@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { styled, useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import MuiDrawer from '@mui/material/Drawer';
@@ -30,6 +30,9 @@ import MyRecipes from '../roots/MyRecipes.jsx';
 import RecipeView from '../roots/RecipeView.jsx';
 import Admin from '../roots/Admin.jsx';
 import Login from './Login.jsx';
+import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
+import Signup from './Signup.jsx';
+
 
 const drawerWidth = 240;
 
@@ -102,6 +105,20 @@ const Navbar = () => {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
   const location = useLocation();
+  const [user, setUser] = useState(null)
+  React.useEffect(() => {
+    const auth = getAuth();
+    const unsubcribe = onAuthStateChanged(auth, (user) => {
+      setUser(user)
+    })
+    return () => unsubcribe();
+  }, [])
+
+  const handleLogout = async() => {
+    const auth = getAuth();
+    await signOut(auth)
+    alert('Log out successfully')
+  }
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -115,6 +132,8 @@ const Navbar = () => {
     switch (location.pathname) {
       case '/login':
         return <Login />;
+      case '/signup':
+        return <Signup />;
       case '/':
         return <Home />;
       case '/recipes':
@@ -153,7 +172,19 @@ const Navbar = () => {
             </Typography>
             <img src="/websitelogo.png" alt="Recipe App Logo" style={{ marginRight: '8px', marginLeft: '12px', height: '55px' }} />
           </Box>
-          <Button
+          {user ? (
+            <Button onClick={handleLogout}
+            variant="contained"
+            sx={{
+              backgroundColor: 'white',
+              color: '#2e6123',
+              '&:hover': {
+                backgroundColor: '#f5f5f5',
+              },
+            }}>Log out</Button>
+          ):(
+            <>
+            <Button
             component={Link}
             to="/login"
             variant="contained"
@@ -163,10 +194,31 @@ const Navbar = () => {
               '&:hover': {
                 backgroundColor: '#f5f5f5',
               },
+              mr: 1
             }}
+            
           >
             Login
           </Button>
+
+          <Button
+            component={Link}
+            to="/signup"
+            variant="contained"
+            sx={{
+              backgroundColor: 'white',
+              color: '#2e6123',
+              '&:hover': {
+                backgroundColor: '#f5f5f5',
+              },
+            }}
+          >
+            Sign up
+          </Button>
+            </>
+            
+          )}
+          
         </Toolbar>
       </AppBar>
       <Drawer variant="permanent" open={open}>
