@@ -1,8 +1,14 @@
 import React from 'react';
 import { Box, Card, CardContent, CardMedia, Typography, Grid, Button } from '@mui/material';
 import CountUp from 'react-countup';
+import axios from 'axios';
 
 const Home = () => {
+  async function handleClick(type) {
+    const recipes = (await axios.get(`http://localhost:5001/home/${type}`)).data;
+    console.log(recipes);
+  }
+
   return (
     <Box sx={{ flexGrow: 1, p: 2 }}>
       <Card sx={{ display: 'flex', width: '100%', mb: 4 }}>
@@ -22,7 +28,7 @@ const Home = () => {
         <CardMedia
           component="img"
           sx={{ width: '50%', objectFit: 'contain' }}
-          image="https://ediblenortheastflorida.ediblecommunities.com/sites/default/files/styles/ariticle_feartured_image_landscape/public/images/aggregator/Spread3-5.jpg?itok=1UFvsM-q"
+          image="topHome.jpeg"
           alt="Welcome image"
         />
       </Card>
@@ -75,7 +81,7 @@ const Home = () => {
             <CardMedia
               component="img"
               sx={{ height: 140, borderBottom: '7px solid #2e6123', minHeight : '18vh', maxHeight: '18vh' }}
-              image="https://www.allrecipes.com/thmb/Y4brle_IWwQ6ll1v4i69TO5sbfI=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/102108380-Authentic-Mexican-Cuisine-Photo-by-Meredith-ebaca57279a548d6b6ef266493497fc3.jpg"
+              image="homeFood1.jpeg"
               alt="Dish Image"
             />
             <CardContent>
@@ -85,7 +91,7 @@ const Home = () => {
               <Typography variant="body2" color="text.secondary">
                 Explore popular Mexican food recipes trending online now.
               </Typography>
-              <Button variant="outlined" sx={{ mt: 2, borderColor: '#2e6123', color: '#2e6123' }}>
+              <Button variant="outlined" sx={{ mt: 2, borderColor: '#2e6123', color: '#2e6123' }} onClick={() => handleClick("mexican")}>
                 View Recipes
               </Button>
             </CardContent>
@@ -96,7 +102,7 @@ const Home = () => {
             <CardMedia
               component="img"
               sx={{ height: 140, borderBottom: '7px solid #2e6123', minHeight : '18vh', maxHeight: '18vh' }}
-              image="https://images.everydayhealth.com/images/diet-nutrition/what-is-a-vegan-diet-benefits-food-list-beginners-guide-alt-1440x810.jpg?sfvrsn=1d260c85_1"
+              image="homeFood2.jpeg"
               alt="Dish Image"
             />
             <CardContent>
@@ -106,7 +112,7 @@ const Home = () => {
               <Typography variant="body2" color="text.secondary">
                 Craving delicious Vegan options? We have you covered.
               </Typography>
-              <Button variant="outlined" sx={{ mt: 2, borderColor: '#2e6123', color: '#2e6123' }}>
+              <Button variant="outlined" sx={{ mt: 2, borderColor: '#2e6123', color: '#2e6123' }} onClick={() => handleClick("vegan")}>
                 View Recipes
               </Button>
             </CardContent>
@@ -117,7 +123,7 @@ const Home = () => {
             <CardMedia
               component="img"
               sx={{ height: 140, borderBottom: '7px solid #2e6123', minHeight : '18vh', maxHeight: '18vh' }}
-              image="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTXzuKZL1VpQ2E-E6ZiDAQZARYrauVMSzA8-w&s"
+              image="homeFood3.jpeg"
               alt="Dish Image"
             />
             <CardContent>
@@ -127,7 +133,7 @@ const Home = () => {
               <Typography variant="body2" color="text.secondary">
                 Looking for something to satisfy your sweet tooth?
               </Typography>
-              <Button variant="outlined" sx={{ mt: 2, borderColor: '#2e6123', color: '#2e6123' }}>
+              <Button variant="outlined" sx={{ mt: 2, borderColor: '#2e6123', color: '#2e6123' }} onClick={() => handleClick("desserts")}>
                 View Recipes
               </Button>
             </CardContent>
@@ -138,7 +144,7 @@ const Home = () => {
             <CardMedia
               component="img"
               sx={{ height: 140, borderBottom: '7px solid #2e6123', minHeight : '18vh', maxHeight: '18vh' }}
-              image="https://www.eatingwell.com/thmb/OjqIt-0hf2URXH1LS9CakKOaiUQ=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/complete-keto-diet-food-list-what-you-can-and-cannot-eat-if-youre-on-a-ketogenic-diet-3-cd4cd1fc60cb455bbe7eee6e3a7d4d2c.jpg"
+              image="homeFood4.jpeg"
               alt="Dish Image"
             />
             <CardContent>
@@ -148,7 +154,7 @@ const Home = () => {
               <Typography variant="body2" color="text.secondary">
                 Struggling with Keto diet restrictions? Explore our array of options!
               </Typography>
-              <Button variant="outlined" sx={{ mt: 2, borderColor: '#2e6123', color: '#2e6123' }}>
+              <Button variant="outlined" sx={{ mt: 2, borderColor: '#2e6123', color: '#2e6123' }} onClick={() => handleClick("keto")}>
                 View Recipes
               </Button>
             </CardContent>
