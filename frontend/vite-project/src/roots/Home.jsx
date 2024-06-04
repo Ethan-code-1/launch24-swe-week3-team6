@@ -20,9 +20,20 @@ const Home = () => {
             <Typography variant="subtitle1" color="text.secondary" component="div" sx={{ mt: 2 }}>
               Start exploring recipes today! Search user generated ones or even create your own!
             </Typography>
-            <Button variant="contained" sx={{ mt: 2, backgroundColor: '#2e6123', fontSize: '1.2rem', padding: '0.75rem 1.5rem' }}>
-              Browse Recipes
-            </Button>
+            <Button
+                variant="contained"
+                sx={{
+                  mt: 2,
+                  backgroundColor: '#2e6123',
+                  fontSize: '1.2rem',
+                  padding: '0.75rem 1.5rem',
+                  '&:hover': {
+                    backgroundColor: '#1e4a1c',
+                  },
+                }}
+              >
+                Browse Recipes
+              </Button>
           </CardContent>
         </Box>
         <CardMedia
@@ -91,7 +102,7 @@ const Home = () => {
               <Typography variant="body2" color="text.secondary">
                 Explore popular Mexican food recipes trending online now.
               </Typography>
-              <Button variant="outlined" sx={{ mt: 2, borderColor: '#2e6123', color: '#2e6123' }} onClick={() => handleClick("mexican")}>
+              <Button variant="outlined" sx={{ mt: 2, borderColor: '#2e6123', color: '#2e6123', '&:hover' : {backgroundColor: 'rgba(46, 97, 35, 0.04)', borderColor: '#2e6123'} }} onClick={() => handleClick("mexican")}>
                 View Recipes
               </Button>
             </CardContent>
@@ -112,7 +123,7 @@ const Home = () => {
               <Typography variant="body2" color="text.secondary">
                 Craving delicious Vegan options? We have you covered.
               </Typography>
-              <Button variant="outlined" sx={{ mt: 2, borderColor: '#2e6123', color: '#2e6123' }} onClick={() => handleClick("vegan")}>
+              <Button variant="outlined" sx={{ mt: 2, borderColor: '#2e6123', color: '#2e6123', '&:hover' : {backgroundColor: 'rgba(46, 97, 35, 0.04)', borderColor: '#2e6123'} }} onClick={() => handleClick("vegan")}>
                 View Recipes
               </Button>
             </CardContent>
@@ -131,9 +142,9 @@ const Home = () => {
                 Desserts
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                Looking for something to satisfy your sweet tooth?
+                Looking for something to satisfy your sweet tooth? We have just what you are looking for.
               </Typography>
-              <Button variant="outlined" sx={{ mt: 2, borderColor: '#2e6123', color: '#2e6123' }} onClick={() => handleClick("desserts")}>
+              <Button variant="outlined" sx={{ mt: 2, borderColor: '#2e6123', color: '#2e6123', '&:hover' : {backgroundColor: 'rgba(46, 97, 35, 0.04)', borderColor: '#2e6123'} }} onClick={() => handleClick("desserts")}>
                 View Recipes
               </Button>
             </CardContent>
@@ -154,7 +165,7 @@ const Home = () => {
               <Typography variant="body2" color="text.secondary">
                 Struggling with Keto diet restrictions? Explore our array of options!
               </Typography>
-              <Button variant="outlined" sx={{ mt: 2, borderColor: '#2e6123', color: '#2e6123' }} onClick={() => handleClick("keto")}>
+              <Button variant="outlined" sx={{ mt: 2, borderColor: '#2e6123', color: '#2e6123', '&:hover' : {backgroundColor: 'rgba(46, 97, 35, 0.04)', borderColor: '#2e6123'} }} onClick={() => handleClick("keto")}>
                 View Recipes
               </Button>
             </CardContent>
