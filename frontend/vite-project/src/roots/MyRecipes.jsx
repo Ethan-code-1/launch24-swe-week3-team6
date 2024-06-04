@@ -5,6 +5,8 @@ import EditIcon from '@mui/icons-material/Edit';
 import '../styles/MyRecipes.css';
 import axios from 'axios';
 
+import {getAuth, onAuthStateChanged} from "firebase/auth"
+
 const MyRecipes = () => {
   const [showYourRecipes, setShowYourRecipes] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
@@ -56,7 +58,8 @@ const MyRecipes = () => {
 
   async function handleSubmit() {
     console.log('Submited', uid);
-    axios.post(`http://localhost:5001/myRecipes/draft`, {'name': title, 'desc': desc, 'uid': uid });
+    const result = await axios.post(`http://localhost:5001/myRecipes/draft`, {'name': title, 'desc': desc, 'uid': uid });
+    console.log(result);
     toggleAddNewRecipe();
   }
 
