@@ -21,15 +21,15 @@ import RestaurantMenuIcon from '@mui/icons-material/RestaurantMenu';
 import BookIcon from '@mui/icons-material/Book';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
+import Button from '@mui/material/Button';
 import { Link, useLocation } from 'react-router-dom';
 
-import Home from "../roots/Home.jsx"
+import Home from "../roots/Home.jsx";
 import Recipes from '../roots/Recipes.jsx';
 import MyRecipes from '../roots/MyRecipes.jsx';
 import RecipeView from '../roots/RecipeView.jsx';
 import Admin from '../roots/Admin.jsx';
 import Login from './Login.jsx';
-
 
 const drawerWidth = 240;
 
@@ -114,19 +114,19 @@ const Navbar = () => {
   const renderContent = () => {
     switch (location.pathname) {
       case '/login':
-        return <Login/>;
+        return <Login />;
       case '/':
-        return <Home/>;
+        return <Home />;
       case '/recipes':
-        return <Recipes/>;
+        return <Recipes />;
       case '/myRecipes':
-        return <MyRecipes/>;
+        return <MyRecipes />;
       case '/recipeView':
-        return <RecipeView/>;
+        return <RecipeView />;
       case '/admin':
-        return <Admin/>;
+        return <Admin />;
       default:
-        return <Home/>;
+        return <Home />;
     }
   };
 
@@ -147,10 +147,26 @@ const Navbar = () => {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h3" noWrap component="div" style = {{marginBottom: '.75vh', marginTop: '.75vh'}}>
-            Flavor Fusion
-          </Typography>
-          <img src="/websitelogo.png" alt="Recipe App Logo" style={{ marginRight: '8px', marginLeft: '12px', height: '55px' }} />
+          <Box sx={{ display: 'flex', alignItems: 'center', flexGrow: 1 }}>
+            <Typography variant="h3" noWrap component="div" style={{ marginBottom: '.75vh', marginTop: '.75vh' }}>
+              Flavor Fusion
+            </Typography>
+            <img src="/websitelogo.png" alt="Recipe App Logo" style={{ marginRight: '8px', marginLeft: '12px', height: '55px' }} />
+          </Box>
+          <Button
+            component={Link}
+            to="/login"
+            variant="contained"
+            sx={{
+              backgroundColor: 'white',
+              color: '#2e6123',
+              '&:hover': {
+                backgroundColor: '#f5f5f5',
+              },
+            }}
+          >
+            Login
+          </Button>
         </Toolbar>
       </AppBar>
       <Drawer variant="permanent" open={open}>
@@ -167,7 +183,7 @@ const Navbar = () => {
             { text: 'My Recipes', icon: <BookIcon />, path: '/myRecipes' },
             { text: 'Recipe View', icon: <VisibilityIcon />, path: '/recipeView' },
             { text: 'Admin Page', icon: <AdminPanelSettingsIcon />, path: '/admin' },
-          ].map((item, index) => (
+          ].map((item) => (
             <ListItem key={item.text} disablePadding sx={{ display: 'block' }}>
               <ListItemButton
                 sx={{
@@ -194,9 +210,9 @@ const Navbar = () => {
         </List>
       </Drawer>
       <Box style={{ background: "#f5f2f2" }} component="main" sx={{ flexGrow: 1, p: 3 }}>
-        <DrawerHeader/>
+        <DrawerHeader />
         <div>
-        {renderContent()}
+          {renderContent()}
         </div>
       </Box>
     </Box>
