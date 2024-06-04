@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { Box, Card, CardContent, CardMedia, Typography, Grid, Button, TextField, IconButton } from '@mui/material';
 import FavoriteIcon from '@mui/icons-material/Favorite';
-import EditIcon from '@mui/icons-material/Edit'; // Import Edit icon for editing functionality
+import EditIcon from '@mui/icons-material/Edit'; 
 import '../styles/MyRecipes.css';
 
 const MyRecipes = () => {
   const [showYourRecipes, setShowYourRecipes] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
-  const [addingNewRecipe, setAddingNewRecipe] = useState(false); // State to control the new recipe form
+  const [addingNewRecipe, setAddingNewRecipe] = useState(false); 
 
   const yourRecipes = [
     { id: 1, title: 'Your Recipe 1', imageUrl: 'https://images.everydayhealth.com/images/diet-nutrition/what-is-a-vegan-diet-benefits-food-list-beginners-guide-alt-1440x810.jpg?sfvrsn=1d260c85_1' },
