@@ -1,7 +1,7 @@
 import axios from "axios";
 import express from 'express';
 import dotenv from "dotenv";
-import { db } from "./firebase.js";
+import { db } from "../firebase.js";
 
 import { collection, getDocs, query, where } from "firebase/firestore";
 
