@@ -1,1 +1,4 @@
 node_modules
+permissions.json
+package-lock.json
+.env 
