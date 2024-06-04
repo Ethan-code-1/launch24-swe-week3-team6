@@ -1,96 +1,108 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Roboto', sans-serif;
+  background: #f7f7f7;
+}
+
 .login-container {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background-image: url(/homeBg.jpeg);
-    background-size: cover;
-    background-position: center;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .login-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(255, 255, 255, 0.7); 
-  }
-  
-  .login-form {
-    background-color: #ffffffd4;
-    padding: 1rem;
-    border-radius: 4px;
-    z-index: 20;
-    width: 400px;
-    height: 550px;
-    display: flex; 
-    flex-direction: column; 
-    align-items: center; 
-    border: 50px solid #2e6123;
-  }
-  
-  
-  .login-title {
-    margin-bottom: 0.5rem;
-    text-align: center;
-    font-size: 2rem;
-    margin-top: 3vh;
-  }
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-image: url('/homeBg.jpeg');
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
 
-  .company-name{
-    margin-top: 6vh;
-    font-size: 3rem;
+.login-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.7);
+}
 
-  }
-  
-  .login-subhead {
-    font-size: 0.875rem; 
-    color: #8a8a8a; 
-    text-align: center;
-    margin-bottom: 1rem;
-  }
-  
-  .login-input {
-    width: calc(100% - 80px); 
-    padding: 0.5rem;
-    margin-bottom: 0.75rem;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 1rem;
-  }
-  
-  
-  
-  .login-button {
-    background-color: #2e6123; 
-    color: white;
-    padding: .75rem 2.5rem;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.2s ease-in-out;
-    font-size: 1.25rem;
-    margin-top: 2vh;
-  }
-  
+.right-overlay {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: #2e612346;
+}
 
-  .right-overlay {
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 100vw; 
-    height: 100vh;
-    background-color: #2e612346; 
-  }
-  
-  .homeHr{
-    width: 300px; 
-  }
+.login-form {
+  background-color: rgba(255, 255, 255, 0.9);
+  padding: 2rem;
+  border-radius: 10px;
+  z-index: 20;
+  width: 400px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: 5px solid #2e6123;
+}
 
- 
+.company-name {
+  margin-top: 1rem;
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #2e6123;
+}
+
+.homeHr {
+  width: 100%;
+  margin: 1rem 0;
+  border: 0;
+  height: 1px;
+  background: #ddd;
+}
+
+.login-title {
+  margin-bottom: 0.5rem;
+  font-size: 1.8rem;
+  font-weight: 500;
+  color: #333;
+  text-align: center;
+}
+
+.login-subhead {
+  font-size: 1rem;
+  color: #666;
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.login-input {
+  width: 100%;
+  padding: 0.75rem;
+  margin-bottom: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 1rem;
+}
+
+.login-button {
+  background-color: #2e6123;
+  color: white;
+  padding: 0.75rem 2.5rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+  font-size: 1.25rem;
+}
+
+.login-button:hover {
+  background-color: #1e4a1c;
+}
