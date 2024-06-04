@@ -30,17 +30,19 @@ router.post('/draft', async (req, res) => {
         recipe['createdBy'] = recipe.uid;
         const docRef = await addDoc(collection(db, 'recipes'), recipe);
 
-        let recipes = (await getDoc(doc(db, 'users', uid))).data()['myRecipes'];
+        let recipes = (await getDoc(doc(db, 'users', recipe.uid))).data()['myRecipes'];
+        console.log('hello', recipes)
         if (recipes) {
             recipes.push(docRef.id);
         } else {
             recipes = [docRef.id];
         }
-        await updateDoc(doc(db, 'users', uid), {'myRecipes': recipes});
+        console.log(recipes);
+        await updateDoc(doc(db, 'users', recipe.uid), {'myRecipes': recipes});
 
         res.status(200).send(docRef);
     } catch (e) {
-        res.status(500).send({ error: 'Error fetching messages' });
+        res.status(500).send({ error: e.message });
     }
 })
 
