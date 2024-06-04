@@ -8,8 +8,10 @@ const Login = () => {
       <div className="right-overlay"></div> 
       <form className="login-form">
         <h1 className="company-name">Flavor Fusion</h1>
+        <p className="login-subhead">Find just the recipe you have been looking for.</p>
+
         <hr className="homeHr" />
-        <p className="login-subhead">Start exploring 100s of recipes today!</p>
+
         <h1 className="login-title">Login</h1>
 
         <input type="text" className="login-input" placeholder="Username" />
