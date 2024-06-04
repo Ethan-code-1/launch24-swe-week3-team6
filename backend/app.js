@@ -3,6 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import axios from "axios";
 import bodyParser from "body-parser";
+import homeRouter from './routes/home.js';
 
 const app = express();
 const port = process.env.PORT || 5001;
