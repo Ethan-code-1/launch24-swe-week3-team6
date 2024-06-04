@@ -27,7 +27,16 @@ router.post('/draft', async (req, res) => {
         const ans = completion.choices[0].message.content;
         console.log(ans);
         recipe["steps"] = ans;
+        recipe['createdBy'] = recipe.uid;
         const docRef = await addDoc(collection(db, 'recipes'), recipe);
+
+        let recipes = (await getDoc(doc(db, 'users', uid))).data()['myRecipes'];
+        if (recipes) {
+            recipes.push(docRef.id);
+        } else {
+            recipes = [docRef.id];
+        }
+        await updateDoc(doc(db, 'users', uid), {'myRecipes': recipes});
 
         res.status(200).send(docRef);
     } catch (e) {
