@@ -43,23 +43,27 @@
 
   /* background: linear-gradient(rgba(203, 235, 196, 1) 0%, rgba(244, 242, 242, 1) 55%); */
   background-color: white;
-  padding-left: 30px;
-  padding-top: 20px;
+  padding-left: 40px;
+  padding-top: 30px;
   /* border-radius: 20px; 90deg */
   border: 1px solid rgba(0, 0, 0, 0.12);
 }
 
 .recipe-title {
   font-size: 2rem;
+  font-weight: bold;
 }
 
 .recipe-subtitle {
   font-size: 1.5rem;
+  margin-bottom: 20px;
+  font-weight: bold;
 }
 
 .recipe-line {
   border-bottom: solid;
   width: 80%;
+  margin-bottom: 30px;
 }
 
 .bookmark-button {
@@ -67,8 +71,12 @@
   background-color: transparent;
   border-radius: 30px;
   padding: 5px;
-  padding-left: 10px;
-  padding-right: 10px;
+  padding-left: 8px;
+  padding-right: 8px;
+
+  position: fixed;
+  top: 80px;
+  right: 20px;
 }
 
 .bookmark-button:hover {
@@ -86,6 +94,10 @@
   padding: 6px;
   padding-left: 9px;
   padding-right: 9px;
+
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
 }
 
 .chat-button:hover {
@@ -97,7 +109,7 @@
 }
 
 .bookmark {
-  height: 25px;
+  height: 27px;
   margin-top: 3px;
 }
 
@@ -105,4 +117,49 @@
   height: 25px;
   margin-top: 4px;
   margin-bottom: -2px;
+  transition: .5s;
 }
+
+
+/* .chat-button:hover .chat {
+  /* color: #fff; */
+  /* transform: rotateY(360deg);
+} */
+
+.ingredients-container {
+  width: 60%;
+  margin-bottom: 30px;
+}
+
+.directions-container {
+  width: 70%;
+  margin-bottom: 30px;
+}
+
+.direction-step {
+  margin-bottom: 20px;
+}
+
+.directions-container ol li {
+  margin-bottom: 10px;
+}
+
+.direction-title {
+  font-weight: bold;
+}
+
+
+.nutrition-facts-container {
+  margin-bottom: 30px;
+}
+
+.nutrition-facts-grid {
+  display: flex;
+  flex-direction: row;
+  gap: 30px;
+}
+
+.fact-top {
+  font-weight: bold;
+}
+
