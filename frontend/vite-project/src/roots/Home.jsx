@@ -28,7 +28,7 @@ const Home = () => {
         <CardMedia
           component="img"
           sx={{ width: '50%', objectFit: 'contain' }}
-          image="https://ediblenortheastflorida.ediblecommunities.com/sites/default/files/styles/ariticle_feartured_image_landscape/public/images/aggregator/Spread3-5.jpg?itok=1UFvsM-q"
+          image="topHome.jpeg"
           alt="Welcome image"
         />
       </Card>
@@ -81,7 +81,7 @@ const Home = () => {
             <CardMedia
               component="img"
               sx={{ height: 140, borderBottom: '7px solid #2e6123', minHeight : '18vh', maxHeight: '18vh' }}
-              image="https://www.allrecipes.com/thmb/Y4brle_IWwQ6ll1v4i69TO5sbfI=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/102108380-Authentic-Mexican-Cuisine-Photo-by-Meredith-ebaca57279a548d6b6ef266493497fc3.jpg"
+              image="homeFood1.jpeg"
               alt="Dish Image"
             />
             <CardContent>
@@ -102,7 +102,7 @@ const Home = () => {
             <CardMedia
               component="img"
               sx={{ height: 140, borderBottom: '7px solid #2e6123', minHeight : '18vh', maxHeight: '18vh' }}
-              image="https://images.everydayhealth.com/images/diet-nutrition/what-is-a-vegan-diet-benefits-food-list-beginners-guide-alt-1440x810.jpg?sfvrsn=1d260c85_1"
+              image="homeFood2.jpeg"
               alt="Dish Image"
             />
             <CardContent>
@@ -123,7 +123,7 @@ const Home = () => {
             <CardMedia
               component="img"
               sx={{ height: 140, borderBottom: '7px solid #2e6123', minHeight : '18vh', maxHeight: '18vh' }}
-              image="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTXzuKZL1VpQ2E-E6ZiDAQZARYrauVMSzA8-w&s"
+              image="homeFood3.jpeg"
               alt="Dish Image"
             />
             <CardContent>
@@ -144,7 +144,7 @@ const Home = () => {
             <CardMedia
               component="img"
               sx={{ height: 140, borderBottom: '7px solid #2e6123', minHeight : '18vh', maxHeight: '18vh' }}
-              image="https://www.eatingwell.com/thmb/OjqIt-0hf2URXH1LS9CakKOaiUQ=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/complete-keto-diet-food-list-what-you-can-and-cannot-eat-if-youre-on-a-ketogenic-diet-3-cd4cd1fc60cb455bbe7eee6e3a7d4d2c.jpg"
+              image="homeFood4.jpeg"
               alt="Dish Image"
             />
             <CardContent>

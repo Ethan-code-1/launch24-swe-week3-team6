@@ -42,11 +42,12 @@ const Login = () => {
       <div className="login-overlay"></div>
       <div className="right-overlay"></div> 
       <form className="login-form" onSubmit={handleLogin}>
-        <h1 className="company-name">Flavor Fusion</h1>
+        <div className="logo-container">
+          <h1 className="company-name">Flavor Fusion</h1>
+          <img src="/websitelogo.png" alt="Recipe App Logo" className="logo-image" />
+        </div>
         <p className="login-subhead">Find just the recipe you have been looking for.</p>
-
         <hr className="homeHr" />
-
         <h1 className="login-title">Login</h1>
 
         <input type="text" className="login-input" placeholder="Email" onChange={(e) => setEmail(e.target.value)}/>
