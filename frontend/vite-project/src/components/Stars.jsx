@@ -1,9 +1,7 @@
 import React from 'react';
 import "../styles/stars.css";
 
-
 const Stars = ({ rating, onRatingChange }) => {
-
   const handleRatingChange = (e) => {
     onRatingChange(parseInt(e.target.value, 10));
   };
@@ -12,13 +10,13 @@ const Stars = ({ rating, onRatingChange }) => {
     <div id="full-stars-example-two">
       <div className="rating-group">
         <input 
-          disabled 
-          defaultChecked={rating === 0} 
           className="rating__input rating__input--none" 
           name="rating3" 
           id="rating3-none" 
           value="0" 
           type="radio" 
+          checked={rating === 0} 
+          onChange={handleRatingChange} 
         />
         {[1, 2, 3, 4, 5].map((star) => (
           <React.Fragment key={star}>

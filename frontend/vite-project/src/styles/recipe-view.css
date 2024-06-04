@@ -191,7 +191,6 @@
   background-color: #2e6123;
   font-size: 1rem;
   padding: 0.5rem 1.25rem;
-  margin-left: 20px;
   margin-top: 0px;
 }
 
@@ -202,6 +201,7 @@
   font-size: 1rem;
   padding: 0.5rem 1.25rem;
   margin-top: 0px;
+  margin-right: 20px;
 }
 
 #cancel-button:hover {
@@ -229,11 +229,16 @@
   display: flex;
   font-size: 1.25rem;
   margin-bottom: 10px;
+  align-items: center;
 }
 
 .review-username {
   margin-right: 20px;
   font-weight: bold;
+}
+
+.review-date {
+  font-size: 1rem;
 }
 
 .review-comment {
@@ -255,6 +260,8 @@
 
 .upvote-number {
   margin-left: 10px;
+  font-size: 1rem;
+  margin-top: 1px;
 }
 
 .upvote-button {
@@ -317,6 +324,18 @@
   font-size: 1rem;
   margin-top: 1px;
   margin-left: 5px;
+}
+
+/* reply */
+.reply-window {
+  display: flex;
+  flex-direction: column;
+  margin-top: 10px;
+}
+
+.reply-button-container {
+  margin-top: 15px;
+  align-self: flex-end;
 }
 
 /* BUTTONS */
