@@ -143,9 +143,10 @@ const Navbar = () => {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" noWrap component="div">
-            Recipe App
+          <Typography variant="h3" noWrap component="div" style = {{marginBottom: '.75vh', marginTop: '.75vh'}}>
+            Flavor Fusion
           </Typography>
+          <img src="/websitelogo.png" alt="Recipe App Logo" style={{ marginRight: '8px', marginLeft: '12px', height: '55px' }} />
         </Toolbar>
       </AppBar>
       <Drawer variant="permanent" open={open}>
