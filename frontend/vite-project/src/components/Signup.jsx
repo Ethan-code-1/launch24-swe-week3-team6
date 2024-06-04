@@ -1,56 +1,56 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { login } from '../../firebaseAuth'; 
+import { signUp } from '../../firebaseAuth'; 
 import { Alert } from '@mui/material';
 
 import '../styles/Login.css';
 
-const Login = () => {
+const Signup = () => {
   const [email, setEmail] = useState("")
+  const [username, setUsername] = useState('');
+
   const [password, setPassword] = useState("")
+  const [confirmPassword, setConfirmPassword] = useState('');
+
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
-  const handleLogin = async (event) => {
+  const handleSignUp = async (event) => {
     event.preventDefault();
-    try {
-      await login(email, password);
-      alert('Log in successfully')
-      navigate('/');
-    } catch (err) {
-      switch (err.code) {
-        case 'auth/user-not-found':
-          setError('No user found with this email.');
-          break;
-        case 'auth/wrong-password':
-          setError('Incorrect password.');
-          break;
-        case 'auth/invalid-email':
-          setError('Invalid email address.');
-          break;
-        case 'auth/invalid-credential':
-          setError('Invalid credentials.');
-          break;
-        default:
-          setError(err.message);
+    if (password !== confirmPassword) {
+        setError("Passwords do not match");
+        return;
       }
-    }
+      try {
+        await signUp(email, password, username);
+        alert('Sign up successfully')
+        navigate('/');
+      } catch (err) {
+        if (err.code === 'auth/email-already-in-use') {
+          setError('User already exists with this email');
+        } else {
+          setError(err.message);
+        }
+      }
   };
 
   return (
     <div className="login-container">
       <div className="login-overlay"></div>
       <div className="right-overlay"></div> 
-      <form className="login-form" onSubmit={handleLogin}>
+      <form className="login-form" onSubmit={handleSignUp}>
         <h1 className="company-name">Flavor Fusion</h1>
         <p className="login-subhead">Find just the recipe you have been looking for.</p>
 
         <hr className="homeHr" />
 
-        <h1 className="login-title">Login</h1>
+        <h1 className="login-title">Create an account</h1>
 
         <input type="text" className="login-input" placeholder="Email" onChange={(e) => setEmail(e.target.value)}/>
+        <input type="text" className="login-input" placeholder="Username" onChange={(e) => setUsername(e.target.value)} />
         <input type="password" className="login-input" placeholder="Password" onChange={(e) => setPassword(e.target.value)} />
+        <input type="password" className="login-input" placeholder="Confirm Password" onChange={(e) => setConfirmPassword(e.target.value)} />
+
         {error && <Alert severity="error">{error}</Alert>}
 
         <button className="login-button">Submit</button>
@@ -59,4 +59,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Signup;
