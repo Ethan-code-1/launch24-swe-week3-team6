@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
+import recipePage from './routes/filter.js';
 import homeRouter from './routes/home.js';
 
 
@@ -13,6 +14,10 @@ const app_key = process.env.APP_KEY;
 app.use(express.json());
 app.use(cors());
 dotenv.config();
+
+// Initialize Routes
+app.use('/api/recipes', recipePage);
+
 
 // access point: https://api.edamam.com/api/recipes/v2
 
