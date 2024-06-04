@@ -1,0 +1,108 @@
+
+.recipe-view-page {
+  display: flex; 
+  flex-direction: row;
+}
+
+.body {
+  width: 95%;
+}
+
+.left-sidebar {
+  display: flex;
+  flex-direction: column;
+  /* justify-content: center; */
+  align-items: center;
+}
+
+.overview-container {
+  display: flex;
+}
+
+.page-title {
+  font-size: 3.5rem;
+}
+
+.page-subtitle {
+  font-size: 1rem;
+}
+
+.top-section {
+  margin-bottom: 50px;
+}
+
+.recipe-image {
+  max-height: 300px;
+
+  margin-top: 20px;
+}
+
+.recipe-container {
+  /* border: solid; */
+  max-width: 800px;
+
+  /* background: linear-gradient(rgba(203, 235, 196, 1) 0%, rgba(244, 242, 242, 1) 55%); */
+  background-color: white;
+  padding-left: 30px;
+  padding-top: 20px;
+  /* border-radius: 20px; 90deg */
+  border: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.recipe-title {
+  font-size: 2rem;
+}
+
+.recipe-subtitle {
+  font-size: 1.5rem;
+}
+
+.recipe-line {
+  border-bottom: solid;
+  width: 80%;
+}
+
+.bookmark-button {
+  border: none;
+  background-color: transparent;
+  border-radius: 30px;
+  padding: 5px;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.bookmark-button:hover {
+  background-color: rgb(198, 198, 198);
+}
+
+.bookmark-button:active {
+  background-color: rgb(177, 177, 177);
+}
+
+.chat-button {
+  border: none;
+  background-color: transparent;
+  border-radius: 35px;
+  padding: 6px;
+  padding-left: 9px;
+  padding-right: 9px;
+}
+
+.chat-button:hover {
+  background-color: rgb(198, 198, 198);
+}
+
+.chat-button:active {
+  background-color: rgb(177, 177, 177);
+}
+
+.bookmark {
+  height: 25px;
+  margin-top: 3px;
+}
+
+.chat {
+  height: 25px;
+  margin-top: 4px;
+  margin-bottom: -2px;
+}
