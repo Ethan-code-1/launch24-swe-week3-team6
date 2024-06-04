@@ -1,7 +1,6 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
-import bodyParser from "body-parser";
 import homeRouter from "./routes/home.js";
 
 const app = express();
@@ -22,15 +21,7 @@ dotenv.config();
 const url =
   "https://api.edamam.com/api/recipes/v2?type=public&app_id=${app_id}app_key=${app_key}";
 
-// Creating routes for endpoints that will be reached
-
-app.get("/recipes", async (req, res) => {});
-
-app.get("/recipeView", async (req, res) => {});
-
-app.get("/myRecipes", async (req, res) => {});
-
-app.get("/admin", async (req, res) => {});
+app.use("/home", homeRouter);
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);

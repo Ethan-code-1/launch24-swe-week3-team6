@@ -1,8 +1,14 @@
 import React from 'react';
 import { Box, Card, CardContent, CardMedia, Typography, Grid, Button } from '@mui/material';
 import CountUp from 'react-countup';
+import axios from 'axios';
 
 const Home = () => {
+  async function handleClick(type) {
+    const recipes = (await axios.get(`http://localhost:5001/home/${type}`)).data;
+    console.log(recipes);
+  }
+
   return (
     <Box sx={{ flexGrow: 1, p: 2 }}>
       <Card sx={{ display: 'flex', width: '100%', mb: 4 }}>
@@ -85,7 +91,7 @@ const Home = () => {
               <Typography variant="body2" color="text.secondary">
                 Explore popular Mexican food recipes trending online now.
               </Typography>
-              <Button variant="outlined" sx={{ mt: 2, borderColor: '#2e6123', color: '#2e6123' }}>
+              <Button variant="outlined" sx={{ mt: 2, borderColor: '#2e6123', color: '#2e6123' }} onClick={() => handleClick("mexican")}>
                 View Recipes
               </Button>
             </CardContent>
@@ -106,7 +112,7 @@ const Home = () => {
               <Typography variant="body2" color="text.secondary">
                 Craving delicious Vegan options? We have you covered.
               </Typography>
-              <Button variant="outlined" sx={{ mt: 2, borderColor: '#2e6123', color: '#2e6123' }}>
+              <Button variant="outlined" sx={{ mt: 2, borderColor: '#2e6123', color: '#2e6123' }} onClick={() => handleClick("vegan")}>
                 View Recipes
               </Button>
             </CardContent>
@@ -127,7 +133,7 @@ const Home = () => {
               <Typography variant="body2" color="text.secondary">
                 Looking for something to satisfy your sweet tooth?
               </Typography>
-              <Button variant="outlined" sx={{ mt: 2, borderColor: '#2e6123', color: '#2e6123' }}>
+              <Button variant="outlined" sx={{ mt: 2, borderColor: '#2e6123', color: '#2e6123' }} onClick={() => handleClick("desserts")}>
                 View Recipes
               </Button>
             </CardContent>
@@ -148,7 +154,7 @@ const Home = () => {
               <Typography variant="body2" color="text.secondary">
                 Struggling with Keto diet restrictions? Explore our array of options!
               </Typography>
-              <Button variant="outlined" sx={{ mt: 2, borderColor: '#2e6123', color: '#2e6123' }}>
+              <Button variant="outlined" sx={{ mt: 2, borderColor: '#2e6123', color: '#2e6123' }} onClick={() => handleClick("keto")}>
                 View Recipes
               </Button>
             </CardContent>
