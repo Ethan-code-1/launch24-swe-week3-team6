@@ -1,0 +1,13 @@
+/* src/styles/average-stars.css */
+.average-stars {
+  display: inline-flex;
+}
+
+.star {
+  color: orange;
+  font-size: 1.5rem;
+}
+
+.star.empty {
+  color: #ddd;
+}

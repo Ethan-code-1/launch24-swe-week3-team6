@@ -20,6 +20,12 @@
 
 .overview-container {
   display: flex;
+  align-items: center;
+  text-align: center;
+}
+
+.average-stars {
+  margin-right: 10px;
 }
 
 .page-title {
@@ -27,7 +33,7 @@
 }
 
 .page-subtitle {
-  font-size: 1rem;
+  font-size: 1.2rem;
 }
 
 .top-section {
@@ -45,7 +51,8 @@
 }
 
 .recipe-info {
-  max-width: 400px;
+  max-width: 450px;
+  font-size: 1.2rem;
 }
 
 .recipe-container {
@@ -119,6 +126,10 @@
 }
 
 /* REVIEW */
+.create-review {
+  margin-bottom: 75px;
+}
+
 .review-title {
   font-size: 2rem;
   margin-bottom: 20px;
@@ -133,20 +144,29 @@
 
 .review-line {
   border-bottom: solid;
-  width: 60%;
+  width: 55%;
   margin-bottom: 40px;
+}
+
+.review-subline {
+  border-bottom: solid;
+  border-color: grey;
+  width: 55%;
+  margin-bottom: 40px;
+  border-width: 1px;
 }
 
 .review-top {
   display: flex;
   justify-content: space-between;
   max-width: 500px;
+  margin-bottom: 10px;
 }
 
 .review-input {
   resize: none;
   min-width: 500px;
-  min-height: 100px;
+  min-height: 150px;
   padding: 10.5px;
 
   /* border: none; */
@@ -159,6 +179,145 @@
   font-size: 1rem;
 }
 
+.review-bottom {
+  max-width: 500px;
+  display: flex;
+  justify-content: end;
+  margin-top: 10px;
+}
+
+#post-button {
+  margin-top: 2rem; /* Assuming 'mt' refers to margin-top */
+  background-color: #2e6123;
+  font-size: 1rem;
+  padding: 0.5rem 1.25rem;
+  margin-left: 20px;
+  margin-top: 0px;
+}
+
+#cancel-button {
+  margin-top: 2rem; /* Assuming 'mt' refers to margin-top */
+  color: red;
+  border-color: red;
+  font-size: 1rem;
+  padding: 0.5rem 1.25rem;
+  margin-top: 0px;
+}
+
+#cancel-button:hover {
+  background-color: rgba(255, 0, 0, 0.054);
+}
+
+.review {
+  margin-bottom: 30px;
+  display: flex;
+}
+
+.profile-picture {
+  height: 35px;
+  margin-top: 4px;
+  margin-bottom: -2px;
+  border-radius: 35px;
+
+  padding: 5px;
+  background-color: white;
+  border: solid;
+  margin-right: 25px;
+}
+
+.review-info {
+  display: flex;
+  font-size: 1.25rem;
+  margin-bottom: 10px;
+}
+
+.review-username {
+  margin-right: 20px;
+  font-weight: bold;
+}
+
+.review-comment {
+  font-size: 1rem;
+  margin-top: 10px;
+}
+
+.review-actions {
+  display: flex;
+  justify-content: start;
+  margin-top: 10px;
+}
+
+.upvote-section {
+  display: flex;
+  justify-self: start;
+  align-items: center;
+}
+
+.upvote-number {
+  margin-left: 10px;
+}
+
+.upvote-button {
+  border: none;
+  background-color: transparent;
+  border-radius: 35px;
+  padding: 6px;
+  padding-left: 9px;
+  padding-right: 9px;
+}
+
+.upvote {
+  height: 25px;
+  margin-top: 2px;
+}
+
+.comment-section {
+  display: flex;
+  justify-self: start;
+  align-items: center;
+  margin-left: 20px;
+}
+
+
+.comment-button {
+  border: none;
+  background-color: transparent;
+  border-radius: 35px;
+  padding: 4px;
+  padding-left: 9px;
+  padding-right: 9px;
+
+  display: flex;
+  justify-content: center;
+
+  text-align: center;
+  align-items: center;
+}
+
+.comment-button:hover,
+.upvote-button:hover,
+.chat-button:hover,
+.bookmark-button:hover {
+  background-color: #55964644;
+}
+
+.comment-button:active,
+.upvote-button:active,
+.chat-button:active,
+.bookmark-button:active {
+  background-color: #3a772c6e;
+}
+
+.comment {
+  height: 30px;
+  /* margin-top: 2px; */
+}
+
+.comment-text {
+  font-size: 1rem;
+  margin-top: 1px;
+  margin-left: 5px;
+}
 
 /* BUTTONS */
 
@@ -175,14 +334,6 @@
   right: 20px;
 }
 
-.bookmark-button:hover {
-  background-color: rgb(198, 198, 198);
-}
-
-.bookmark-button:active {
-  background-color: rgb(177, 177, 177);
-}
-
 .chat-button {
   border: none;
   background-color: transparent;
@@ -194,14 +345,6 @@
   position: fixed;
   bottom: 20px;
   right: 20px;
-}
-
-.chat-button:hover {
-  background-color: rgb(198, 198, 198);
-}
-
-.chat-button:active {
-  background-color: rgb(177, 177, 177);
 }
 
 .bookmark {
