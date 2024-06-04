@@ -21,7 +21,21 @@ dotenv.config();
 const url =
   "https://api.edamam.com/api/recipes/v2?type=public&app_id=${app_id}app_key=${app_key}";
 
-// Creating routes to the frontend paths
+// Creating routes for endpoints that will be reached
+app.get("/home/search/${query}", async (req, res) => {
+  var options = {
+    url: "https://api.edamam.com/api/recipes/v2",
+    headers: {
+      app_id: app_id,
+      app_key: app_key,
+      type: "public",
+    },
+    json: true,
+  };
+  const userInfoResponse = await requestGet(options);
+  console.log(userInfoResponse);
+});
+
 app.get("/recipes", async (req, res) => {});
 
 app.get("/recipeView", async (req, res) => {});
