@@ -2,10 +2,10 @@ import {initializeApp} from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 
 
-import serviceAccount from "./permissions.json";
+import serviceAccount from "./permissions.json" assert { type: 'json' };
 
 
 const app = initializeApp(serviceAccount);
 const db = getFirestore(app);
 
-module.exports = db;
+export { db };
