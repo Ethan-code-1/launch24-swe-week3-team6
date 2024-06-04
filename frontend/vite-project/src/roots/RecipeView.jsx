@@ -1,18 +1,24 @@
-import {useState, useEffect} from 'react';
-import RecipeImage from '../assets/recipe-image.jpeg'
-import '../styles/recipe-view.css'
-import Bookmark from '../icons/bookmark.png'
-import FilledBookmark from '../icons/bookmark-filled.png'
-import ChatBubble from '../icons/chat-bubble.png'
-import PenIcon from '../icons/pen-icon.svg'
-
+import React, { useState } from 'react';
+import RecipeImage from '../assets/recipe-image.jpeg';
+import '../styles/recipe-view.css';
+import Bookmark from '../icons/bookmark.png';
+import FilledBookmark from '../icons/bookmark-filled.png';
+import ChatBubble from '../icons/chat-bubble.png';
+import { Button } from '@mui/material';
+import Stars from '../components/Stars.jsx';
 
 const RecipeView = () => {
   const [saved, setSaved] = useState(false);
+  const [rating, setRating] = useState(0);
 
-  const handleSetSaved = () => { 
+  const handleSetSaved = () => {
     setSaved(!saved);
-  }
+  };
+
+  const handleRatingChange = (newRating) => {
+    setRating(newRating);
+    // console.log(newRating);
+  };
 
   return (
     <div className='recipe-view-page'>
@@ -20,12 +26,15 @@ const RecipeView = () => {
         <div className='top-section'>
           <div className='page-title'>Italian Chicken Marinade</div>
           <div className='overview-container'>
-              <div className='page-subtitle'>***** 3.9 from 2 votes | </div>
+            <div className='page-subtitle'>***** 3.9 from 2 votes</div>
+            <div> &nbsp;|&nbsp; </div>
               <div className='page-subtitle'> 12 comments</div>
           </div>
 
-          <img src={RecipeImage} alt='Recipe Image' className='recipe-image'/>
-          <div> This Italian dressing chicken marinade is a super simple but delicious way to add flavor before grilling. </div>
+          <img src={RecipeImage} alt='Recipe Image' className='recipe-image' />
+          <div className='recipe-info'> This Italian dressing chicken marinade is a super simple but delicious way
+            to add flavor before grilling. </div>
+          
         </div>
 
         <div className='middle-section'>
@@ -120,8 +129,27 @@ const RecipeView = () => {
         
 
         <div className='bottom-section'>
-          <div className='rating-title'>3 Reviews</div>
-          <div className='stars'>*****</div>
+          <div className='review-title'>Reviews</div>
+          <div className='review-line'></div>
+          <form>
+            <div className='review-top'>
+              <div className='review-subtitle'>Your Rating</div>
+              <Stars rating={rating} onRatingChange={handleRatingChange} />
+            </div>
+            <div>
+              <textarea className='review-input'
+              placeholder='What did you think about this recipe? Join the discussion!'
+            />
+            </div>
+            
+
+            <div className='review-bottom'>
+              <Button variant="contained" sx={{ mt: 2, backgroundColor: '#2e6123', fontSize: '1rem', padding: '0.5rem 1.25rem' }}>Post Review</Button>
+              <Button variant="contained" sx={{ mt: 2, backgroundColor: 'grey', fontSize: '1rem', padding: '0.5rem 1.25rem' }}>Cancel</Button>
+
+            </div>
+            
+          </form>
           
         </div>
 
