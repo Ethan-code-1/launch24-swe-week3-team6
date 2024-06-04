@@ -189,7 +189,7 @@ const Navbar = () => {
           ))}
         </List>
       </Drawer>
-      <Box style={{ background: "#f5f2f2" }} component="main" sx={{ flexGrow: 1, p: 3 }}>
+      <Box style={{ background: "#f5f2f2" , minHeight:'100vh'}} component="main" sx={{ flexGrow: 1, p: 3 }}>
         <DrawerHeader/>
         <div>
         {renderContent()}
