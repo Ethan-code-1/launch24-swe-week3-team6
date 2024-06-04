@@ -6,6 +6,7 @@ import './index.css';
 import Home from './roots/Home';
 import Navbar from './components/Navbar.jsx'
 
+
 const router = createBrowserRouter([
   {
     path: '/',
@@ -26,7 +27,7 @@ const router = createBrowserRouter([
   {
     path: '/admin',
     element: <Navbar></Navbar>,
-  },
+  }
 ]);
 
 ReactDOM.createRoot(document.getElementById('root')).render(
