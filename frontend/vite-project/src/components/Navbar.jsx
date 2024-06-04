@@ -28,6 +28,8 @@ import Recipes from '../roots/Recipes.jsx';
 import MyRecipes from '../roots/MyRecipes.jsx';
 import RecipeView from '../roots/RecipeView.jsx';
 import Admin from '../roots/Admin.jsx';
+import Login from './Login.jsx';
+
 
 const drawerWidth = 240;
 
@@ -111,6 +113,8 @@ const Navbar = () => {
 
   const renderContent = () => {
     switch (location.pathname) {
+      case '/login':
+        return <Login/>;
       case '/':
         return <Home/>;
       case '/recipes':
