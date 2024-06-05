@@ -3,6 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import recipePage from './routes/filter.js';
 import homeRouter from './routes/home.js';
+import myRecipesRouter from './routes/myRecipes.js';
 
 
 const app = express();
@@ -26,6 +27,7 @@ const url =
   "https://api.edamam.com/api/recipes/v2?type=public&app_id=${app_id}app_key=${app_key}";
 
 app.use("/home", homeRouter);
+app.use("/myRecipes", myRecipesRouter);
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);

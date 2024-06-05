@@ -3,11 +3,24 @@ import { Box, Card, CardContent, CardMedia, Typography, Grid, Button, TextField,
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import EditIcon from '@mui/icons-material/Edit'; 
 import '../styles/MyRecipes.css';
+import axios from 'axios';
+
+import {getAuth, onAuthStateChanged} from "firebase/auth"
 
 const MyRecipes = () => {
   const [showYourRecipes, setShowYourRecipes] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [addingNewRecipe, setAddingNewRecipe] = useState(false); 
+  const [title, setTitle] = useState('');
+  const [desc, setDesc] = useState('');
+  const [uid, setUid] = useState('');
+
+  const auth = getAuth();
+  onAuthStateChanged(auth, (user) => {
+      if (user) {
+          setUid(user.uid);
+      }
+  });
 
   const yourRecipes = [
     { id: 1, title: 'Your Recipe 1', imageUrl: 'https://images.everydayhealth.com/images/diet-nutrition/what-is-a-vegan-diet-benefits-food-list-beginners-guide-alt-1440x810.jpg?sfvrsn=1d260c85_1' },
@@ -42,6 +55,13 @@ const MyRecipes = () => {
   const toggleAddNewRecipe = () => {
     setAddingNewRecipe(!addingNewRecipe);
   };
+
+  async function handleSubmit() {
+    console.log('Submited', uid);
+    const result = await axios.post(`http://localhost:5001/myRecipes/draft`, {'name': title, 'desc': desc, 'uid': uid });
+    console.log(result);
+    toggleAddNewRecipe();
+  }
 
   return (
     <Box sx={{ flexGrow: 1, p: 2 }}>
@@ -111,9 +131,9 @@ const MyRecipes = () => {
       {addingNewRecipe && (
         <Card sx={{ mb: 4, p: 2 }}>
           <Typography variant="h5">Add New Recipe</Typography>
-          <TextField fullWidth label="Title" sx={{ mb: 2 }} />
-          <TextField fullWidth label="Content" multiline rows={4} sx={{ mb: 2 }} />
-          <Button variant="contained" color="primary">Submit</Button>
+          <TextField fullWidth label="Title" sx={{ mb: 2 }} onChange={(text) => setTitle(text.target.value)} />
+          <TextField fullWidth label="Content" multiline rows={4} sx={{ mb: 2 }} onChange={(text) => setDesc(text.target.value)}/>
+          <Button variant="contained" color="primary" onClick={() => handleSubmit()}>Submit</Button>
         </Card>
       )}
 
