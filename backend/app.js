@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import homeRouter from "./routes/home.js";
+import bodyParser from "body-parser";
 
 const app = express();
 const port = process.env.PORT || 5001;
