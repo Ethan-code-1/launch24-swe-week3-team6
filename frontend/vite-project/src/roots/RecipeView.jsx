@@ -10,19 +10,24 @@ import Upvote from '../icons/upvote-icon.svg';
 import UpvoteFilled from '../icons/upvote-icon-filled.png';
 import Reply from '../icons/reply.svg';
 
+
 import { Button } from '@mui/material';
 import Stars from '../components/Stars.jsx';
 import AverageStars from '../components/AverageStars.jsx';
+import Recipe from '../components/Recipe.jsx';
+import Chatbot from '../components/Chatbot.jsx';
 
 const RecipeView = () => {
+  
   const [allData, setAllData] = useState([]);
 
   const [saved, setSaved] = useState(false);
   const [upvote, setUpvote] = useState(false);
   const [rating, setRating] = useState(0);
   const [review, setReview] = useState("");
-  const [showReply, setShowReply] = useState(false); // State for managing reply window visibility
-  const [reply, setReply] = useState(""); // State for managing reply content
+  const [showChat, setShowChat] = useState(false); 
+  const [showReply, setShowReply] = useState(false); 
+  const [reply, setReply] = useState("");
 
 
   const averageRating = 3.5; // Example average rating
@@ -41,8 +46,12 @@ const RecipeView = () => {
     setSaved(!saved);
   };
 
-    const handleSetUpvote = () => {
+  const handleSetUpvote = () => {
     setUpvote(!upvote);
+  };
+
+  const handleSetChatView = () => {
+    setShowChat(!showChat);
   };
 
   const handleRatingChange = (newRating) => {
@@ -110,31 +119,6 @@ const RecipeView = () => {
   }
 
 
-  const nutritionFacts = [
-  { value: '508', label: 'calories' },
-  { value: '34g', label: 'fat' },
-  { value: '12g', label: 'carbs' },
-  { value: '25g', label: 'protein' },
-  ];
-  
-  const directionSteps = [
-  `Whisk salad dressing, garlic powder, and salt together in a shallow baking dish;
-   add chicken breasts and turn to coat. Cover the dish with plastic wrap and marinate in the refrigerator,
-   4 hours to overnight.`,
-  'Preheat an outdoor grill for high heat and lightly oil the grate.',
-  'Remove chicken from marinade and shake off excess; discard remaining marinade.',
-  `Cook chicken on the preheated grill until no longer pink in the center and the juices run clear,
-   about 7 to 8 minutes on each side. An instant-read thermometer inserted into the center should read at least 165 degrees F (74 degrees C).`,
-  ];
-  
-  const ingredients = [
-  '1 (16 ounce) bottle Italian-style salad dressing',
-  '1 teaspoon garlic powder',
-  '1 teaspoon salt',
-  '4 skinless, boneless chicken breast halves',
-  ];
-
-
   return (
     <div className='recipe-view-page'>
       <div className='body'>
@@ -152,44 +136,7 @@ const RecipeView = () => {
             to add flavor before grilling. </div>
         </div>
 
-        <div className='middle-section'>
-          <div className='recipe-container'>
-            <div className='recipe-title'> Italian Chicken Marinade </div>
-            <div className='recipe-line'></div>
-
-            <div className='ingredients-container'>
-                <div className='recipe-subtitle'> Ingredients </div>
-                <ul>
-                  {ingredients.map((ingredient, index) => (
-                    <li key={index}>{ingredient}</li>
-                  ))}
-                </ul>
-              </div>
-
-            <div className='directions-container'>
-              <div className='recipe-subtitle'> Directions </div>
-              {directionSteps.map((info, index) => (
-                <div className='direction-step' key={index}>
-                  <div className='direction-title'>Step {index + 1}</div>
-                  <div className='direction-info'>{info}</div>
-                </div>
-              ))}
-            </div>
-
-            <div className='nutrition-facts-container'>
-              <div className='recipe-subtitle'> Nutrition Facts </div>
-              <div className='nutrition-facts-grid'>
-                {nutritionFacts.map((fact, index) => (
-                  <div className='nutrition-fact' key={index}>
-                    <div className='fact-top'>{fact.value}</div>
-                    <div className='fact-bottom'>{fact.label}</div>
-                  </div>
-                ))}
-              </div>
-            </div>
-            
-          </div>
-        </div>
+        <Recipe/>
 
         <div className='bottom-section'>
 
@@ -280,9 +227,15 @@ const RecipeView = () => {
         <button className='bookmark-button' onClick={handleSetSaved}>
           {saved ? <img src={FilledBookmark} alt="Filled Bookmark" className='bookmark' /> : <img src={Bookmark} alt="Bookmark" className='bookmark' />}
         </button>
-        <button className='chat-button'>
+        <button className='chat-button' onClick={handleSetChatView}>
+
           <img src={ChatBubble} alt='Chat Bubble' className='chat' />
         </button>
+        {
+          showChat &&
+
+          <Chatbot showChat={showChat} handleSetChatView={ handleSetChatView } />
+        }
       </div>
     </div>
   );
