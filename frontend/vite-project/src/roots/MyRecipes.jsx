@@ -268,16 +268,25 @@ const MyRecipes = () => {
               fullWidth
               label="Title"
               sx={{ mb: 2 }}
-              value={editingRecipe.title}
+              value={editingRecipe.name}
               onChange={(e) => setEditingRecipe({ ...editingRecipe, title: e.target.value })}
             />
             <TextField
               fullWidth
               label="Description"
               multiline
+              rows={2}
+              sx={{ mb: 2}}
+              value={editingRecipe.desc}
+              onChange={(e) => setEditingRecipe({ ...editingRecipe, description: e.target.value })}
+            />
+            <TextField
+              fullWidth
+              label="Steps"
+              multiline
               rows={6}
               sx={{ mb: 2}}
-              value={editingRecipe.description}
+              value={editingRecipe.steps}
               onChange={(e) => setEditingRecipe({ ...editingRecipe, description: e.target.value })}
             />
             <Autocomplete
