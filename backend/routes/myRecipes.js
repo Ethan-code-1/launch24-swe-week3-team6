@@ -28,6 +28,7 @@ router.post('/draft', async (req, res) => {
         console.log(ans);
         recipe["steps"] = ans;
         recipe['createdBy'] = recipe.uid;
+        delete recipe['uid'];
         const docRef = await addDoc(collection(db, 'recipes'), recipe);
 
         let recipes = (await getDoc(doc(db, 'users', recipe.uid))).data()['myRecipes'];
@@ -46,9 +47,24 @@ router.post('/draft', async (req, res) => {
     }
 })
 
-// get search results
-router.get('home/?q=:search', (req, res) => {
-    console.log("get search results");
+router.get("/created/:id", async (req, res) => {
+    try {
+        const uid = req.params.id
+        const authorDoc = await getDoc(doc(db, 'users', uid));
+        const author = authorDoc.data()['name'];
+        let recipes = (await getDoc(doc(db, 'users', uid))).data()['myRecipes'];
+        recipes = await Promise.all(recipes.map(async (recId) => {
+            const recDoc = await getDoc(doc(db, 'recipes', recId));
+            let rec = recDoc.data();
+            rec['id'] = recDoc.id;
+            rec['author'] = author;
+            return rec;
+        }))
+        // console.log(recipes)
+        res.status(200).json(recipes);
+    } catch (e) {
+        res.status(500).send({ error: e.message });
+    }
 })
 
 export default router;

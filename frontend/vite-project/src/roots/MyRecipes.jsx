@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Box, Card, CardContent, CardMedia, Typography, Grid, Button, TextField, IconButton } from '@mui/material';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import EditIcon from '@mui/icons-material/Edit'; 
@@ -14,18 +14,12 @@ const MyRecipes = () => {
   const [title, setTitle] = useState('');
   const [desc, setDesc] = useState('');
   const [uid, setUid] = useState('');
+  const [yourRecipes, setYourRecipes] = useState([]);
 
-  const auth = getAuth();
-  onAuthStateChanged(auth, (user) => {
-      if (user) {
-          setUid(user.uid);
-      }
-  });
-
-  const yourRecipes = [
-    { id: 1, title: 'Your Recipe 1', imageUrl: 'https://images.everydayhealth.com/images/diet-nutrition/what-is-a-vegan-diet-benefits-food-list-beginners-guide-alt-1440x810.jpg?sfvrsn=1d260c85_1' },
-    { id: 2, title: 'Your Recipe 2', imageUrl: 'https://images.everydayhealth.com/images/diet-nutrition/what-is-a-vegan-diet-benefits-food-list-beginners-guide-alt-1440x810.jpg?sfvrsn=1d260c85_1' },
-  ];
+  // const yourRecipes = [
+  //   { id: 1, title: 'Your Recipe 1', imageUrl: 'https://images.everydayhealth.com/images/diet-nutrition/what-is-a-vegan-diet-benefits-food-list-beginners-guide-alt-1440x810.jpg?sfvrsn=1d260c85_1' },
+  //   { id: 2, title: 'Your Recipe 2', imageUrl: 'https://images.everydayhealth.com/images/diet-nutrition/what-is-a-vegan-diet-benefits-food-list-beginners-guide-alt-1440x810.jpg?sfvrsn=1d260c85_1' },
+  // ];
 
   const favoritedRecipes = [
     { id: 1, title: 'Favorited Recipe 1', imageUrl: 'https://images.everydayhealth.com/images/diet-nutrition/what-is-a-vegan-diet-benefits-food-list-beginners-guide-alt-1440x810.jpg?sfvrsn=1d260c85_1', author: 'Author 1' },
@@ -37,7 +31,7 @@ const MyRecipes = () => {
 
   const getRecipes = () => {
     const recipes = showYourRecipes ? yourRecipes : favoritedRecipes;
-    return recipes.filter(recipe => recipe.title.toLowerCase().includes(searchQuery.toLowerCase()));
+    return recipes.filter(recipe => recipe.name.toLowerCase().includes(searchQuery.toLowerCase()));
   };
 
   const handleUnfavorite = (recipeId) => {
@@ -62,6 +56,25 @@ const MyRecipes = () => {
     console.log(result);
     toggleAddNewRecipe();
   }
+
+  async function fetchCreatedRecipes(uid) {
+    console.log(uid);
+    const result = (await axios.get(`http://localhost:5001/myRecipes/created/${uid}`)).data;
+    setYourRecipes(result);
+    console.log(result);
+  }
+
+  useEffect(() => {
+    const auth = getAuth();
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            setUid(user.uid);
+            fetchCreatedRecipes(user.uid);
+        } else {
+          alert('Not logged in');
+        }
+    });
+  }, [])
 
   return (
     <Box sx={{ flexGrow: 1, p: 2 }}>
@@ -138,7 +151,7 @@ const MyRecipes = () => {
       )}
 
       <Grid container spacing={2}>
-        {getRecipes().map(recipe => (
+        {yourRecipes && getRecipes().map(recipe => (
           <Grid key={recipe.id} item xs={12} sm={6} md={3}>
             <Card className="recipe-card" onClick={() => handleOpenRecipe(recipe.id)}>
               <Box sx={{ position: 'relative' }}>
@@ -171,7 +184,7 @@ const MyRecipes = () => {
                   component="img"
                   sx={{ height: 140, borderBottom: '7px solid #2e6123', minHeight: '18vh', maxHeight: '18vh' }}
                   image={recipe.imageUrl}
-                  alt={recipe.title}
+                  alt={recipe.name}
                 />
               </Box>
               <CardContent>
@@ -179,7 +192,7 @@ const MyRecipes = () => {
                 {recipe.author && (
                   <Typography variant="subtitle2" color="text.secondary">Author: {recipe.author}</Typography>
                 )}
-                <Typography variant="body2" color="text.secondary">Description of the recipe</Typography>
+                <Typography variant="body2" color="text.secondary">{recipe.desc}</Typography>
               </CardContent>
             </Card>
           </Grid>
