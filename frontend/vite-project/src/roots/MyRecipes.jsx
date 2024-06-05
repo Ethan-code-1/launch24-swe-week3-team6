@@ -17,14 +17,8 @@ const MyRecipes = () => {
   const [uid, setUid] = useState('');
   const [yourRecipes, setYourRecipes] = useState([]);
   const [favoritedRecipes, setFavoritedRecipes] = useState([]);
-
   const [editingRecipe, setEditingRecipe] = useState(null);
 
-  // const yourRecipes = [
-  //   { id: 1, title: 'Your Recipe 1', imageUrl: 'https://images.everydayhealth.com/images/diet-nutrition/what-is-a-vegan-diet-benefits-food-list-beginners-guide-alt-1440x810.jpg?sfvrsn=1d260c85_1' },
-  //   { id: 2, title: 'Your Recipe 2', imageUrl: 'https://images.everydayhealth.com/images/diet-nutrition/what-is-a-vegan-diet-benefits-food-list-beginners-guide-alt-1440x810.jpg?sfvrsn=1d260c85_1' },
-  // ];
-  
   const cuisineTypes = [
     'American', 'Asian', 'British', 'Caribbean', 'Central European', 'Chinese',
     'Eastern European', 'French', 'Greek', 'Indian', 'Italian', 'Japanese',
@@ -34,53 +28,31 @@ const MyRecipes = () => {
 
   const mealTypes = ['Breakfast', 'Brunch', 'Lunch/Dinner', 'Snack', 'Teatime'];
 
-  // const auth = getAuth();
-  // onAuthStateChanged(auth, (user) => {
-  //     if (user) {
-  //         setUid(user.uid);
-  //     }
-  // });
-
-  /*
-  const favoritedRecipes = [
-    { id: 1, name: 'Favorited Recipe 1', desc: 'Description for Favorited Recipe 1', cuisineType: 'Asian', mealType: 'Snack', imageUrl: 'https://images.everydayhealth.com/images/diet-nutrition/what-is-a-vegan-diet-benefits-food-list-beginners-guide-alt-1440x810.jpg?sfvrsn=1d260c85_1', author: 'Author 1' },
-    { id: 2, name: 'Favorited Recipe 2', desc: 'Description for Favorited Recipe 2', cuisineType: 'Mexican', mealType: 'Lunch/Dinner', imageUrl: 'https://images.everydayhealth.com/images/diet-nutrition/what-is-a-vegan-diet-benefits-food-list-beginners-guide-alt-1440x810.jpg?sfvrsn=1d260c85_1', author: 'Author 2' },
-    { id: 3, name: 'Favorited Recipe 3', desc: 'Description for Favorited Recipe 3', cuisineType: 'French', mealType: 'Brunch', imageUrl: 'https://images.everydayhealth.com/images/diet-nutrition/what-is-a-vegan-diet-benefits-food-list-beginners-guide-alt-1440x810.jpg?sfvrsn=1d260c85_1', author: 'Author 3' },
-    { id: 4, name: 'Favorited Recipe 4', desc: 'Description for Favorited Recipe 4', cuisineType: 'Greek', mealType: 'Teatime', imageUrl: 'https://images.everydayhealth.com/images/diet-nutrition/what-is-a-vegan-diet-benefits-food-list-beginners-guide-alt-1440x810.jpg?sfvrsn=1d260c85_1', author: 'Author 4' },
-    { id: 5, name: 'Favorited Recipe 5', desc: 'Description for Favorited Recipe 5', cuisineType: 'Indian', mealType: 'Breakfast', imageUrl: 'https://images.everydayhealth.com/images/diet-nutrition/what-is-a-vegan-diet-benefits-food-list-beginners-guide-alt-1440x810.jpg?sfvrsn=1d260c85_1', author: 'Author 5' },
-  ];*/
-
   const getRecipes = () => {
     const recipes = showYourRecipes ? yourRecipes : favoritedRecipes;
     return recipes.filter(recipe => recipe.name.toLowerCase().includes(searchQuery.toLowerCase()));
-};
-
+  };
 
   async function fetchFavoritedRecipes(uid) {
     try {
-        const result = await axios.get(`http://localhost:5001/myRecipes/favorites/${uid}`);
-        setFavoritedRecipes(result.data);
-        console.log("result" , result.data); 
+      const result = await axios.get(`http://localhost:5001/myRecipes/favorites/${uid}`);
+      setFavoritedRecipes(result.data);
+      console.log("result", result.data); 
     } catch (error) {
-        console.error('Error fetching favorited recipes:', error);
+      console.error('Error fetching favorited recipes:', error);
     }
-}
+  }
 
-const handleUnfavorite = async (recipeId) => {
-  try {
+  const handleUnfavorite = async (recipeId) => {
+    try {
       await axios.post('http://localhost:5001/myRecipes/unfavorite', { uid, recipeId });
       setFavoritedRecipes(prevRecipes => prevRecipes.filter(recipe => recipe.id !== recipeId));
       alert(`Unfavorited recipe with ID: ${recipeId}`);
-  } catch (error) {
+    } catch (error) {
       console.error('Error unfavoriting recipe:', error);
-  }
-};
-
-
-
-  const handleOpenRecipe = (recipeId) => {
-    alert(`Opening recipe with ID: ${recipeId}`);
+    }
   };
+
 
   const handleEdit = (recipe) => {
     setEditingRecipe(recipe);
@@ -100,7 +72,7 @@ const handleUnfavorite = async (recipeId) => {
   };
 
   async function handleSubmit() {
-    console.log('Submited', uid);
+    console.log('Submitted', uid);
     const result = await axios.post(`http://localhost:5001/myRecipes/draft`, {'name': title, 'desc': desc, 'cuisineType': cuisineType, 'mealType': mealType, 'uid': uid });
     console.log(result);
     await fetchCreatedRecipes(uid);
@@ -117,14 +89,13 @@ const handleUnfavorite = async (recipeId) => {
   useEffect(() => {
     const auth = getAuth();
     onAuthStateChanged(auth, (user) => {
-        if (user) {
-            setUid(user.uid);
-            fetchCreatedRecipes(user.uid);
-            fetchFavoritedRecipes(user.uid); 
-
-        } else {
-          alert('Not logged in');
-        }
+      if (user) {
+        setUid(user.uid);
+        fetchCreatedRecipes(user.uid);
+        fetchFavoritedRecipes(user.uid); 
+      } else {
+        alert('Not logged in');
+      }
     });
   }, [])
 
@@ -191,14 +162,13 @@ const handleUnfavorite = async (recipeId) => {
         >
           {addingNewRecipe ? 'Cancel' : 'Want to add a recipe?'}
         </Button>
-      
       )}
 
       {addingNewRecipe && (
         <Card sx={{ mb: 4, p: 2 }}>
           <Typography variant="h5">Add New Recipe</Typography>
           <TextField fullWidth label="Title" sx={{ mb: 2 }} onChange={(text) => setTitle(text.target.value)} />
-          <TextField fullWidth label="Description" multiline rows={4} sx={{ mb: 2 }} onChange={(text) => setDesc(text.target.value)}/>
+          <TextField fullWidth label="Description" multiline rows={4} sx={{ mb: 2 }} onChange={(text) => setDesc(text.target.value)} />
           <Autocomplete
             options={cuisineTypes}
             getOptionLabel={(option) => option}
@@ -224,26 +194,34 @@ const handleUnfavorite = async (recipeId) => {
       <Grid container spacing={2}>
         {yourRecipes && getRecipes().map(recipe => (
           <Grid key={recipe.id} item xs={12} sm={6} md={3}>
-            <a href={`./recipeView/${recipe.id}`}>
+            <a 
+              href={`./recipeView/${recipe.id}`} 
+              onClick={(e) => {
+                if (e.defaultPrevented) return; // Check if default action was prevented
+                handleOpenRecipe(recipe.id);
+              }}
+            >
               <Card className="recipe-card">
                 <Box sx={{ position: 'relative' }}>
                   {showYourRecipes && (
                     <IconButton
                       aria-label="edit"
                       onClick={(e) => {
-                        e.stopPropagation();
+                        e.preventDefault(); // Prevents the default anchor tag action
+                        e.stopPropagation(); // Stops the propagation to parent elements
                         handleEdit(recipe);
                       }}
                       sx={{ position: 'absolute', top: '0', right: '0', zIndex: 1000 }}
                     >
-                      <EditIcon style = {{zIndex: 200, color: 'white', background: '#0000006b'}} />
+                      <EditIcon style={{ zIndex: 200, color: 'white', background: '#0000006b' }} />
                     </IconButton>
                   )}
                   {!showYourRecipes && (
                     <IconButton
                       aria-label="unfavorite"
                       onClick={(e) => {
-                        e.stopPropagation();
+                        e.preventDefault(); // Prevents the default anchor tag action
+                        e.stopPropagation(); // Stops the propagation to parent elements
                         handleUnfavorite(recipe.id);
                       }}
                       sx={{ position: 'absolute', top: '0', right: '0', zIndex: 1 }}
@@ -272,7 +250,6 @@ const handleUnfavorite = async (recipeId) => {
                 </CardContent>
               </Card>
             </a>
-            
           </Grid>
         ))}
       </Grid>
@@ -307,7 +284,7 @@ const handleUnfavorite = async (recipeId) => {
               label="Description"
               multiline
               rows={2}
-              sx={{ mb: 2}}
+              sx={{ mb: 2 }}
               value={editingRecipe.desc}
               onChange={(e) => setEditingRecipe({ ...editingRecipe, desc: e.target.value })}
             />
@@ -316,7 +293,7 @@ const handleUnfavorite = async (recipeId) => {
               label="Steps"
               multiline
               rows={6}
-              sx={{ mb: 2}}
+              sx={{ mb: 2 }}
               value={editingRecipe.steps}
               onChange={(e) => setEditingRecipe({ ...editingRecipe, steps: e.target.value })}
             />
