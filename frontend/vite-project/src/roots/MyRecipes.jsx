@@ -16,6 +16,8 @@ const MyRecipes = () => {
   const [mealType, setMealType] = useState('');
   const [uid, setUid] = useState('');
   const [yourRecipes, setYourRecipes] = useState([]);
+  const [favoritedRecipes, setFavoritedRecipes] = useState([]);
+
   const [editingRecipe, setEditingRecipe] = useState(null);
 
   // const yourRecipes = [
@@ -39,21 +41,45 @@ const MyRecipes = () => {
   //     }
   // });
 
+  /*
   const favoritedRecipes = [
     { id: 1, name: 'Favorited Recipe 1', desc: 'Description for Favorited Recipe 1', cuisineType: 'Asian', mealType: 'Snack', imageUrl: 'https://images.everydayhealth.com/images/diet-nutrition/what-is-a-vegan-diet-benefits-food-list-beginners-guide-alt-1440x810.jpg?sfvrsn=1d260c85_1', author: 'Author 1' },
     { id: 2, name: 'Favorited Recipe 2', desc: 'Description for Favorited Recipe 2', cuisineType: 'Mexican', mealType: 'Lunch/Dinner', imageUrl: 'https://images.everydayhealth.com/images/diet-nutrition/what-is-a-vegan-diet-benefits-food-list-beginners-guide-alt-1440x810.jpg?sfvrsn=1d260c85_1', author: 'Author 2' },
     { id: 3, name: 'Favorited Recipe 3', desc: 'Description for Favorited Recipe 3', cuisineType: 'French', mealType: 'Brunch', imageUrl: 'https://images.everydayhealth.com/images/diet-nutrition/what-is-a-vegan-diet-benefits-food-list-beginners-guide-alt-1440x810.jpg?sfvrsn=1d260c85_1', author: 'Author 3' },
     { id: 4, name: 'Favorited Recipe 4', desc: 'Description for Favorited Recipe 4', cuisineType: 'Greek', mealType: 'Teatime', imageUrl: 'https://images.everydayhealth.com/images/diet-nutrition/what-is-a-vegan-diet-benefits-food-list-beginners-guide-alt-1440x810.jpg?sfvrsn=1d260c85_1', author: 'Author 4' },
     { id: 5, name: 'Favorited Recipe 5', desc: 'Description for Favorited Recipe 5', cuisineType: 'Indian', mealType: 'Breakfast', imageUrl: 'https://images.everydayhealth.com/images/diet-nutrition/what-is-a-vegan-diet-benefits-food-list-beginners-guide-alt-1440x810.jpg?sfvrsn=1d260c85_1', author: 'Author 5' },
-  ];
+  ];*/
 
   const getRecipes = () => {
     const recipes = showYourRecipes ? yourRecipes : favoritedRecipes;
     return recipes.filter(recipe => recipe.name.toLowerCase().includes(searchQuery.toLowerCase()));
-  };
+};
 
-  const handleUnfavorite = (recipeId) => {
-    alert(`Unfavorited recipe with ID: ${recipeId}`);
+
+  async function fetchFavoritedRecipes(uid) {
+    try {
+        const result = await axios.get(`http://localhost:5001/myRecipes/favorites/${uid}`);
+        setFavoritedRecipes(result.data);
+        console.log("result" , result.data); 
+    } catch (error) {
+        console.error('Error fetching favorited recipes:', error);
+    }
+}
+
+const handleUnfavorite = async (recipeId) => {
+  try {
+      await axios.post('http://localhost:5001/myRecipes/unfavorite', { uid, recipeId });
+      setFavoritedRecipes(prevRecipes => prevRecipes.filter(recipe => recipe.id !== recipeId));
+      alert(`Unfavorited recipe with ID: ${recipeId}`);
+  } catch (error) {
+      console.error('Error unfavoriting recipe:', error);
+  }
+};
+
+
+
+  const handleOpenRecipe = (recipeId) => {
+    alert(`Opening recipe with ID: ${recipeId}`);
   };
 
   const handleEdit = (recipe) => {
@@ -94,6 +120,8 @@ const MyRecipes = () => {
         if (user) {
             setUid(user.uid);
             fetchCreatedRecipes(user.uid);
+            fetchFavoritedRecipes(user.uid); 
+
         } else {
           alert('Not logged in');
         }

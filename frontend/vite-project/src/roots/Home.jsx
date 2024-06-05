@@ -142,7 +142,7 @@ const Home = () => {
                 Desserts
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                Looking for something to satisfy your sweet tooth? We have just what you are looking for.
+                Looking for something to satisfy your sweet tooth? Look no longer.
               </Typography>
               <Button variant="outlined" sx={{ mt: 2, borderColor: '#2e6123', color: '#2e6123', '&:hover' : {backgroundColor: 'rgba(46, 97, 35, 0.04)', borderColor: '#2e6123'} }} onClick={() => handleClick("desserts")}>
                 View Recipes

@@ -79,4 +79,46 @@ router.put("/edit/:rid", async (req, res) => {
     }
 })
 
+router.get("/favorites/:id", async (req, res) => {
+    try {
+        const uid = req.params.id;
+        const userDoc = await getDoc(doc(db, 'users', uid));
+        let favoritedRecipes = userDoc.data()['favoriteMeals'] || [];
+
+        
+        favoritedRecipes = await Promise.all(favoritedRecipes.map(async (recId) => {
+            const recDoc = await getDoc(doc(db, 'recipes', recId));
+            let rec = recDoc.data();
+            rec['id'] = recDoc.id;
+            return rec;
+        }));
+        
+        res.status(200).json(favoritedRecipes);
+    } catch (e) {
+        res.status(500).send({ error: e.message });
+    }
+});
+
+
+
+
+router.post("/unfavorite", async (req, res) => {
+    try {
+        const { uid, recipeId } = req.body;
+        const userRef = doc(db, 'users', uid);
+        const userDoc = await getDoc(userRef);
+        let favoriteMeals = userDoc.data().favoriteMeals || [];
+        
+        favoriteMeals = favoriteMeals.filter(id => id !== recipeId);
+        
+        await updateDoc(userRef, { favoriteMeals });
+        
+        res.status(200).send({ message: "Recipe unfavorited successfully" });
+    } catch (e) {
+        res.status(500).send({ error: e.message });
+    }
+});
+
 export default router;
+
+
