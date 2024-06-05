@@ -40,11 +40,11 @@ const MyRecipes = () => {
   // });
 
   const favoritedRecipes = [
-    { id: 1, title: 'Favorited Recipe 1', description: 'Description for Favorited Recipe 1', cuisineType: 'Asian', mealType: 'Snack', imageUrl: 'https://images.everydayhealth.com/images/diet-nutrition/what-is-a-vegan-diet-benefits-food-list-beginners-guide-alt-1440x810.jpg?sfvrsn=1d260c85_1', author: 'Author 1' },
-    { id: 2, title: 'Favorited Recipe 2', description: 'Description for Favorited Recipe 2', cuisineType: 'Mexican', mealType: 'Lunch/Dinner', imageUrl: 'https://images.everydayhealth.com/images/diet-nutrition/what-is-a-vegan-diet-benefits-food-list-beginners-guide-alt-1440x810.jpg?sfvrsn=1d260c85_1', author: 'Author 2' },
-    { id: 3, title: 'Favorited Recipe 3', description: 'Description for Favorited Recipe 3', cuisineType: 'French', mealType: 'Brunch', imageUrl: 'https://images.everydayhealth.com/images/diet-nutrition/what-is-a-vegan-diet-benefits-food-list-beginners-guide-alt-1440x810.jpg?sfvrsn=1d260c85_1', author: 'Author 3' },
-    { id: 4, title: 'Favorited Recipe 4', description: 'Description for Favorited Recipe 4', cuisineType: 'Greek', mealType: 'Teatime', imageUrl: 'https://images.everydayhealth.com/images/diet-nutrition/what-is-a-vegan-diet-benefits-food-list-beginners-guide-alt-1440x810.jpg?sfvrsn=1d260c85_1', author: 'Author 4' },
-    { id: 5, title: 'Favorited Recipe 5', description: 'Description for Favorited Recipe 5', cuisineType: 'Indian', mealType: 'Breakfast', imageUrl: 'https://images.everydayhealth.com/images/diet-nutrition/what-is-a-vegan-diet-benefits-food-list-beginners-guide-alt-1440x810.jpg?sfvrsn=1d260c85_1', author: 'Author 5' },
+    { id: 1, name: 'Favorited Recipe 1', desc: 'Description for Favorited Recipe 1', cuisineType: 'Asian', mealType: 'Snack', imageUrl: 'https://images.everydayhealth.com/images/diet-nutrition/what-is-a-vegan-diet-benefits-food-list-beginners-guide-alt-1440x810.jpg?sfvrsn=1d260c85_1', author: 'Author 1' },
+    { id: 2, name: 'Favorited Recipe 2', desc: 'Description for Favorited Recipe 2', cuisineType: 'Mexican', mealType: 'Lunch/Dinner', imageUrl: 'https://images.everydayhealth.com/images/diet-nutrition/what-is-a-vegan-diet-benefits-food-list-beginners-guide-alt-1440x810.jpg?sfvrsn=1d260c85_1', author: 'Author 2' },
+    { id: 3, name: 'Favorited Recipe 3', desc: 'Description for Favorited Recipe 3', cuisineType: 'French', mealType: 'Brunch', imageUrl: 'https://images.everydayhealth.com/images/diet-nutrition/what-is-a-vegan-diet-benefits-food-list-beginners-guide-alt-1440x810.jpg?sfvrsn=1d260c85_1', author: 'Author 3' },
+    { id: 4, name: 'Favorited Recipe 4', desc: 'Description for Favorited Recipe 4', cuisineType: 'Greek', mealType: 'Teatime', imageUrl: 'https://images.everydayhealth.com/images/diet-nutrition/what-is-a-vegan-diet-benefits-food-list-beginners-guide-alt-1440x810.jpg?sfvrsn=1d260c85_1', author: 'Author 4' },
+    { id: 5, name: 'Favorited Recipe 5', desc: 'Description for Favorited Recipe 5', cuisineType: 'Indian', mealType: 'Breakfast', imageUrl: 'https://images.everydayhealth.com/images/diet-nutrition/what-is-a-vegan-diet-benefits-food-list-beginners-guide-alt-1440x810.jpg?sfvrsn=1d260c85_1', author: 'Author 5' },
   ];
 
   const getRecipes = () => {
