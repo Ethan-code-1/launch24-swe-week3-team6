@@ -4,7 +4,7 @@ import dotenv from "dotenv";
 import recipePage from './routes/filter.js';
 import homeRouter from './routes/home.js';
 import myRecipesRouter from './routes/myRecipes.js';
-
+import recipeRouter from './routes/recipe.js';
 
 const app = express();
 const port = process.env.PORT || 5001;
@@ -28,6 +28,7 @@ const url =
 
 app.use("/home", homeRouter);
 app.use("/myRecipes", myRecipesRouter);
+app.use("/recipe", recipeRouter);
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);

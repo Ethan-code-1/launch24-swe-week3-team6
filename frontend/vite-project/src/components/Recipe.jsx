@@ -1,7 +1,8 @@
 import React from 'react'
 import '../styles/recipe.css'
 
-const Recipe = () => {
+const Recipe = (data) => {
+  const recipe = data.recipe;
     const nutritionFacts = [
   { value: '508', label: 'calories' },
   { value: '34g', label: 'fat' },
@@ -9,27 +10,28 @@ const Recipe = () => {
   { value: '25g', label: 'protein' },
   ];
   
-  const directionSteps = [
-  `Whisk salad dressing, garlic powder, and salt together in a shallow baking dish;
-   add chicken breasts and turn to coat. Cover the dish with plastic wrap and marinate in the refrigerator,
-   4 hours to overnight.`,
-  'Preheat an outdoor grill for high heat and lightly oil the grate.',
-  'Remove chicken from marinade and shake off excess; discard remaining marinade.',
-  `Cook chicken on the preheated grill until no longer pink in the center and the juices run clear,
-   about 7 to 8 minutes on each side. An instant-read thermometer inserted into the center should read at least 165 degrees F (74 degrees C).`,
-  ];
+  const split = recipe.steps.split('\n');
+  console.log('split', split);
+
+  let ings =  split.splice(split.indexOf("Ingredients:") + 1, split.indexOf("Instructions:") - 3)
+  console.log('ingredients', ings)
+  ings = ings.map((i) => {
+    return i.includes(':') ? i : i.slice(2)
+  })
+  ings = ings.filter((i) => i !== '');
+  console.log('ingredients', ings)
+
+  let instructions = split.splice(split.indexOf("Instructions:"))
+  instructions = instructions.map((inst) => {return inst.slice(2)})
   
-  const ingredients = [
-  '1 (16 ounce) bottle Italian-style salad dressing',
-  '1 teaspoon garlic powder',
-  '1 teaspoon salt',
-  '4 skinless, boneless chicken breast halves',
-  ];
+  const directionSteps = instructions;
+  
+  const ingredients = ings
   
   return (
     <div className='recipe-section'>
           <div className='recipe-container'>
-            <div className='recipe-title'> Italian Chicken Marinade </div>
+            <div className='recipe-title'> {recipe.name} </div>
             <div className='recipe-line'></div>
 
             <div className='ingredients-container'>

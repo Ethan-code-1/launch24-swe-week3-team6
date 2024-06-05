@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import RecipeImage from '../assets/recipe-image.jpeg';
 import '../styles/recipe-view.css';
+import axios from 'axios';
 
 import Bookmark from '../icons/bookmark.png';
 import FilledBookmark from '../icons/bookmark-filled.png';
@@ -17,9 +18,11 @@ import AverageStars from '../components/AverageStars.jsx';
 import Recipe from '../components/Recipe.jsx';
 import Chatbot from '../components/Chatbot.jsx';
 
+import { useParams } from "react-router-dom";
+
 const RecipeView = () => {
   
-  const [allData, setAllData] = useState([]);
+  // const [allData, setAllData] = useState([]);
 
   const [saved, setSaved] = useState(false);
   const [upvote, setUpvote] = useState(false);
@@ -28,13 +31,21 @@ const RecipeView = () => {
   const [showChat, setShowChat] = useState(false); 
   const [showReply, setShowReply] = useState(false); 
   const [reply, setReply] = useState("");
+  const [recipe, setRecipe] = useState(null);
 
+  const { rid } = useParams();
+  console.log(rid);
 
   const averageRating = 3.5; // Example average rating
 
   const fetchData = async () => {
-    // const response = await axios.get("http://localhost:5001/posts");
-    // setAllData(response.data);
+    try {
+      const res = await axios.get(`http://localhost:5001/recipe/${rid}`);
+      console.log(res.data);
+      setRecipe(res.data);
+    } catch (e) {
+      console.error("Error fetching data", e);
+    }
   };
 
   useEffect(() => {
@@ -123,7 +134,7 @@ const RecipeView = () => {
     <div className='recipe-view-page'>
       <div className='body'>
         <div className='top-section'>
-          <div className='page-title'>Italian Chicken Marinade</div>
+          <div className='page-title'>{recipe && recipe.name}</div>
           <div className='overview-container'>
             <AverageStars rating={averageRating} className='average-stars'/>
             <div className='page-subtitle'> {averageRating} from 2 votes </div>
@@ -132,11 +143,10 @@ const RecipeView = () => {
           </div>
 
           <img src={RecipeImage} alt='Recipe Image' className='recipe-image' />
-          <div className='recipe-info'> This Italian dressing chicken marinade is a super simple but delicious way
-            to add flavor before grilling. </div>
+          <div className='recipe-info'> {recipe && recipe.desc}</div>
         </div>
-
-        <Recipe/>
+         {recipe && <Recipe recipe={recipe}/>}
+        
 
         <div className='bottom-section'>
 

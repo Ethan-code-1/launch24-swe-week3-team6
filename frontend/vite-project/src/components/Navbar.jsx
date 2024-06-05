@@ -129,23 +129,32 @@ const Navbar = () => {
   };
 
   const renderContent = () => {
-    switch (location.pathname) {
-      case '/login':
-        return <Login />;
-      case '/signup':
-        return <Signup />;
-      case '/':
-        return <Home />;
-      case '/recipes':
-        return <Recipes />;
-      case '/myRecipes':
-        return <MyRecipes />;
-      case '/recipeView':
-        return <RecipeView />;
-      case '/admin':
-        return <Admin />;
-      default:
-        return <Home />;
+    if (location.pathname.split('/').length > 2) {
+      switch (location.pathname.split('/')[1]) {
+        case 'recipeView':
+          return <RecipeView />;
+        default:
+          return null;
+      }
+    } else {
+      switch (location.pathname) {
+        case '/login':
+          return <Login />;
+        case '/signup':
+          return <Signup />;
+        case '/':
+          return <Home />;
+        case '/recipes':
+          return <Recipes />;
+        case '/myRecipes':
+          return <MyRecipes />;
+        case '/recipeView':
+          return <RecipeView />;
+        case '/admin':
+          return <Admin />;
+        default:
+          return <Home />;
+      }
     }
   };
 

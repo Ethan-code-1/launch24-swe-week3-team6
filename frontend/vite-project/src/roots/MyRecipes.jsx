@@ -56,10 +56,6 @@ const MyRecipes = () => {
     alert(`Unfavorited recipe with ID: ${recipeId}`);
   };
 
-  const handleOpenRecipe = (recipeId) => {
-    alert(`Opening recipe with ID: ${recipeId}`);
-  };
-
   const handleEdit = (recipe) => {
     setEditingRecipe(recipe);
     console.log(editingRecipe);
@@ -200,52 +196,55 @@ const MyRecipes = () => {
       <Grid container spacing={2}>
         {yourRecipes && getRecipes().map(recipe => (
           <Grid key={recipe.id} item xs={12} sm={6} md={3}>
-            <Card className="recipe-card" onClick={() => handleOpenRecipe(recipe.id)}>
-              <Box sx={{ position: 'relative' }}>
-                {showYourRecipes && (
-                  <IconButton
-                    aria-label="edit"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleEdit(recipe);
-                    }}
-                    sx={{ position: 'absolute', top: '0', right: '0', zIndex: 1000 }}
-                  >
-                    <EditIcon style = {{zIndex: 200, color: 'white', background: '#0000006b'}} />
-                  </IconButton>
-                )}
-                {!showYourRecipes && (
-                  <IconButton
-                    aria-label="unfavorite"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleUnfavorite(recipe.id);
-                    }}
-                    sx={{ position: 'absolute', top: '0', right: '0', zIndex: 1 }}
-                    style={{ color: '#ff0000', background: '#0000006b' }}
-                  >
-                    <FavoriteIcon />
-                  </IconButton>
-                )}
-                <CardMedia
-                  component="img"
-                  sx={{ height: 140, borderBottom: '7px solid #2e6123', minHeight: '18vh', maxHeight: '18vh' }}
-                  image={recipe.imageUrl}
-                  alt={recipe.name}
-                />
-              </Box>
-              <CardContent>
-                <Typography variant="h6">{recipe.title}</Typography>
-                {recipe.author && (
-                  <Typography variant="subtitle2" color="text.secondary">Author: {recipe.author}</Typography>
-                )}
-                <Typography variant="body2" color="text.secondary">
-                  {recipe.desc.length > 40 ? `${recipe.desc.substring(0, 40)}...` : recipe.desc}
-                </Typography>
-                <Typography variant="body2" color="text.secondary">Cuisine: {recipe.cuisineType}</Typography>
-                <Typography variant="body2" color="text.secondary">Meal Type: {recipe.mealType}</Typography>
-              </CardContent>
-            </Card>
+            <a href={`./recipeView/${recipe.id}`}>
+              <Card className="recipe-card">
+                <Box sx={{ position: 'relative' }}>
+                  {showYourRecipes && (
+                    <IconButton
+                      aria-label="edit"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleEdit(recipe);
+                      }}
+                      sx={{ position: 'absolute', top: '0', right: '0', zIndex: 1000 }}
+                    >
+                      <EditIcon style = {{zIndex: 200, color: 'white', background: '#0000006b'}} />
+                    </IconButton>
+                  )}
+                  {!showYourRecipes && (
+                    <IconButton
+                      aria-label="unfavorite"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleUnfavorite(recipe.id);
+                      }}
+                      sx={{ position: 'absolute', top: '0', right: '0', zIndex: 1 }}
+                      style={{ color: '#ff0000', background: '#0000006b' }}
+                    >
+                      <FavoriteIcon />
+                    </IconButton>
+                  )}
+                  <CardMedia
+                    component="img"
+                    sx={{ height: 140, borderBottom: '7px solid #2e6123', minHeight: '18vh', maxHeight: '18vh' }}
+                    image={recipe.imageUrl}
+                    alt={recipe.name}
+                  />
+                </Box>
+                <CardContent>
+                  <Typography variant="h6">{recipe.title}</Typography>
+                  {recipe.author && (
+                    <Typography variant="subtitle2" color="text.secondary">Author: {recipe.author}</Typography>
+                  )}
+                  <Typography variant="body2" color="text.secondary">
+                    {recipe.desc.length > 40 ? `${recipe.desc.substring(0, 40)}...` : recipe.desc}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">Cuisine: {recipe.cuisineType}</Typography>
+                  <Typography variant="body2" color="text.secondary">Meal Type: {recipe.mealType}</Typography>
+                </CardContent>
+              </Card>
+            </a>
+            
           </Grid>
         ))}
       </Grid>
