@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Card, CardContent, CardMedia, Typography, Grid, Button, TextField, IconButton } from '@mui/material';
+import { Box, Card, CardContent, CardMedia, Typography, Grid, Button, TextField, IconButton, Modal, Autocomplete, MenuItem, Select, FormControl, InputLabel } from '@mui/material';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import EditIcon from '@mui/icons-material/Edit'; 
 import '../styles/MyRecipes.css';
 import axios from 'axios';
-
-import {getAuth, onAuthStateChanged} from "firebase/auth"
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 const MyRecipes = () => {
   const [showYourRecipes, setShowYourRecipes] = useState(true);
@@ -13,20 +12,39 @@ const MyRecipes = () => {
   const [addingNewRecipe, setAddingNewRecipe] = useState(false); 
   const [title, setTitle] = useState('');
   const [desc, setDesc] = useState('');
+  const [cuisineType, setCuisineType] = useState('');
+  const [mealType, setMealType] = useState('');
   const [uid, setUid] = useState('');
   const [yourRecipes, setYourRecipes] = useState([]);
+  const [editingRecipe, setEditingRecipe] = useState(null);
 
   // const yourRecipes = [
   //   { id: 1, title: 'Your Recipe 1', imageUrl: 'https://images.everydayhealth.com/images/diet-nutrition/what-is-a-vegan-diet-benefits-food-list-beginners-guide-alt-1440x810.jpg?sfvrsn=1d260c85_1' },
   //   { id: 2, title: 'Your Recipe 2', imageUrl: 'https://images.everydayhealth.com/images/diet-nutrition/what-is-a-vegan-diet-benefits-food-list-beginners-guide-alt-1440x810.jpg?sfvrsn=1d260c85_1' },
   // ];
+  
+  const cuisineTypes = [
+    'American', 'Asian', 'British', 'Caribbean', 'Central European', 'Chinese',
+    'Eastern European', 'French', 'Greek', 'Indian', 'Italian', 'Japanese',
+    'Korean', 'Kosher', 'Mediterranean', 'Mexican', 'Middle Eastern', 'Nordic',
+    'South American', 'South East Asian', 'World'
+  ];
+
+  const mealTypes = ['Breakfast', 'Brunch', 'Lunch/Dinner', 'Snack', 'Teatime'];
+
+  // const auth = getAuth();
+  // onAuthStateChanged(auth, (user) => {
+  //     if (user) {
+  //         setUid(user.uid);
+  //     }
+  // });
 
   const favoritedRecipes = [
-    { id: 1, title: 'Favorited Recipe 1', imageUrl: 'https://images.everydayhealth.com/images/diet-nutrition/what-is-a-vegan-diet-benefits-food-list-beginners-guide-alt-1440x810.jpg?sfvrsn=1d260c85_1', author: 'Author 1' },
-    { id: 2, title: 'Favorited Recipe 2', imageUrl: 'https://images.everydayhealth.com/images/diet-nutrition/what-is-a-vegan-diet-benefits-food-list-beginners-guide-alt-1440x810.jpg?sfvrsn=1d260c85_1', author: 'Author 2' },
-    { id: 3, title: 'Favorited Recipe 3', imageUrl: 'https://images.everydayhealth.com/images/diet-nutrition/what-is-a-vegan-diet-benefits-food-list-beginners-guide-alt-1440x810.jpg?sfvrsn=1d260c85_1', author: 'Author 3' },
-    { id: 4, title: 'Favorited Recipe 4', imageUrl: 'https://images.everydayhealth.com/images/diet-nutrition/what-is-a-vegan-diet-benefits-food-list-beginners-guide-alt-1440x810.jpg?sfvrsn=1d260c85_1', author: 'Author 4' },
-    { id: 5, title: 'Favorited Recipe 5', imageUrl: 'https://images.everydayhealth.com/images/diet-nutrition/what-is-a-vegan-diet-benefits-food-list-beginners-guide-alt-1440x810.jpg?sfvrsn=1d260c85_1', author: 'Author 5' },
+    { id: 1, title: 'Favorited Recipe 1', description: 'Description for Favorited Recipe 1', cuisineType: 'Asian', mealType: 'Snack', imageUrl: 'https://images.everydayhealth.com/images/diet-nutrition/what-is-a-vegan-diet-benefits-food-list-beginners-guide-alt-1440x810.jpg?sfvrsn=1d260c85_1', author: 'Author 1' },
+    { id: 2, title: 'Favorited Recipe 2', description: 'Description for Favorited Recipe 2', cuisineType: 'Mexican', mealType: 'Lunch/Dinner', imageUrl: 'https://images.everydayhealth.com/images/diet-nutrition/what-is-a-vegan-diet-benefits-food-list-beginners-guide-alt-1440x810.jpg?sfvrsn=1d260c85_1', author: 'Author 2' },
+    { id: 3, title: 'Favorited Recipe 3', description: 'Description for Favorited Recipe 3', cuisineType: 'French', mealType: 'Brunch', imageUrl: 'https://images.everydayhealth.com/images/diet-nutrition/what-is-a-vegan-diet-benefits-food-list-beginners-guide-alt-1440x810.jpg?sfvrsn=1d260c85_1', author: 'Author 3' },
+    { id: 4, title: 'Favorited Recipe 4', description: 'Description for Favorited Recipe 4', cuisineType: 'Greek', mealType: 'Teatime', imageUrl: 'https://images.everydayhealth.com/images/diet-nutrition/what-is-a-vegan-diet-benefits-food-list-beginners-guide-alt-1440x810.jpg?sfvrsn=1d260c85_1', author: 'Author 4' },
+    { id: 5, title: 'Favorited Recipe 5', description: 'Description for Favorited Recipe 5', cuisineType: 'Indian', mealType: 'Breakfast', imageUrl: 'https://images.everydayhealth.com/images/diet-nutrition/what-is-a-vegan-diet-benefits-food-list-beginners-guide-alt-1440x810.jpg?sfvrsn=1d260c85_1', author: 'Author 5' },
   ];
 
   const getRecipes = () => {
@@ -42,8 +60,14 @@ const MyRecipes = () => {
     alert(`Opening recipe with ID: ${recipeId}`);
   };
 
-  const handleEdit = (recipeId) => {
-    alert(`Editing recipe with ID: ${recipeId}`);
+  const handleEdit = (recipe) => {
+    setEditingRecipe(recipe);
+    console.log(editingRecipe);
+  };
+
+  const handleSave = () => {
+    alert('Saved');
+    setEditingRecipe(null);
   };
 
   const toggleAddNewRecipe = () => {
@@ -52,7 +76,7 @@ const MyRecipes = () => {
 
   async function handleSubmit() {
     console.log('Submited', uid);
-    const result = await axios.post(`http://localhost:5001/myRecipes/draft`, {'name': title, 'desc': desc, 'uid': uid });
+    const result = await axios.post(`http://localhost:5001/myRecipes/draft`, {'name': title, 'desc': desc, 'cuisineType': cuisineType, 'mealType': mealType, 'uid': uid });
     console.log(result);
     toggleAddNewRecipe();
   }
@@ -130,22 +154,41 @@ const MyRecipes = () => {
           onClick={toggleAddNewRecipe}
           sx={{
             mb: 2,
-            bgcolor: '#2e6123',
+            bgcolor: addingNewRecipe ? '#ff0000' : '#2e6123',
             color: 'white',
             '&:hover': {
-              bgcolor: '#1e4a1c',
+              bgcolor: addingNewRecipe ? '#cc0000' : '#1e4a1c',
             },
           }}
         >
           {addingNewRecipe ? 'Cancel' : 'Want to add a recipe?'}
         </Button>
+      
       )}
 
       {addingNewRecipe && (
         <Card sx={{ mb: 4, p: 2 }}>
           <Typography variant="h5">Add New Recipe</Typography>
           <TextField fullWidth label="Title" sx={{ mb: 2 }} onChange={(text) => setTitle(text.target.value)} />
-          <TextField fullWidth label="Content" multiline rows={4} sx={{ mb: 2 }} onChange={(text) => setDesc(text.target.value)}/>
+          <TextField fullWidth label="Description" multiline rows={4} sx={{ mb: 2 }} onChange={(text) => setDesc(text.target.value)}/>
+          <Autocomplete
+            options={cuisineTypes}
+            getOptionLabel={(option) => option}
+            renderInput={(params) => <TextField {...params} label="Cuisine Type" sx={{ mb: 2 }} />}
+            onChange={(event, value) => setCuisineType(value)}
+          />
+          <FormControl fullWidth sx={{ mb: 2 }}>
+            <InputLabel>Meal Type</InputLabel>
+            <Select
+              value={mealType}
+              onChange={(e) => setMealType(e.target.value)}
+              label="Meal Type"
+            >
+              {mealTypes.map((type) => (
+                <MenuItem key={type} value={type}>{type}</MenuItem>
+              ))}
+            </Select>
+          </FormControl>
           <Button variant="contained" color="primary" onClick={() => handleSubmit()}>Submit</Button>
         </Card>
       )}
@@ -160,11 +203,11 @@ const MyRecipes = () => {
                     aria-label="edit"
                     onClick={(e) => {
                       e.stopPropagation();
-                      handleEdit(recipe.id);
+                      handleEdit(recipe);
                     }}
-                    sx={{ position: 'absolute', top: '0', left: '0', zIndex: 1000 }}
+                    sx={{ position: 'absolute', top: '0', right: '0', zIndex: 1000 }}
                   >
-                    <EditIcon style = {{zIndex: 200, color: 'black'}} />
+                    <EditIcon style = {{zIndex: 200, color: 'white', background: '#0000006b'}} />
                   </IconButton>
                 )}
                 {!showYourRecipes && (
@@ -175,7 +218,7 @@ const MyRecipes = () => {
                       handleUnfavorite(recipe.id);
                     }}
                     sx={{ position: 'absolute', top: '0', right: '0', zIndex: 1 }}
-                    style={{ color: '#ff0000' }}
+                    style={{ color: '#ff0000', background: '#0000006b' }}
                   >
                     <FavoriteIcon />
                   </IconButton>
@@ -192,12 +235,74 @@ const MyRecipes = () => {
                 {recipe.author && (
                   <Typography variant="subtitle2" color="text.secondary">Author: {recipe.author}</Typography>
                 )}
-                <Typography variant="body2" color="text.secondary">{recipe.desc}</Typography>
+                <Typography variant="body2" color="text.secondary">
+                  {recipe.desc.length > 40 ? `${recipe.desc.substring(0, 40)}...` : recipe.desc}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">Cuisine: {recipe.cuisineType}</Typography>
+                <Typography variant="body2" color="text.secondary">Meal Type: {recipe.mealType}</Typography>
               </CardContent>
             </Card>
           </Grid>
         ))}
       </Grid>
+
+      {editingRecipe && (
+        <Modal
+          open={Boolean(editingRecipe)}
+          onClose={() => setEditingRecipe(null)}
+          aria-labelledby="edit-recipe-modal"
+          aria-describedby="edit-recipe-modal-description"
+        >
+          <Box sx={{ 
+            position: 'absolute', 
+            top: '50%', 
+            left: '50%', 
+            transform: 'translate(-50%, -50%)', 
+            width: 400, 
+            bgcolor: 'background.paper', 
+            boxShadow: 24, 
+            p: 4 
+          }}>
+            <Typography variant="h6" id="edit-recipe-modal">Edit Recipe</Typography>
+            <TextField
+              fullWidth
+              label="Title"
+              sx={{ mb: 2 }}
+              value={editingRecipe.title}
+              onChange={(e) => setEditingRecipe({ ...editingRecipe, title: e.target.value })}
+            />
+            <TextField
+              fullWidth
+              label="Description"
+              multiline
+              rows={6}
+              sx={{ mb: 2}}
+              value={editingRecipe.description}
+              onChange={(e) => setEditingRecipe({ ...editingRecipe, description: e.target.value })}
+            />
+            <Autocomplete
+              options={cuisineTypes}
+              getOptionLabel={(option) => option}
+              renderInput={(params) => <TextField {...params} label="Cuisine Type" sx={{ mb: 2 }} />}
+              value={editingRecipe.cuisineType}
+              onChange={(event, value) => setEditingRecipe({ ...editingRecipe, cuisineType: value })}
+            />
+            <FormControl fullWidth sx={{ mb: 2 }}>
+              <InputLabel>Meal Type</InputLabel>
+              <Select
+                value={editingRecipe.mealType}
+                onChange={(e) => setEditingRecipe({ ...editingRecipe, mealType: e.target.value })}
+                label="Meal Type"
+              >
+                {mealTypes.map((type) => (
+                  <MenuItem key={type} value={type}>{type}</MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+            <Button variant="contained" color="primary" onClick={handleSave}>Save</Button>
+          </Box>
+        </Modal>
+      )}
     </Box>
   );
 };
