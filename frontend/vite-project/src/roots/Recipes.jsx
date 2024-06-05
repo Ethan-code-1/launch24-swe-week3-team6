@@ -12,6 +12,7 @@ import {
   Typography,
   CardMedia,
   TextField,
+  Autocomplete,
 } from "@mui/material";
 
 // Notes:
@@ -46,7 +47,6 @@ const Recipes = () => {
   // setting the array for result of recipes with the keyword
   const [searchResults, setSearchResults] = useState([]);
 
-  
   const fetchAllRecipes = async () => {
     try {
       const response = await axios.get(
@@ -87,8 +87,6 @@ const Recipes = () => {
     } catch (error) {
       console.error("Error fetching recipes:", error);
       setError("Failed to fetch recipes. Please try again.");
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -229,88 +227,85 @@ const Recipes = () => {
       alignItems="center"
       sx={{ margin: "20px" }}
     >
-      <Grid container alignItems="center" justifyContent="space-between">
-        <Grid item>
-          <Typography variant="h3" gutterBottom>
-            Browse Recipes
-          </Typography>
-        </Grid>
-        <Grid item>
+      <Typography variant="h3" gutterBottom>
+        Browse Recipes
+      </Typography>
+      <Grid
+        container
+        alignItems="center"
+        justifyContent="space-between"
+        spacing={2}
+      >
+        <Grid item xs={12}>
           <Box
             sx={{
-              marginLeft: "250px",
-              marginBottom: "5px",
               display: "flex",
-              alignItems: "left",
+              alignItems: "center",
+              justifyContent: "space-between", // Ensure elements are spaced out
             }}
           >
+            <Autocomplete
+              options={cuisineOptions}
+              getOptionLabel={(option) => option}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Select Cuisine"
+                  variant="outlined"
+                  sx={{ width: 175, marginRight: "10px" }}
+                />
+              )}
+              value={type}
+              onChange={(event, newValue) => {
+                setType(newValue);
+              }}
+            />
             <TextField
               label="Search Recipes"
               variant="outlined"
-              fullWidth
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              sx={{ width: "70%", marginRight: "10px" }}
+              sx={{ flexGrow: 1, marginRight: "10px" }} // Flex grow to take available space
             />
             <Button
               variant="contained"
               onClick={handleSubmit}
-              sx={{ backgroundColor: "purple" }}
+              sx={{ backgroundColor: "purple", marginRight: "10px" }}
             >
               Search
             </Button>
-          </Box>
-        </Grid>
-        <Grid item>
-          <Box sx={{ display: "flex", alignItems: "center" }}>
-            <Typography sx={{ marginRight: "20px", color: "purple" }}>
-              Filter by:
-            </Typography>
-            <Select
-              value={filterByEdamam ? "edamam" : "user"}
-              onChange={(e) =>
-                e.target.value === "edamam"
-                  ? handleFilterByEdamam()
-                  : handleFilterByUser()
-              }
-              sx={{
-                width: "120px",
-                "& .MuiSelect-icon": { color: "purple" },
-                "& .MuiSelect-select": {
-                  color: "purple",
-                  borderColor: "purple",
-                  "&:focus": { borderColor: "purple" }, // Override focused state border color
-                },
-              }}
-            >
-              <MenuItem value="edamam" sx={{ color: "purple" }}>
-                Edamam
-              </MenuItem>
-              <MenuItem value="user" sx={{ color: "purple" }}>
-                User
-              </MenuItem>
-            </Select>
+            <Box sx={{ display: "flex", alignItems: "center" }}>
+              <Typography sx={{ marginRight: "10px", color: "purple" }}>
+                Filter by:
+              </Typography>
+              <Select
+                value={filterByEdamam ? "edamam" : "user"}
+                onChange={(e) =>
+                  e.target.value === "edamam"
+                    ? handleFilterByEdamam()
+                    : handleFilterByUser()
+                }
+                sx={{
+                  width: "120px",
+                  "& .MuiSelect-icon": { color: "purple" },
+                  "& .MuiSelect-select": {
+                    color: "purple",
+                    borderColor: "purple",
+                    "&:focus": { borderColor: "purple" }, // Override focused state border color
+                  },
+                }}
+              >
+                <MenuItem value="edamam" sx={{ color: "purple" }}>
+                  Edamam
+                </MenuItem>
+                <MenuItem value="user" sx={{ color: "purple" }}>
+                  User
+                </MenuItem>
+              </Select>
+            </Box>
           </Box>
         </Grid>
       </Grid>
-
-      <Card sx={{ width: "100%", marginBottom: "20px" }}>
-        <CardContent
-          sx={{ display: "flex", justifyContent: "center", flexWrap: "wrap" }}
-        >
-          {cuisineOptions.map((cuisine) => (
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={() => handleClick(cuisine)}
-              key={cuisine}
-              sx={{ mx: 1, my: 1, backgroundColor: "#2e6123" }}
-            >
-              {cuisine}
-            </Button>
-          ))}
-        </CardContent>
-      </Card>
 
       <Card
         sx={{
