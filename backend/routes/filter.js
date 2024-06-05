@@ -37,11 +37,12 @@ router.get('/cuisine/:cuisineType', async (req, res) => {
 });
 
 // GET: recipe page detail filtered by meal type
-router.get('/meal/:mealType', async (req, res) => {
+router.get('/meal/:mealType/:cuisineType', async (req, res) => {
     const mealType = req.params.mealType;
+    const cuisineType = req.params.cuisineType;
     try {
         // Retrieve recipes from Edamam
-        const response = await axios.get(`https://api.edamam.com/api/recipes/v2?type=public&app_id=${app_id}&app_key=${app_key}&mealType=${mealType}`);
+        const response = await axios.get(`https://api.edamam.com/api/recipes/v2?type=public&app_id=${app_id}&app_key=${app_key}&cuisineType=${cuisineType}&mealType=${mealType}`);
         const edamamResults = response.data.hits;
 
         // Retrieve recipes from Firestore

@@ -1,10 +1,12 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Box, Card, CardContent, CardMedia, Typography, Grid, Button, TextField, IconButton } from '@mui/material';
+import { Box, Card, Select, MenuItem, CardContent, Button, Grid, Typography, CardMedia, TextField } from '@mui/material';
 
 const Recipes = () => {
-  const [recipes, setRecipes] = useState([{}]);
-  const [type, setType] = useState("")
+  const [recipes, setRecipes] = useState([]);
+  const [type, setType] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filterByEdamam, setFilterByEdamam] = useState(true); // Initially, filter by Edamam
   const cuisineOptions = [
     "American", "Asian", "British", "Caribbean", "Central Europe", 
     "Chinese", "Eastern Europe", "French", "Indian", "Italian", 
@@ -15,77 +17,230 @@ const Recipes = () => {
     "Breakfast", "Lunch", "Dinner", "Snack", "Teatime"
   ];
 
-  const handleClick = async (cuisine) => {
+  const fetchRecipes = async (cuisine) => {
     try {
-      setType(cuisine);
-      // Handle button click logic here
       const response = await axios.get(`http://localhost:5001/api/recipes/cuisine/${cuisine}`);
       
+      const newRecipes = [];
+
       // Process edamamResults
       response.data.edamamResults.forEach(recipe => {
-        const name = recipe.recipe.label;
-        const meal = recipe.recipe.mealType;
-        const image = recipe.recipe.image;
-        const time = recipe.recipe.totalTime;
-      
         const recipeObj = {
-          name: name,
-          meal: meal,
-          image: image,
-          time: time
+          name: recipe.recipe.label,
+          meal: recipe.recipe.mealType,
+          image: recipe.recipe.image,
+          time: recipe.recipe.totalTime,
+          id: recipe._links.self.href,
+          userMade: false
         };
-        setRecipes(prevRecipes => [...prevRecipes, recipeObj]);
+        newRecipes.push(recipeObj);
       });
-      
+
       // Process firestoreResults
       response.data.firestoreResults.forEach(recipe => {
-        const name = recipe.name;
-        const meal = recipe.mealType;
-        const image = recipe.image ? recipe.image : null;
-        const time = recipe.totalTime ? recipe.totalTime : null;
-      
         const recipeObj = {
-          name: name,
-          meal: meal,
-          image: image,
-          time: time
+          name: recipe.name,
+          meal: recipe.mealType,
+          image: recipe.image || null,
+          time: recipe.totalTime || null,
+          id: null,
+          userMade: true
         };
-        setRecipes(prevRecipes => [...prevRecipes, recipeObj]);
+        newRecipes.push(recipeObj);
       });
+
+      setRecipes(newRecipes);
+    } catch (error) {
+      console.error('Error fetching recipes:', error);
+    }
+  };
+
+  const handleClick = (cuisine) => {
+    setType(cuisine);
+  };
+
+  useEffect(() => {
+    if (type) {
+      setRecipes([]); // Reset recipes state
+      fetchRecipes(type);
+    }
+  }, [type]);
+
+  const handleSave = (recipe) => {
+    // TODO: save the recipe to firebase
+    console.log('Recipe saved:', recipe);
+  };
+
+  const handleSubmit = () => {
+    // TODO: call the api that fetches by key words
+    console.log("hi");
+  }
+
+  const handleDetail = () => {
+    // TODO: redirect to recipe detail page
+    console.log("hi");
+  }
+
+  const handleMealType = async (meal) => {
+    try {
+      const response = await axios.get(`http://localhost:5001/api/recipes/meal/${meal}/${type}`);
+      
+      const newRecipes = [];
+
+      // Process edamamResults
+      response.data.edamamResults.forEach(recipe => {
+        const recipeObj = {
+          name: recipe.recipe.label,
+          meal: recipe.recipe.mealType,
+          image: recipe.recipe.image,
+          time: recipe.recipe.totalTime,
+          id: recipe._links.self.href,
+          userMade: false,
+        };
+        newRecipes.push(recipeObj);
+      });
+
+      // Process firestoreResults
+      response.data.firestoreResults.forEach(recipe => {
+        const recipeObj = {
+          name: recipe.name,
+          meal: recipe.mealType,
+          image: recipe.image || null,
+          time: recipe.totalTime || null,
+          id: null,
+          userMade: true,
+        };
+        newRecipes.push(recipeObj);
+      });
+
+      setRecipes(newRecipes);
     } catch (error) {
       console.error('Error fetching recipes:', error);
     }
   };
   
+  const handleFilterByEdamam = () => {
+    setFilterByEdamam(true);
+  };
+
+  const handleFilterByUser = () => {
+    setFilterByEdamam(false);
+  };
+
+  const filteredRecipes = recipes.filter(recipe =>
+    recipe.name.toLowerCase().includes(searchQuery.toLowerCase()) &&
+    (filterByEdamam ? !recipe.userMade : recipe.userMade)
+  );
 
   return (
     <Box display="flex" flexDirection="column" alignItems="center" sx={{ margin: '20px' }}>
-  <div>
-    <h1>Browse Recipes</h1>
-  </div>
-  <Card sx={{ width: '100%' }}>
-    <CardContent sx={{ display: 'flex', justifyContent: 'left', flexWrap: 'wrap' }}>
-      {cuisineOptions.map((cuisine, index) => (
-        <Button variant="contained" color="primary" onClick={() => handleClick(cuisine)} key={cuisine} sx={{ mx: 1, my: 1 }}>
-          {cuisine}
-        </Button>
-      ))}
-    </CardContent>
-  </Card>
-
-  <Card sx={{ width: '100%', display: 'flex', flexDirection: 'column' }}>
-  <p>Explore {type}</p>
-  <CardContent sx={{ display: 'flex', justifyContent: 'left', flexWrap: 'wrap' }}>
-    {mealOptions.map((meal, index) => (
-      <div key={index} sx={{ marginRight: '10px', marginBottom: '10px' }}>{meal}</div>
-    ))}
-  </CardContent>
-</Card>
-
-
-
-</Box>
+      <Grid container alignItems="center" justifyContent="space-between">
+        <Grid item>
+          <Typography variant="h3" gutterBottom>Browse Recipes</Typography>
+        </Grid>
+        <Grid item>
+          <Box sx={{ marginLeft: '250px', marginBottom: '5px', display: 'flex', alignItems: 'left' }}>
+            <TextField
+              label="Search Recipes"
+              variant="outlined"
+              fullWidth
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              sx={{ width: '70%', marginRight: '10px' }}
+            />
+            <Button variant="contained" onClick={handleSubmit} sx={{ backgroundColor: 'purple' }}>Search</Button>
+          </Box>
+        </Grid>
+        <Grid item>
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Typography sx={{ marginRight: '20px', color: 'purple' }}>Filter by:</Typography>
+            <Select
+              value={filterByEdamam ? 'edamam' : 'user'}
+              onChange={(e) => e.target.value === 'edamam' ? handleFilterByEdamam() : handleFilterByUser()}
+              sx={{
+                width: '120px',
+                '& .MuiSelect-icon': { color: 'purple' },
+                '& .MuiSelect-select': {
+                  color: 'purple',
+                  borderColor: 'purple',
+                  '&:focus': { borderColor: 'purple' } // Override focused state border color
+                }
+              }}
+            >
+              <MenuItem value="edamam" sx={{ color: 'purple' }}>Edamam</MenuItem>
+              <MenuItem value="user" sx={{ color: 'purple' }}>User</MenuItem>
+            </Select>
+          </Box>
+        </Grid>
+      </Grid>
+  
+      <Card sx={{ width: '100%', marginBottom: '20px' }}>
+        <CardContent sx={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap' }}>
+          {cuisineOptions.map((cuisine) => (
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => handleClick(cuisine)}
+              key={cuisine}
+              sx={{ mx: 1, my: 1, backgroundColor: '#2e6123' }}
+            >
+              {cuisine}
+            </Button>
+          ))}
+        </CardContent>
+      </Card>
+  
+      <Card sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', width: '100%', marginBottom: '20px' }}>
+        <CardContent sx={{ marginLeft: '50px', textAlign: 'left', flexGrow: 1 }}>
+          <Typography variant="h6">Explore {type}</Typography>
+        </CardContent>
+        <CardContent>
+          {mealOptions.map((meal, index) => (
+            <Button 
+              key={index}
+              onClick={() => handleMealType(meal)}
+              sx={{ textTransform: 'capitalize', marginRight: '50px', borderRadius: 0, border: 0, backgroundColor: 'transparent', color: '#2e6123'  }}
+            >
+              {meal}
+            </Button>
+          ))}
+        </CardContent>
+      </Card>
+  
+      {recipes.length === 0 ? (
+        <Typography variant="body1" color="text.secondary" sx={{ marginBottom: '20px', cursor: 'pointer' }} >
+          Search up your favorite recipes right now!
+        </Typography>
+      ) : (
+        <Grid container spacing={2} justifyContent="center">
+          {filteredRecipes.map((recipe, index) => (
+            <Grid item key={index} xs={12} sm={6} md={4}>
+              <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}
+              onMouseOver={(e) => e.currentTarget.style.transform = 'translateY(-5px)'}
+              onMouseOut={(e) => e.currentTarget.style.transform = 'translateY(0)'} onClick={handleDetail}>
+                <CardMedia
+                  component="img"
+                  height="140"
+                  image={recipe.image}
+                  alt={recipe.name}
+                />
+                <CardContent sx={{ flexGrow: 1 }}>
+                  <Typography variant="h6">{recipe.name}</Typography>
+                  <Typography variant="body2" color="text.secondary">Meal Type: {recipe.meal}</Typography>
+                  <Typography variant="body2" color="text.secondary">Time Takes: {recipe.time} mins</Typography>
+                </CardContent>
+                <CardContent sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                  <Button variant="contained" color="secondary" onClick={() => handleSave(recipe)}>Save</Button>
+                </CardContent>
+              </Card>
+            </Grid>
+          ))}
+        </Grid>
+      )}
+    </Box>
   );
+  
+
 };
 
 export default Recipes;
