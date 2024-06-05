@@ -10,20 +10,11 @@ const router = express.Router();
 const app_id = process.env.APP_ID;
 const app_key = process.env.APP_KEY;
 
-function getRandomSubset(arr, size) {
-  var shuffled = arr.slice(0),
-    i = arr.length,
-    min = i - size,
-    temp,
-    index;
-  while (i-- > min) {
-    index = Math.floor((i + 1) * Math.random());
-    temp = shuffled[index];
-    shuffled[index] = shuffled[i];
-    shuffled[i] = temp;
-  }
-  return shuffled.slice(min);
-}
+// Function to get a random subset of an array
+const getRandomSubset = (array, subsetSize) => {
+  const shuffled = array.sort(() => 0.5 - Math.random());
+  return shuffled.slice(0, subsetSize);
+};
 
 // GET: recipe page with random recipes to display
 router.get("/cuisine/all", async (req, res) => {
