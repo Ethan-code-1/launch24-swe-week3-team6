@@ -66,10 +66,17 @@ const MyRecipes = () => {
     }
 }
 
+const handleUnfavorite = async (recipeId) => {
+  try {
+      await axios.post('http://localhost:5001/myRecipes/unfavorite', { uid, recipeId });
+      setFavoritedRecipes(prevRecipes => prevRecipes.filter(recipe => recipe.id !== recipeId));
+      alert(`Unfavorited recipe with ID: ${recipeId}`);
+  } catch (error) {
+      console.error('Error unfavoriting recipe:', error);
+  }
+};
 
-  const handleUnfavorite = (recipeId) => {
-    alert(`Unfavorited recipe with ID: ${recipeId}`);
-  };
+
 
   const handleOpenRecipe = (recipeId) => {
     alert(`Opening recipe with ID: ${recipeId}`);
@@ -238,7 +245,7 @@ const MyRecipes = () => {
                     style={{ color: '#ff0000', background: '#0000006b' }}
                   >
                     <FavoriteIcon />
-                  </IconButton>
+                </IconButton>
                 )}
                 <CardMedia
                   component="img"
