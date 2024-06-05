@@ -65,7 +65,10 @@ const MyRecipes = () => {
     console.log(editingRecipe);
   };
 
-  const handleSave = () => {
+  const handleSave = async (rid) => {
+    const r = await axios.put(`http://localhost:5001/myRecipes/edit/${rid}`, editingRecipe);
+    console.log(r);
+    await fetchCreatedRecipes(uid);
     alert('Saved');
     setEditingRecipe(null);
   };
@@ -269,7 +272,7 @@ const MyRecipes = () => {
               label="Title"
               sx={{ mb: 2 }}
               value={editingRecipe.name}
-              onChange={(e) => setEditingRecipe({ ...editingRecipe, title: e.target.value })}
+              onChange={(e) => setEditingRecipe({ ...editingRecipe, name: e.target.value })}
             />
             <TextField
               fullWidth
@@ -278,7 +281,7 @@ const MyRecipes = () => {
               rows={2}
               sx={{ mb: 2}}
               value={editingRecipe.desc}
-              onChange={(e) => setEditingRecipe({ ...editingRecipe, description: e.target.value })}
+              onChange={(e) => setEditingRecipe({ ...editingRecipe, desc: e.target.value })}
             />
             <TextField
               fullWidth
@@ -287,7 +290,7 @@ const MyRecipes = () => {
               rows={6}
               sx={{ mb: 2}}
               value={editingRecipe.steps}
-              onChange={(e) => setEditingRecipe({ ...editingRecipe, description: e.target.value })}
+              onChange={(e) => setEditingRecipe({ ...editingRecipe, steps: e.target.value })}
             />
             <Autocomplete
               options={cuisineTypes}
@@ -308,7 +311,7 @@ const MyRecipes = () => {
                 ))}
               </Select>
             </FormControl>
-            <Button variant="contained" color="primary" onClick={handleSave}>Save</Button>
+            <Button variant="contained" color="primary" onClick={() => handleSave(editingRecipe.id)}>Save</Button>
           </Box>
         </Modal>
       )}

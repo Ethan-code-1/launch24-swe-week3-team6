@@ -67,4 +67,16 @@ router.get("/created/:id", async (req, res) => {
     }
 })
 
+router.put("/edit/:rid", async (req, res) => {
+    try {
+        const rid = req.params.rid;
+        const newRec = req.body;
+        console.log(newRec);
+        const recDoc = await updateDoc(doc(db, 'recipes', rid), newRec);
+        res.status(200).send("Successfully Updated Recipe!");
+    } catch (e) {
+        res.status(500).send({ error: e.message });
+    }
+})
+
 export default router;
