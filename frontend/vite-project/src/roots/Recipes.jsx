@@ -15,12 +15,18 @@ import {
   CardMedia,
   TextField,
   Autocomplete,
+  Snackbar,
+  Alert,
 } from "@mui/material";
 
 // Notes:
 // stored fetching URL
 const Recipes = () => {
-  const [currentUser, setCurrentUser] = useState("");
+  // for Save Feature
+  const [currentUser, setCurrentUser] = useState(null);
+  const [flag, setFlag] = useState(false);
+  const [notification, setNotification] = useState(false);
+
   const [allrecipes, setAllRecipes] = useState([]);
   const [recipes, setRecipes] = useState([]);
   const [type, setType] = useState("");
@@ -139,22 +145,25 @@ const Recipes = () => {
   const extractID = (s) => {
     const regex = /\/api\/recipes\/v2\/([a-f0-9]+)\?/;
     const match = s.match(regex);
-  
+
     if (match) {
       const recipeId = match[1];
       //console.log(recipeId);
       return recipeId;
     }
-  }
+  };
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         // User is signed in
+
         setCurrentUser(user.uid);
+        setFlag(false);
         //console.log(user.uid);
       } else {
         // User is signed out
+        setFlag(true);
         setCurrentUser(null);
       }
     });
@@ -173,12 +182,15 @@ const Recipes = () => {
     // TODO: save the recipe to firebase
     // console.log(currentUser);
     // console.log(recipe.id);
-    try {
-      await axios.post(
-        `http://localhost:5001/api/auth/${currentUser}/${recipe.id}`
-      );
-    } catch (error) {
-      console.error("Error fetching recipes:", error);
+    if (currentUser) {
+      try {
+        await axios.post(
+          `http://localhost:5001/api/auth/${currentUser}/${recipe.id}`
+        );
+        setNotification(true); // Show notification on successful save
+      } catch (error) {
+        console.error("Error fetching recipes:", error);
+      }
     }
   };
 
@@ -394,14 +406,21 @@ const Recipes = () => {
                   flexDirection: "column",
                   justifyContent: "space-between",
                 }}
-                onMouseOver={(e) => (e.currentTarget.style.transform = "translateY(-5px)")}
-                onMouseOut={(e) => (e.currentTarget.style.transform = "translateY(0)")}
+                onMouseOver={(e) =>
+                  (e.currentTarget.style.transform = "translateY(-5px)")
+                }
+                onMouseOut={(e) =>
+                  (e.currentTarget.style.transform = "translateY(0)")
+                }
               >
                 <Link
-                  to={`recipeView/${recipe.id}`}
-                  style={{ textDecoration: "none", color: "inherit" }}  // Ensures text color stays as it is
+                  to={`/recipeView/${recipe.id.split("/").pop()}`}
+                  onClick={(e) => {
+                    handleOpenRecipe(recipe.id);
+                  }}
+                  style={{ textDecoration: "none", color: "inherit" }} // Ensures text color stays as it is
                 >
-                {/* <Link
+                  {/* <Link
                   to={recipe.userMade
                         ? `recipeView/userCreated/${recipe.id}`
                         : `recipeView/official/${recipe.id}`}
@@ -414,11 +433,21 @@ const Recipes = () => {
                     alt={recipe.name}
                   />
                   <CardContent sx={{ flexGrow: 1 }}>
-                    <Typography variant="h6" sx={{ color: 'inherit' }}>{recipe.name}</Typography>
-                    <Typography variant="body2" color="text.secondary" sx={{ color: 'inherit' }}>
+                    <Typography variant="h6" sx={{ color: "inherit" }}>
+                      {recipe.name}
+                    </Typography>
+                    <Typography
+                      variant="body2"
+                      color="text.secondary"
+                      sx={{ color: "inherit" }}
+                    >
                       Meal Type: {recipe.meal}
                     </Typography>
-                    <Typography variant="body2" color="text.secondary" sx={{ color: 'inherit' }}>
+                    <Typography
+                      variant="body2"
+                      color="text.secondary"
+                      sx={{ color: "inherit" }}
+                    >
                       Time Takes: {recipe.time} mins
                     </Typography>
                   </CardContent>
@@ -426,20 +455,31 @@ const Recipes = () => {
                 <CardContent
                   sx={{ display: "flex", justifyContent: "flex-end" }}
                 >
-                  <Button
-                    variant="contained"
-                    color="secondary"
-                    onClick={() => handleSave(recipe)}
-                  >
-                    Save
-                  </Button>
+                  {!flag && (
+                    <Button
+                      variant="contained"
+                      color="secondary"
+                      onClick={() => handleSave(recipe)}
+                    >
+                      Save
+                    </Button>
+                  )}
                 </CardContent>
               </Card>
-
             </Grid>
           ))}
         </Grid>
       )}
+      <Snackbar
+        open={notification}
+        autoHideDuration={3000}
+        onClose={() => setNotification(false)}
+        anchorOrigin={{ vertical: "center", horizontal: "center" }}
+      >
+        <Alert onClose={() => setNotification(false)} severity="success">
+          Saved successfully!
+        </Alert>
+      </Snackbar>
     </Box>
   );
 };

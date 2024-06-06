@@ -1,4 +1,3 @@
-
 .recipe-view-page {
   display: flex; 
   flex-direction: row;
@@ -202,6 +201,18 @@
   margin-left: 20px;
 }
 
+.review-replies {
+  display: flex;
+  justify-self: start;
+  align-items: center;
+  margin-left: 30px;
+  border-radius: 20px;
+  padding: 10px;
+}
+
+.review-replies:hover {
+  cursor: default;
+}
 
 .comment-button {
   border: none;
@@ -218,6 +229,7 @@
   align-items: center;
 }
 
+.review-replies:hover,
 .comment-button:hover,
 .upvote-button:hover,
 .chat-button:hover,
@@ -225,6 +237,7 @@
   background-color: #55964644;
 }
 
+.review-replies:hover,
 .comment-button:active,
 .upvote-button:active,
 .chat-button:active,

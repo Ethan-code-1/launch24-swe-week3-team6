@@ -6,6 +6,9 @@ const Recipe = (data) => {
 
   const nutrition = data.nutrition;
 
+  console.log(nutrition);
+  console.log(typeof nutrition);
+
   function extractNutritionData(nutritionString) {
     const regex = /{ value: "(.*?)", label: "(.*?)" }/g;
     const nutritionData = [];
@@ -16,22 +19,19 @@ const Recipe = (data) => {
     }
 
     return nutritionData;
-}
-
+  }
+  
   const nutritionFacts = extractNutritionData(nutrition);
   console.log(nutritionFacts);
   
   
   const split = recipe.steps.split('\n');
-  // console.log('split', split);
 
   let ings =  split.splice(split.indexOf("Ingredients:") + 1, split.indexOf("Instructions:") - 3)
-  // console.log('ingredients', ings)
   ings = ings.map((i) => {
     return i.includes(':') ? i : i.slice(2)
   })
   ings = ings.filter((i) => i !== '');
-  // console.log('ingredients', ings)
 
   let instructions = split.splice(split.indexOf("Instructions:"))
   instructions = instructions.map((inst) => {return inst.slice(2)})
