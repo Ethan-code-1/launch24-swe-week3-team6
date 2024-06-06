@@ -366,8 +366,8 @@ const Recipes = () => {
               <Link
                   to={{
                     pathname: recipe.userMade
-                      ? `/userCreated/${recipe.id}`
-                      : `/official/${recipe.id}`,
+                      ? `recipeView/userCreated/${recipe.id}`
+                      : `recipeView/official/${recipe.id}`,
                   }}
                   style={{ textDecoration: 'none' }}
                 >

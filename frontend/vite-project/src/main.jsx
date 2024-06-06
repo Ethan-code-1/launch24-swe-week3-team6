@@ -30,7 +30,7 @@ const router = createBrowserRouter([
     element: <Navbar></Navbar>,
   },
   {
-    path: '/recipeView/:rid',
+    path: '/recipeView/:category/:rid',
     element: <Navbar></Navbar>,
   },
   {
