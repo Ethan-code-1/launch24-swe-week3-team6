@@ -101,10 +101,10 @@ const RecipeView = () => {
     const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
     const timestampISO = new Date().toISOString();
 
-    if (review) {
+    if (review && rating) {
       const body = {
         review: review,
-        // rating: rating,
+        rating: rating,
         timestamp: timestamp,
         timestampISO: timestampISO,
         uid: uid,
@@ -184,10 +184,10 @@ const RecipeView = () => {
           <div className='review-line'></div>
 
           <form className='create-review' onSubmit={handlePostReview}>
-            {/* <div className='review-top'>
+            <div className='review-top'>
               <div className='review-subtitle'>Your Rating</div>
               <Stars rating={rating} onRatingChange={handleRatingChange} />
-            </div> */}
+            </div>
             <div>
               <textarea className='review-input'
                 maxLength="400"
@@ -218,7 +218,7 @@ const RecipeView = () => {
                         <div className='review-date'>{rev.timestamp}</div>
                       </div>
       
-                      <AverageStars rating={5.0} className='review-stars' />
+                      <AverageStars rating={rev.rating ? rev.rating : 5.0} className='review-stars' />
                       <div className='review-comment'>
                         {rev.review}
                       </div>

@@ -200,6 +200,7 @@ const MyRecipes = () => {
                 if (e.defaultPrevented) return; // Check if default action was prevented
                 handleOpenRecipe(recipe.id);
               }}
+              style={{textDecoration:'none'}}
             >
               <Card className="recipe-card">
                 <Box sx={{ position: 'relative' }}>
