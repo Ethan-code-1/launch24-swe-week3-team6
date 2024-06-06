@@ -36,6 +36,7 @@ router.get("/cuisine/all", async (req, res) => {
         image: doc.data().image || null,
         totalTime: doc.data().totalTime || null,
         id: doc.id,
+        userMade: doc.data().userMade,
       });
     });
 
@@ -75,6 +76,7 @@ router.get("/cuisine/:cuisineType", async (req, res) => {
         image: doc.data().image || null,
         totalTime: doc.data().totalTime || null,
         id: doc.id,
+        userMade: doc.data().userMade,
       });
     });
 
@@ -110,6 +112,7 @@ router.get("/meal/:mealType/:cuisineType", async (req, res) => {
         image: doc.data().image || null,
         totalTime: doc.data().totalTime || null,
         id: doc.id,
+        userMade: doc.data().userMade,
       });
     });
 
