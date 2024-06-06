@@ -72,11 +72,24 @@ const MyRecipes = () => {
   };
 
   async function handleSubmit() {
-    console.log('Submitted', uid);
-    const result = await axios.post(`http://localhost:5001/myRecipes/draft`, {'name': title, 'desc': desc, 'cuisineType': cuisineType, 'mealType': mealType, 'uid': uid });
-    console.log(result);
-    await fetchCreatedRecipes(uid);
-    toggleAddNewRecipe();
+      console.log('Submitted', uid);
+      try {
+          const result = await axios.post(`http://localhost:5001/myRecipes/draft`, { 'name': title, 'desc': desc, 'cuisineType': cuisineType, 'mealType': mealType, 'uid': uid });
+          console.log(result.data); // Log the entire response object to see its structure
+          const { docRef, docId } = result.data; // Extracting docRef and docId from the response
+          // console.log("docRef:", docRef);
+          // console.log("docId:", docId);
+
+          const nutrition = await axios.post(`http://localhost:5001/myRecipes/nutrition`, {'name': title, 'desc': desc, 'cuisineType': cuisineType, 'mealType': mealType, 'uid': uid, 'docId': docId });
+          console.log("nut" + nutrition);
+          console.log(result);
+
+          await fetchCreatedRecipes(uid);
+          toggleAddNewRecipe();
+      } catch (error) {
+          console.error("Error:", error);
+          // Handle error here if needed
+      }
   }
 
   async function fetchCreatedRecipes(uid) {

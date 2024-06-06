@@ -18,7 +18,7 @@ router.post('/draft', async (req, res) => {
     try {
         const recipe = req.body;
         const msg = 'Create a recipe from this description: ' + recipe.name + recipe.desc;
-        console.log(msg)
+        // console.log(msg)
         const completion = await openai.chat.completions.create({
             messages: [{role: 'user', content: msg}],
             model: "gpt-3.5-turbo",
@@ -33,19 +33,53 @@ router.post('/draft', async (req, res) => {
         let recipes = (await getDoc(doc(db, 'users', recipe.createdBy))).data()['myRecipes'];
         console.log('hello', recipes)
         if (recipes) {
-            console.log('pushing', recipes)
+            // console.log('pushing', recipes)
             recipes.push(docRef.id);
         } else {
             recipes = [docRef.id];
         }
-        console.log(recipes);
+        // console.log(recipes);
         await updateDoc(doc(db, 'users', recipe.createdBy), {'myRecipes': recipes});
 
-        res.status(200).send(docRef);
+        // console.log('doc', docRef.id);
+        res.status(200).send({ docRef, docId: docRef.id });
     } catch (e) {
         res.status(500).send({ error: e.message });
     }
 })
+
+
+router.post('/nutrition', async (req, res) => {
+    try {
+        const recipe = req.body;
+        const docId = recipe.docId
+        console.log("doc" + docId);
+        const msg = 'Create an array of nutrition facts from this description: ' + recipe.name + " " + recipe.desc + " in this format: " + `    
+        const nutritionFacts = [
+        { value: '', label: 'calories' },
+        { value: '', label: 'fat' },
+        { value: '', label: 'carbs' },
+        { value: '', label: 'protein' },
+        ];`;
+        // console.log(msg)
+        const completion = await openai.chat.completions.create({
+            messages: [{role: 'user', content: msg}],
+            model: "gpt-3.5-turbo",
+        });
+        // console.log('completion', completion.choices[0]);
+        console.log('completion', completion.choices[0].message.content);
+        const result = completion.choices[0].message.content;
+
+        // console.log(recipes);
+        await updateDoc(doc(db, 'recipes', docId), { nutritionFacts: result });
+
+        // res.status(200).send(docRef);
+    } catch (e) {
+        res.status(500).send({ error: e.message });
+    }
+})
+
+
 
 router.get("/created/:id", async (req, res) => {
     try {
