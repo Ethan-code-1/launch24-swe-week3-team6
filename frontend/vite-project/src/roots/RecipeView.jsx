@@ -33,6 +33,7 @@ const RecipeView = () => {
   const [showReply, setShowReply] = useState([]); 
   const [reply, setReply] = useState("");
   const [recipe, setRecipe] = useState(null);
+  const [nutritionFacts, setNutritionFacts] = useState("");
   const [uid, setUid] = useState('');
   const [revs, setRevs] = useState(null);
   const [showReplies, setShowReplies] = useState([]);
@@ -45,7 +46,10 @@ const RecipeView = () => {
     try {
       const res = await axios.get(`http://localhost:5001/recipe/${rid}`);
       // console.log(res.data);
+
       setRecipe(res.data.rec);
+      setNutritionFacts(res.data.rec.nutritionFacts);
+      console.log(res.data.rec.nutritionFacts);
       console.log(res.data.revs);
       setRevs(res.data.revs);
     } catch (e) {
@@ -175,7 +179,7 @@ const RecipeView = () => {
           <img src={RecipeImage} alt='Recipe Image' className='recipe-image' />
           <div className='recipe-info'> {recipe && recipe.desc}</div>
         </div>
-         {recipe && <Recipe recipe={recipe}/>}
+        {recipe && <Recipe recipe={recipe} nutrition={ nutritionFacts } />}
         
 
         <div className='bottom-section'>
