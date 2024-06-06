@@ -106,6 +106,7 @@ const MyRecipes = () => {
     console.log(data);
     const result = await axios.post(`http://localhost:5001/myRecipes/draft`, data);
     console.log(result);
+    alert("Recipe added!")
     await fetchCreatedRecipes(uid);
     toggleAddNewRecipe();
   }
