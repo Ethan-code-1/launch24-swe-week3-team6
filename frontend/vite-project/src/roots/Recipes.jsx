@@ -62,9 +62,10 @@ const Recipes = () => {
           meal: recipe.recipe.mealType,
           image: recipe.recipe.image,
           time: recipe.recipe.totalTime,
-          id: recipe._links.self.href,
+          id: extractID(recipe._links.self.href),
           userMade: false,
         };
+        //console.log(recipe._links.self.href);
         newRecipes.push(recipeObj);
       });
 
@@ -75,7 +76,7 @@ const Recipes = () => {
           meal: recipe.mealType,
           image: recipe.image || null,
           time: recipe.totalTime || null,
-          id: null,
+          id: recipe.id,
           userMade: true,
         };
         newRecipes.push(recipeObj);
@@ -106,9 +107,10 @@ const Recipes = () => {
           meal: recipe.recipe.mealType,
           image: recipe.recipe.image,
           time: recipe.recipe.totalTime,
-          id: recipe._links.self.href,
+          id: extractID(recipe._links.self.href),
           userMade: false,
         };
+        //console.log(recipe._links.self.href);
         newRecipes.push(recipeObj);
       });
 
@@ -119,7 +121,7 @@ const Recipes = () => {
           meal: recipe.mealType,
           image: recipe.image || null,
           time: recipe.totalTime || null,
-          id: null,
+          id: recipe.id,
           userMade: true,
         };
         newRecipes.push(recipeObj);
@@ -131,9 +133,16 @@ const Recipes = () => {
     }
   };
 
-  const handleClick = (cuisine) => {
-    setType(cuisine);
-  };
+  const extractID = (s) => {
+    const regex = /\/api\/recipes\/v2\/([a-f0-9]+)\?/;
+    const match = s.match(regex);
+  
+    if (match) {
+      const recipeId = match[1];
+      //console.log(recipeId);
+      return recipeId;
+    }
+  }
 
   useEffect(() => {
     if (type) {
@@ -150,7 +159,6 @@ const Recipes = () => {
   };
 
   const handleSubmit = async () => {
-    // to do: search for recipes that contain keyword
     setLoading(true);
     setError(null);
     try {
@@ -181,9 +189,10 @@ const Recipes = () => {
           meal: recipe.recipe.mealType,
           image: recipe.recipe.image,
           time: recipe.recipe.totalTime,
-          id: recipe._links.self.href,
+          id: extractID(recipe._links.self.href),
           userMade: false,
         };
+        //console.log(recipe._links.self.href);
         newRecipes.push(recipeObj);
       });
 
@@ -194,7 +203,7 @@ const Recipes = () => {
           meal: recipe.mealType,
           image: recipe.image || null,
           time: recipe.totalTime || null,
-          id: null,
+          id: recipe.id,
           userMade: true,
         };
         newRecipes.push(recipeObj);
@@ -241,7 +250,7 @@ const Recipes = () => {
             sx={{
               display: "flex",
               alignItems: "center",
-              justifyContent: "space-between", // Ensure elements are spaced out
+              justifyContent: "space-between",
             }}
           >
             <Autocomplete
@@ -265,18 +274,18 @@ const Recipes = () => {
               variant="outlined"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              sx={{ flexGrow: 1, marginRight: "10px" }} // Flex grow to take available space
+              sx={{ flexGrow: 1, marginRight: "20px", marginLeft: "20px" }} // Flex grow to take available space
             />
             <Button
               variant="contained"
               onClick={handleSubmit}
-              sx={{ backgroundColor: "purple", marginRight: "10px" }}
+              sx={{ backgroundColor: "purple", marginRight: "30px" }}
             >
               Search
             </Button>
             <Box sx={{ display: "flex", alignItems: "center" }}>
               <Typography sx={{ marginRight: "10px", color: "purple" }}>
-                Filter by:
+                Filter Recipes By:
               </Typography>
               <Select
                 value={filterByEdamam ? "edamam" : "user"}
@@ -296,10 +305,10 @@ const Recipes = () => {
                 }}
               >
                 <MenuItem value="edamam" sx={{ color: "purple" }}>
-                  Edamam
+                  Official
                 </MenuItem>
                 <MenuItem value="user" sx={{ color: "purple" }}>
-                  User
+                  User Created
                 </MenuItem>
               </Select>
             </Box>
@@ -314,6 +323,7 @@ const Recipes = () => {
           alignItems: "center",
           width: "100%",
           marginBottom: "20px",
+          marginTop: "15px",
         }}
       >
         <CardContent
@@ -355,8 +365,7 @@ const Recipes = () => {
             <Grid item key={index} xs={12} sm={6} md={4}>
               <Link
                 to={{
-                  pathname: `/RecipeView`, // TODO: change to detail page
-                  state: { recipeURI: recipe.id },
+                  pathname: `/RecipeView/${recipe.id}`,
                 }}
                 style={{ textDecoration: "none" }}
               >
