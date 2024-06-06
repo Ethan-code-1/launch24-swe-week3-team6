@@ -150,7 +150,6 @@ const Recipes = () => {
   };
 
   const handleSubmit = async () => {
-    // to do: search for recipes that contain keyword
     setLoading(true);
     setError(null);
     try {
@@ -165,7 +164,6 @@ const Recipes = () => {
       setLoading(false);
     }
   };
-
   const handleMealType = async (meal) => {
     try {
       const response = await axios.get(
@@ -354,9 +352,9 @@ const Recipes = () => {
           {filteredRecipes.map((recipe, index) => (
             <Grid item key={index} xs={12} sm={6} md={4}>
               <Link
-                to={{
-                  pathname: `/RecipeView`, // TODO: change to detail page
-                  state: { recipeURI: recipe.id },
+                to={`/recipeView/${recipe.id.split("/").pop()}`}
+                onClick={(e) => {
+                  handleOpenRecipe(recipe.id);
                 }}
                 style={{ textDecoration: "none" }}
               >
