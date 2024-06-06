@@ -29,6 +29,10 @@ const router = createBrowserRouter([
     element: <Navbar />,
   },
   {
+    path: '/recipes/:category',
+    element: <Navbar />,
+  },
+  {
     path: '/recipeView',
     element: <Navbar />,
   },
