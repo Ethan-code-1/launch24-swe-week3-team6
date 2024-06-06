@@ -1,25 +1,33 @@
-import React, { useState } from 'react';
-import { Box, Card, CardContent, CardMedia, Typography, Grid, Button, TextField, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
+import React, { useState, useEffect } from 'react';
+import { Box, Card, CardContent, CardMedia, Typography, Button, TextField, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, IconButton } from '@mui/material';
 import { getAuth, signOut } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 
 const Admin = () => {
+  const [recipes, setRecipes] = useState([]);
+  const [currentRecipeIndex, setCurrentRecipeIndex] = useState(0);
   const [openDialog, setOpenDialog] = useState(false);
   const [message, setMessage] = useState('');
   const [selectedRecipe, setSelectedRecipe] = useState(null);
   const navigate = useNavigate();
 
-  const recipesToApprove = [
-    { id: 1, title: 'Submitted Recipe 1', imageUrl: 'https://www.southernliving.com/thmb/pKa7sB3W1hp0r9ElK4NUYLOCXCw=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/southern-living-27338_Green_Chile_Mac_And_Cheese_With_Chicken_303-7416f067f07f4bf3b6b8aaeddff4542b.jpg' },
-    { id: 2, title: 'Submitted Recipe 2', imageUrl: 'https://www.southernliving.com/thmb/pKa7sB3W1hp0r9ElK4NUYLOCXCw=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/southern-living-27338_Green_Chile_Mac_And_Cheese_With_Chicken_303-7416f067f07f4bf3b6b8aaeddff4542b.jpg' },
-  ];
+  useEffect(() => {
+    const fetchRecipes = async () => {
+      try {
+        const response = await axios.get("http://localhost:5001/admin/pending_recipes");
+        setRecipes(response.data);
+      } catch (error) {
+        console.error("Error fetching recipes:", error);
+      }
+    };
+    fetchRecipes();
+  }, []);
 
-  const handleOpenRecipe = (recipeId) => {
-    alert(`Recipe with ID: ${recipeId} opened`);
-  };
-
-  const handleReject = (recipeId) => {
-    setSelectedRecipe(recipeId);
+  const handleReject = () => {
+    setSelectedRecipe(recipes[currentRecipeIndex].id);
     setOpenDialog(true);
   };
 
@@ -28,11 +36,23 @@ const Admin = () => {
     setMessage('');
   };
 
-  const handleAccept = (recipeId) => {
-    alert(`Recipe with ID: ${recipeId} accepted`);
+  const handleAccept = async () => {
+    try {
+      const recipeId = recipes[currentRecipeIndex].id;
+      await axios.post(`http://localhost:5001/admin/accept_recipe/${recipeId}`);
+      const updatedRecipes = recipes.filter((recipe, index) => index !== currentRecipeIndex);
+      setRecipes(updatedRecipes);
+      if (currentRecipeIndex >= updatedRecipes.length) {
+        setCurrentRecipeIndex(updatedRecipes.length - 1);
+      }
+      alert(`Recipe with ID: ${recipeId} accepted`);
+    } catch (error) {
+      console.error('Error accepting recipe:', error);
+      alert(`Error accepting recipe: ${error.message}`);
+    }
   };
 
-  const handleSendMessage = () => {
+  const handleSendMessage = async () => {
     alert(`Message for recipe ID: ${selectedRecipe} - ${message}`);
     handleCloseDialog();
   };
@@ -44,12 +64,28 @@ const Admin = () => {
     navigate('/login');
   };
 
+  const nextRecipe = () => {
+    if (currentRecipeIndex < recipes.length - 1) {
+      setCurrentRecipeIndex(currentRecipeIndex + 1);
+    }
+  };
+
+  const previousRecipe = () => {
+    if (currentRecipeIndex > 0) {
+      setCurrentRecipeIndex(currentRecipeIndex - 1);
+    }
+  };
+
+  if (recipes.length === 0) {
+    return <Typography variant="h5">No recipes to approve</Typography>;
+  }
+
+  const currentRecipe = recipes[currentRecipeIndex];
+
   return (
     <Box sx={{ flexGrow: 1, p: 2 }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-        <Typography variant="h3">
-          Admin Page
-        </Typography>
+        <Typography variant="h3">Admin Page</Typography>
         <Button
           onClick={handleLogout}
           variant="contained"
@@ -64,57 +100,67 @@ const Admin = () => {
           Log out
         </Button>
       </Box>
-      <Grid container spacing={2}>
-        {recipesToApprove.map(recipe => (
-          <Grid key={recipe.id} item xs={12} sm={6} md={3}>
-            <Card onClick={() => handleOpenRecipe(recipe.id)} sx={{ cursor: 'pointer' }}>
-              <CardMedia
-                component="img"
-                sx={{ height: 140 }}
-                image={recipe.imageUrl}
-                alt={recipe.title}
-              />
-              <CardContent>
-                <Typography variant="h6">{recipe.title}</Typography>
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
-                  <Button
-                    variant="contained"
-                    sx={{
-                      backgroundColor: 'green',
-                      color: 'white',
-                      '&:hover': {
-                        backgroundColor: 'darkgreen',
-                      },
-                    }}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleAccept(recipe.id);
-                    }}
-                  >
-                    Accept
-                  </Button>
-                  <Button
-                    variant="contained"
-                    sx={{
-                      backgroundColor: 'red',
-                      color: 'white',
-                      '&:hover': {
-                        backgroundColor: 'darkred',
-                      },
-                    }}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleReject(recipe.id);
-                    }}
-                  >
-                    Reject
-                  </Button>
-                </Box>
-              </CardContent>
-            </Card>
-          </Grid>
-        ))}
-      </Grid>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+        <IconButton onClick={previousRecipe} disabled={currentRecipeIndex === 0}>
+          <ArrowBackIosIcon />
+        </IconButton>
+        <Box sx={{ flexGrow: 1, mx: 2 }}>
+          <Card sx={{ cursor: 'pointer' }}>
+            <CardMedia
+              component="img"
+              sx={{ height: 300 }}
+              image={currentRecipe.imageUrl}
+              alt={currentRecipe.name}
+            />
+            <CardContent>
+              <Typography variant="h6">{currentRecipe.name}</Typography>
+              <Typography variant="body2" color="text.secondary">{currentRecipe.desc}</Typography>
+              <Typography variant="body2" color="text.secondary">Cuisine Type: {currentRecipe.cuisineType}</Typography>
+              <Typography variant="body2" color="text.secondary">Meal Type: {currentRecipe.mealType}</Typography>
+              <Typography variant="body2" color="text.secondary">Created By: {currentRecipe.createdBy}</Typography>
+              <Typography variant="body2" color="text.secondary">Steps: {Array.isArray(currentRecipe.steps) ? currentRecipe.steps.join(', ') : currentRecipe.steps}</Typography>
+              <Typography variant="body2" color="text.secondary">User Made: {currentRecipe.userMade}</Typography>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
+                <Button
+                  variant="contained"
+                  sx={{
+                    backgroundColor: 'green',
+                    color: 'white',
+                    '&:hover': {
+                      backgroundColor: 'darkgreen',
+                    },
+                  }}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleAccept();
+                  }}
+                >
+                  Accept
+                </Button>
+                <Button
+                  variant="contained"
+                  sx={{
+                    backgroundColor: 'red',
+                    color: 'white',
+                    '&:hover': {
+                      backgroundColor: 'darkred',
+                    },
+                  }}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleReject();
+                  }}
+                >
+                  Reject
+                </Button>
+              </Box>
+            </CardContent>
+          </Card>
+        </Box>
+        <IconButton onClick={nextRecipe} disabled={currentRecipeIndex === recipes.length - 1}>
+          <ArrowForwardIosIcon />
+        </IconButton>
+      </Box>
       <Dialog open={openDialog} onClose={handleCloseDialog}>
         <DialogTitle>Reject Recipe</DialogTitle>
         <DialogContent>
