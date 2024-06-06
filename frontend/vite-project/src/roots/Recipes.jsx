@@ -20,7 +20,8 @@ import {
 // Notes:
 // stored fetching URL
 const Recipes = () => {
-  const [currentUser, setCurrentUser] = useState("");
+  const [currentUser, setCurrentUser] = useState(null);
+  const [flag, setFlag] = useState(false);
   const [allrecipes, setAllRecipes] = useState([]);
   const [recipes, setRecipes] = useState([]);
   const [type, setType] = useState("");
@@ -151,10 +152,13 @@ const Recipes = () => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         // User is signed in
+        
         setCurrentUser(user.uid);
+        setFlag(false);
         //console.log(user.uid);
       } else {
         // User is signed out
+        setFlag(true);
         setCurrentUser(null);
       }
     });
@@ -173,12 +177,14 @@ const Recipes = () => {
     // TODO: save the recipe to firebase
     // console.log(currentUser);
     // console.log(recipe.id);
-    try {
-      await axios.post(
-        `http://localhost:5001/api/auth/${currentUser}/${recipe.id}`
-      );
-    } catch (error) {
-      console.error("Error fetching recipes:", error);
+    if (currentUser) {
+      try {
+        await axios.post(
+          `http://localhost:5001/api/auth/${currentUser}/${recipe.id}`
+        );
+      } catch (error) {
+        console.error("Error fetching recipes:", error);
+      }
     }
   };
 
@@ -426,13 +432,16 @@ const Recipes = () => {
                 <CardContent
                   sx={{ display: "flex", justifyContent: "flex-end" }}
                 >
-                  <Button
-                    variant="contained"
-                    color="secondary"
-                    onClick={() => handleSave(recipe)}
-                  >
-                    Save
-                  </Button>
+                
+                {!flag && (
+                    <Button
+                      variant="contained"
+                      color="secondary"
+                      onClick={() => handleSave(recipe)}
+                    >
+                      Save
+                    </Button>
+                  )}
                 </CardContent>
               </Card>
 
