@@ -363,27 +363,23 @@ const Recipes = () => {
         <Grid container spacing={2} justifyContent="center">
           {filteredRecipes.map((recipe, index) => (
             <Grid item key={index} xs={12} sm={6} md={4}>
-              <Link
+              <Card
+                sx={{
+                  height: "100%",
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "space-between",
+                }}
+                onMouseOver={(e) => (e.currentTarget.style.transform = "translateY(-5px)")}
+                onMouseOut={(e) => (e.currentTarget.style.transform = "translateY(0)")}
+              >
+                <Link
                   to={{
                     pathname: recipe.userMade
                       ? `recipeView/userCreated/${recipe.id}`
                       : `recipeView/official/${recipe.id}`,
                   }}
-                  style={{ textDecoration: 'none' }}
-                >
-                <Card
-                  sx={{
-                    height: "100%",
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "space-between",
-                  }}
-                  onMouseOver={(e) =>
-                    (e.currentTarget.style.transform = "translateY(-5px)")
-                  }
-                  onMouseOut={(e) =>
-                    (e.currentTarget.style.transform = "translateY(0)")
-                  }
+                  style={{ textDecoration: "none", color: "inherit" }} // Ensures text color stays as it is
                 >
                   <CardMedia
                     component="img"
@@ -392,27 +388,28 @@ const Recipes = () => {
                     alt={recipe.name}
                   />
                   <CardContent sx={{ flexGrow: 1 }}>
-                    <Typography variant="h6">{recipe.name}</Typography>
-                    <Typography variant="body2" color="text.secondary">
+                    <Typography variant="h6" sx={{ color: 'inherit' }}>{recipe.name}</Typography>
+                    <Typography variant="body2" color="text.secondary" sx={{ color: 'inherit' }}>
                       Meal Type: {recipe.meal}
                     </Typography>
-                    <Typography variant="body2" color="text.secondary">
+                    <Typography variant="body2" color="text.secondary" sx={{ color: 'inherit' }}>
                       Time Takes: {recipe.time} mins
                     </Typography>
                   </CardContent>
-                  <CardContent
-                    sx={{ display: "flex", justifyContent: "flex-end" }}
+                </Link>
+                <CardContent
+                  sx={{ display: "flex", justifyContent: "flex-end" }}
+                >
+                  <Button
+                    variant="contained"
+                    color="secondary"
+                    onClick={() => handleSave(recipe)}
                   >
-                    <Button
-                      variant="contained"
-                      color="secondary"
-                      onClick={() => handleSave(recipe)}
-                    >
-                      Save
-                    </Button>
-                  </CardContent>
-                </Card>
-              </Link>
+                    Save
+                  </Button>
+                </CardContent>
+              </Card>
+
             </Grid>
           ))}
         </Grid>
