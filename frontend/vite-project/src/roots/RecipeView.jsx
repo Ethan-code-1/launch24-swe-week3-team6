@@ -37,6 +37,7 @@ const RecipeView = () => {
   const [uid, setUid] = useState('');
   const [revs, setRevs] = useState(null);
   const [showReplies, setShowReplies] = useState([]);
+  const [image, setImage] = useState("");
 
   const { rid } = useParams();
 
@@ -49,7 +50,9 @@ const RecipeView = () => {
 
       setRecipe(res.data.rec);
       setNutritionFacts(res.data.rec.nutritionFacts);
-      console.log(res.data.rec.nutritionFacts);
+      setImage(res.data.rec.img);
+      // console.log(res.data.rec.nutritionFacts);
+      console.log(res.data.rec.img);
       console.log(res.data.revs);
       setRevs(res.data.revs);
     } catch (e) {
@@ -176,7 +179,7 @@ const RecipeView = () => {
             <div className='page-subtitle'> 2 comments</div>
           </div>
 
-          <img src={RecipeImage} alt='Recipe Image' className='recipe-image' />
+          <img src={image} alt='Recipe Image' className='recipe-image' />
           <div className='recipe-info'> {recipe && recipe.desc}</div>
         </div>
         {recipe && <Recipe recipe={recipe} nutrition={ nutritionFacts } />}
