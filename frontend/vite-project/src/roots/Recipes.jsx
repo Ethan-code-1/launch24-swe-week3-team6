@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "../../firebase";
 import {
   Box,
   Card,
@@ -18,6 +20,7 @@ import {
 // Notes:
 // stored fetching URL
 const Recipes = () => {
+  const [currentUser, setCurrentUser] = useState("");
   const [allrecipes, setAllRecipes] = useState([]);
   const [recipes, setRecipes] = useState([]);
   const [type, setType] = useState("");
@@ -145,17 +148,38 @@ const Recipes = () => {
   }
 
   useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        // User is signed in
+        setCurrentUser(user.uid);
+        //console.log(user.uid);
+      } else {
+        // User is signed out
+        setCurrentUser(null);
+      }
+    });
+
     if (type) {
       setRecipes([]); // Reset recipes state
       fetchRecipes(type);
     } else {
       fetchAllRecipes();
     }
+    // Clean up subscription on unmount
+    return () => unsubscribe();
   }, [type]);
 
-  const handleSave = (recipe) => {
+  const handleSave = async (recipe) => {
     // TODO: save the recipe to firebase
-    console.log("Recipe saved:", recipe);
+    // console.log(currentUser);
+    // console.log(recipe.id);
+    try {
+      await axios.post(
+        `http://localhost:5001/api/auth/${currentUser}/${recipe.id}`
+      );
+    } catch (error) {
+      console.error("Error fetching recipes:", error);
+    }
   };
 
   const handleSubmit = async () => {
@@ -374,12 +398,10 @@ const Recipes = () => {
                 onMouseOut={(e) => (e.currentTarget.style.transform = "translateY(0)")}
               >
                 <Link
-                  to={{
-                    pathname: recipe.userMade
-                      ? `recipeView/userCreated/${recipe.id}`
-                      : `recipeView/official/${recipe.id}`,
-                  }}
-                  style={{ textDecoration: "none", color: "inherit" }} // Ensures text color stays as it is
+                  to={recipe.userMade
+                        ? `recipeView/userCreated/${recipe.id}`
+                        : `recipeView/official/${recipe.id}`}
+                  style={{ textDecoration: "none", color: "inherit" }}  // Ensures text color stays as it is
                 >
                   <CardMedia
                     component="img"
