@@ -1,6 +1,7 @@
 import React from 'react';
 import { Box, Card, CardContent, CardMedia, Typography, Grid, Button } from '@mui/material';
 import CountUp from 'react-countup';
+import { Link } from "react-router-dom";
 import axios from 'axios';
 
 const Home = () => {
@@ -20,6 +21,11 @@ const Home = () => {
             <Typography variant="subtitle1" color="text.secondary" component="div" sx={{ mt: 2 }}>
               Start exploring recipes today! Search user generated ones or even create your own!
             </Typography>
+            <Link
+            to={{
+              pathname: '/recipes',
+            }}
+            style={{ textDecoration: "none" }}>
             <Button
                 variant="contained"
                 sx={{
@@ -34,6 +40,7 @@ const Home = () => {
               >
                 Browse Recipes
               </Button>
+              </Link>
           </CardContent>
         </Box>
         <CardMedia
