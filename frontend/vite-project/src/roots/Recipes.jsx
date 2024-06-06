@@ -80,7 +80,7 @@ const Recipes = () => {
           image: recipe.image || null,
           time: recipe.totalTime || null,
           id: recipe.id,
-          userMade: true,
+          userMade: recipe.userMade,
         };
         newRecipes.push(recipeObj);
       });
@@ -125,7 +125,7 @@ const Recipes = () => {
           image: recipe.image || null,
           time: recipe.totalTime || null,
           id: recipe.id,
-          userMade: true,
+          userMade: recipe.userMade,
         };
         newRecipes.push(recipeObj);
       });
@@ -228,7 +228,7 @@ const Recipes = () => {
           image: recipe.image || null,
           time: recipe.totalTime || null,
           id: recipe.id,
-          userMade: true,
+          userMade: recipe.userMade,
         };
         newRecipes.push(recipeObj);
       });
