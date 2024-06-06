@@ -5,6 +5,8 @@ import recipePage from './routes/filter.js';
 import homeRouter from './routes/home.js';
 import myRecipesRouter from './routes/myRecipes.js';
 import recipeRouter from './routes/recipe.js';
+import authRouter from './routes/auth.js';
+import chatRouter from './routes/chat.js';
 
 const app = express();
 const port = process.env.PORT || 5001;
@@ -29,6 +31,8 @@ const url =
 app.use("/home", homeRouter);
 app.use("/myRecipes", myRecipesRouter);
 app.use("/recipe", recipeRouter);
+app.use("/api/auth", authRouter);
+app.use("/chat", chatRouter);
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);

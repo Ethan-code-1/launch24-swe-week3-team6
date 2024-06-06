@@ -274,7 +274,6 @@ const RecipeView = () => {
                                     <div className='review-date'>{rep.time}</div>
                                   </div>
                                   
-                                  <AverageStars rating={5.0} className='review-stars' />
                                   <div className='review-comment'>
                                     {rep.content}
                                   </div>
