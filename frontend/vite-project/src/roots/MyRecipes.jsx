@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Box, Card, CardContent, CardMedia, Typography, Grid, Button, TextField, IconButton, Modal, Autocomplete, MenuItem, Select, FormControl, InputLabel } from '@mui/material';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import EditIcon from '@mui/icons-material/Edit'; 
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import '../styles/MyRecipes.css';
 import axios from 'axios';
 import { getAuth, onAuthStateChanged } from "firebase/auth";
@@ -14,6 +15,8 @@ const MyRecipes = () => {
   const [desc, setDesc] = useState('');
   const [cuisineType, setCuisineType] = useState('');
   const [mealType, setMealType] = useState('');
+  const [image, setImage] = useState(null); 
+  const [imagePreview, setImagePreview] = useState(''); 
   const [uid, setUid] = useState('');
   const [yourRecipes, setYourRecipes] = useState([]);
   const [favoritedRecipes, setFavoritedRecipes] = useState([]);
@@ -53,7 +56,6 @@ const MyRecipes = () => {
     }
   };
 
-
   const handleEdit = (recipe) => {
     setEditingRecipe(recipe);
     console.log(editingRecipe);
@@ -71,8 +73,19 @@ const MyRecipes = () => {
     setAddingNewRecipe(!addingNewRecipe);
   };
 
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    setImage(file);
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setImagePreview(reader.result);
+    };
+    reader.readAsDataURL(file);
+  };
+
   async function handleSubmit() {
     console.log('Submitted', uid);
+    console.log('Image:', image); 
     const result = await axios.post(`http://localhost:5001/myRecipes/draft`, {'name': title, 'desc': desc, 'cuisineType': cuisineType, 'mealType': mealType, 'uid': uid });
     console.log(result);
     await fetchCreatedRecipes(uid);
@@ -187,7 +200,26 @@ const MyRecipes = () => {
               ))}
             </Select>
           </FormControl>
-          <Button variant="contained" color="primary" onClick={() => handleSubmit()}>Submit</Button>
+          <Button
+            variant="contained"
+            component="label"
+            sx={{ mb: 2 }}
+          >
+            Upload Image
+            <input
+              type="file"
+              hidden
+              accept="image/*"
+              onChange={handleImageChange}
+            />
+            {image && <CheckCircleIcon sx={{ ml: 1, color: 'green' }} />}
+          </Button>
+          {imagePreview && (
+            <Box sx={{ mt: 2 }}>
+              <img src={imagePreview} alt="Recipe" style={{ maxWidth: '100%', maxHeight: '200px' }} />
+            </Box>
+          )}
+          <Button variant="contained" color="primary" style = {{display: 'block'}} onClick={handleSubmit}>Submit</Button>
         </Card>
       )}
 
@@ -197,7 +229,7 @@ const MyRecipes = () => {
             <a 
               href={`./recipeView/${recipe.id}`} 
               onClick={(e) => {
-                if (e.defaultPrevented) return; // Check if default action was prevented
+                if (e.defaultPrevented) return; 
                 handleOpenRecipe(recipe.id);
               }}
               style={{textDecoration:'none'}}
