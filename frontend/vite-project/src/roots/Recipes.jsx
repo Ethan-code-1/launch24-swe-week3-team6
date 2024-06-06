@@ -15,13 +15,18 @@ import {
   CardMedia,
   TextField,
   Autocomplete,
+  Snackbar, 
+  Alert
 } from "@mui/material";
 
 // Notes:
 // stored fetching URL
 const Recipes = () => {
+  // for Save Feature
   const [currentUser, setCurrentUser] = useState(null);
   const [flag, setFlag] = useState(false);
+  const [notification, setNotification] = useState(false);
+
   const [allrecipes, setAllRecipes] = useState([]);
   const [recipes, setRecipes] = useState([]);
   const [type, setType] = useState("");
@@ -182,6 +187,7 @@ const Recipes = () => {
         await axios.post(
           `http://localhost:5001/api/auth/${currentUser}/${recipe.id}`
         );
+        setNotification(true); // Show notification on successful save
       } catch (error) {
         console.error("Error fetching recipes:", error);
       }
@@ -449,6 +455,16 @@ const Recipes = () => {
           ))}
         </Grid>
       )}
+      <Snackbar
+        open={notification}
+        autoHideDuration={3000}
+        onClose={() => setNotification(false)}
+        anchorOrigin={{ vertical: 'center', horizontal: 'center' }}
+      >
+        <Alert onClose={() => setNotification(false)} severity="success">
+          Saved successfully!
+        </Alert>
+      </Snackbar>
     </Box>
   );
 };
