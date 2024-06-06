@@ -364,11 +364,13 @@ const Recipes = () => {
           {filteredRecipes.map((recipe, index) => (
             <Grid item key={index} xs={12} sm={6} md={4}>
               <Link
-                to={{
-                  pathname: `/RecipeView/${recipe.id}`,
-                }}
-                style={{ textDecoration: "none" }}
-              >
+                  to={{
+                    pathname: recipe.userMade
+                      ? `/userCreated/${recipe.id}`
+                      : `/official/${recipe.id}`,
+                  }}
+                  style={{ textDecoration: 'none' }}
+                >
                 <Card
                   sx={{
                     height: "100%",
