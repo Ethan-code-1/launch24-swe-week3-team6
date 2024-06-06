@@ -54,13 +54,12 @@ router.post('/nutrition', async (req, res) => {
         const recipe = req.body;
         const docId = recipe.docId
         console.log("doc" + docId);
-        const msg = 'Create an array of nutrition facts from this description: ' + recipe.name + " " + recipe.desc + " in this format: " + `    
-        [
+        const msg = 'Create an array of nutrition facts from this description: ' + recipe.name + " " + recipe.desc + " in this format: " + `
         { value: "", label: "calories" },
         { value: "", label: "fat" },
         { value: "", label: "carbs" },
         { value: "", label: "protein" },
-        ];`;
+        `;
         // console.log(msg)
         const completion = await openai.chat.completions.create({
             messages: [{role: 'user', content: msg}],

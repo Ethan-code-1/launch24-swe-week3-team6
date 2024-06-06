@@ -6,7 +6,7 @@ const Recipe = (data) => {
 
   const nutrition = data.nutrition;
 
-  console.log(nutrition);
+  console.log("nutrition" + nutrition);
   console.log(typeof nutrition);
 
   function extractNutritionData(nutritionString) {
