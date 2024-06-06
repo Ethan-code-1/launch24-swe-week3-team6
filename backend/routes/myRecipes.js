@@ -55,12 +55,12 @@ router.post('/nutrition', async (req, res) => {
         const docId = recipe.docId
         console.log("doc" + docId);
         const msg = 'Create an array of nutrition facts from this description: ' + recipe.name + " " + recipe.desc + " in this format: " + `    
-        const nutritionFacts = [
-        { value: '', label: 'calories' },
-        { value: '', label: 'fat' },
-        { value: '', label: 'carbs' },
-        { value: '', label: 'protein' },
-        ];`;
+        {array: [
+        { value: "", label: "calories" },
+        { value: "", label: "fat" },
+        { value: "", label: "carbs" },
+        { value: "", label: "protein" },
+        ]};`;
         // console.log(msg)
         const completion = await openai.chat.completions.create({
             messages: [{role: 'user', content: msg}],
@@ -70,8 +70,13 @@ router.post('/nutrition', async (req, res) => {
         console.log('completion', completion.choices[0].message.content);
         const result = completion.choices[0].message.content;
 
-        // console.log(recipes);
+        // const cleanedResult = result.replace(/(\r\n|\n|\r)/gm, "").trim();
+        // console.log(cleanedResult)
+        // const nutritionFacts = JSON.parse(cleanedResult);
+
+        console.log("fin");
         await updateDoc(doc(db, 'recipes', docId), { nutritionFacts: result });
+        console.log("fini");
 
         // res.status(200).send(docRef);
     } catch (e) {

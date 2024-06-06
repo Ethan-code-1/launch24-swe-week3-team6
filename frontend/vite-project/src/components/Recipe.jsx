@@ -1,25 +1,37 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react';
 import '../styles/recipe.css'
 
 const Recipe = (data) => {
   const recipe = data.recipe;
-    const nutritionFacts = [
-  { value: '508', label: 'calories' },
-  { value: '34g', label: 'fat' },
-  { value: '12g', label: 'carbs' },
-  { value: '25g', label: 'protein' },
-  ];
+
+  const nutrition = data.nutrition;
+
+  function extractNutritionData(nutritionString) {
+    const regex = /{ value: "(.*?)", label: "(.*?)" }/g;
+    const nutritionData = [];
+    let match;
+
+    while ((match = regex.exec(nutritionString)) !== null) {
+        nutritionData.push({ value: match[1], label: match[2] });
+    }
+
+    return nutritionData;
+}
+
+  const nutritionFacts = extractNutritionData(nutrition);
+  console.log(nutritionFacts);
+  
   
   const split = recipe.steps.split('\n');
-  console.log('split', split);
+  // console.log('split', split);
 
   let ings =  split.splice(split.indexOf("Ingredients:") + 1, split.indexOf("Instructions:") - 3)
-  console.log('ingredients', ings)
+  // console.log('ingredients', ings)
   ings = ings.map((i) => {
     return i.includes(':') ? i : i.slice(2)
   })
   ings = ings.filter((i) => i !== '');
-  console.log('ingredients', ings)
+  // console.log('ingredients', ings)
 
   let instructions = split.splice(split.indexOf("Instructions:"))
   instructions = instructions.map((inst) => {return inst.slice(2)})
