@@ -50,7 +50,6 @@ router.get("/:cat", async (req, res) => {
   }
 });
 
-// get search results
 router.get("/search/:q", async (req, res) => {
   //console.log("get search results");
   // searchQuery dependent on what ingredient the user is looking for (e.g. "chicken", "corn")
@@ -77,6 +76,7 @@ router.get("/search/:q", async (req, res) => {
         searchedrecipeinfo.recipe_img = hit.recipe.image;
         searchedrecipeinfo.recipe_ingredients = hit.recipe.ingredientLines;
         searchedrecipeinfo.recipe_link = hit.recipe.url;
+        searchedrecipeinfo.recipe_id = hit.recipe.url;
 
         usersearchdata.push(searchedrecipeinfo);
         console.log(searchedrecipeinfo);
