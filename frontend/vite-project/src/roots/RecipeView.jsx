@@ -257,40 +257,45 @@ const RecipeView = () => {
                         </div>
       
                       )}
-                      <h3>Replies</h3>
-                      {showReplies.includes(rev.id) && (rev.replies.map((rep) => {
-                        return (
-                          <div className='review'>
-                            <div>
-                              <img src={Profile} alt='User Profile' className='profile-picture'/>
-                            </div>
+                      
+                      {showReplies.includes(rev.id) && (
+                        <>
+                          <h3>Replies</h3>
+                          {rev.replies.map((rep) => {
+                            return (
+                              <div className='review'>
+                                <div>
+                                  <img src={Profile} alt='User Profile' className='profile-picture'/>
+                                </div>
 
-                            <div>
-                              <div className='review-info'>
-                                <div className='review-username'>{rep.user.name}</div>
-                                <div className='review-date'>{rep.time}</div>
-                              </div>
-                              
-                              <AverageStars rating={5.0} className='review-stars' />
-                              <div className='review-comment'>
-                                {rep.content}
-                              </div>
+                                <div>
+                                  <div className='review-info'>
+                                    <div className='review-username'>{rep.user.name}</div>
+                                    <div className='review-date'>{rep.time}</div>
+                                  </div>
+                                  
+                                  <AverageStars rating={5.0} className='review-stars' />
+                                  <div className='review-comment'>
+                                    {rep.content}
+                                  </div>
 
-                              <div className='review-actions'>
-                                <div className='upvote-section'>
-                                  <button className='upvote-button' onClick={handleSetUpvote}>
-                                    {upvote ? <img src={UpvoteFilled} alt="Upvote Filled" className='upvote' /> : <img src={Upvote} alt="Upvote" className='upvote' />}
-                                  </button>
-              
-                                  <div className='upvote-number'>{rev.replies.length}</div>
+                                  <div className='review-actions'>
+                                    <div className='upvote-section'>
+                                      <button className='upvote-button' onClick={handleSetUpvote}>
+                                        {upvote ? <img src={UpvoteFilled} alt="Upvote Filled" className='upvote' /> : <img src={Upvote} alt="Upvote" className='upvote' />}
+                                      </button>
+                  
+                                      <div className='upvote-number'>{rev.replies.length}</div>
+                                    </div>
+                                  </div>
                                 </div>
                               </div>
-                            </div>
-                          </div>
-                        )
-                      }))}
-                      
-                      
+                            )
+                          })}
+                      </>
+                      )}
+                        
+
                     </div>
                   </div>
                 <div className='review-subline'></div>
