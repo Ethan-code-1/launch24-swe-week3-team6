@@ -131,11 +131,11 @@ const MyRecipes = () => {
 
   const handleDelete = async (recipeId, isPending) => {
     try {
+      const endpoint = isPending ? `http://localhost:5001/myRecipes/pending/${recipeId}` : `http://localhost:5001/myRecipes/${recipeId}`;
+      await axios.delete(endpoint, { data: { uid } });
       if (isPending) {
-        await axios.delete(`http://localhost:5001/myRecipes/pending/${recipeId}`);
         setPendingRecipes(prevRecipes => prevRecipes.filter(recipe => recipe.id !== recipeId));
       } else {
-        await axios.delete(`http://localhost:5001/myRecipes/${recipeId}`);
         setYourRecipes(prevRecipes => prevRecipes.filter(recipe => recipe.id !== recipeId));
       }
       alert('Recipe deleted successfully');
@@ -143,6 +143,7 @@ const MyRecipes = () => {
       console.error('Error deleting recipe:', error);
     }
   };
+  
 
   useEffect(() => {
     const auth = getAuth();
