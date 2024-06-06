@@ -50,15 +50,16 @@ const Chatbot = ({ showChat, handleSetChatView }) => {
     }
   };
 
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleChatSubmit(e);
+    }
+  };
+
   const [messages, setMessages] = useState([
+    {"role": "system", "content": "This is a recipe app where you will be asked questions on specific recipes"},
     {"role": "assistant", "content": "Hi! How can I help you today?"},
-    // {"role": "user", "content": "Who won the world series in 2020?"},
-    // {"role": "assistant", "content": "The Los Angeles Dodgers won the World Series in 2020."},
-    // { "role": "user", "content": "Where was it played?" },
-    // {"role": "assistant", "content": "You are a helpful assistant."},
-    // { "role": "user", "content": "Who won the world series in 2020?" },
-    // {"role": "assistant", "content": "You are a helpful assistant."},
-    // {"role": "user", "content": "Who won the world series in 2020?"},
     ]);
   
   return (
@@ -75,7 +76,7 @@ const Chatbot = ({ showChat, handleSetChatView }) => {
             </svg>
 
          <div className='chats-container'>
-                {messages.map((msg, index) => (
+                {messages.filter(msg => msg.role !== 'system').map((msg, index) => (
                   <div key={index} className={`message ${msg.role}`}>
                     {msg.content}
                   </div>
@@ -95,6 +96,7 @@ const Chatbot = ({ showChat, handleSetChatView }) => {
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
+            onKeyDown={handleKeyDown}
             placeholder="Type your message..."
           />
           <button type="submit" className='chat-submit'>
