@@ -58,32 +58,34 @@ const Home = () => {
               Explore
             </Typography>
             <Typography variant="h2" sx={{ fontWeight: 'bold' }}>
-              <CountUp start={0} end={50} duration={2} />+
+              <CountUp start={0} end={10000} duration={2} />+
             </Typography>
             <Typography variant="h6">
               Recipes
             </Typography>
           </Grid>
-          <Grid item xs={12} md={4} sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', textAlign: 'center' }}>
-            <Typography variant="h6">
-              Filter by
-            </Typography>
-            <Typography variant="h2" sx={{ fontWeight: 'bold' }}>
-              <CountUp start={0} end={15} duration={2} />+
-            </Typography>
-            <Typography variant="h6">
-              Ingredients
-            </Typography>
-          </Grid>
+          
           <Grid item xs={12} md={4} sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', textAlign: 'center' }}>
             <Typography variant="h6">
               Sort by
             </Typography>
             <Typography variant="h2" sx={{ fontWeight: 'bold' }}>
-              <CountUp start={0} end={10} duration={2} />+
+              <CountUp start={0} end={35} duration={2} />+
             </Typography>
             <Typography variant="h6">
               Diets
+            </Typography>
+          </Grid>
+
+          <Grid item xs={12} md={4} sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', textAlign: 'center' }}>
+            <Typography variant="h6">
+              Filter by
+            </Typography>
+            <Typography variant="h2" sx={{ fontWeight: 'bold' }}>
+              <CountUp start={5} end={5} duration={2} />
+            </Typography>
+            <Typography variant="h6">
+              Meal Types
             </Typography>
           </Grid>
         </Grid>
