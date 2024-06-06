@@ -4,9 +4,8 @@ import request from 'request';
 import dotenv from "dotenv";
 import OpenAI from "openai";
 
-import {db, storage} from "./../firebase.js";
+import { db } from "./../firebase.js";
 import { collection, getDocs, updateDoc, doc, addDoc, getDoc, deleteDoc, query, where } from "firebase/firestore";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 const requestGet = util.promisify(request.get);
 const router = express.Router();
@@ -33,20 +32,13 @@ router.post('/draft', async (req, res) => {
         const ans = completion.choices[0].message.content;
         recipe["steps"] = ans;
         recipe['createdBy'] = recipe.uid;
+        recipe['userMade'] = true;
         delete recipe['uid'];
         // delete recipe['img']
-        const docRef = await addDoc(collection(db, 'recipes'), recipe);
-
-        // const imgRef = ref(storage, `recipeImages/${docRef.id}`);
-        // console.log('imgRef', imgRef);
-        // const imgSnapshot = await uploadBytes(imgRef, image);
-        // console.log('imgSnapShot', imgSnapshot);
-        // const downloadUrl = getDownloadURL(imgSnapshot.ref);
-        // console.log('downloadUrl', downloadUrl);
-        // await updateDoc(docRef, {'img': downloadUrl});
+        const docRef = await addDoc(collection(db, 'pending_recipes'), recipe);
         
         // add recipe to user's created recipes
-        let recipes = (await getDoc(doc(db, 'users', recipe.createdBy))).data()['myRecipes'];
+        let recipes = (await getDoc(doc(db, 'users', recipe.createdBy))).data()['pendingRecipes'];
         if (recipes) {
             // console.log('pushing', recipes)
             recipes.push(docRef.id);
@@ -54,7 +46,7 @@ router.post('/draft', async (req, res) => {
             recipes = [docRef.id];
         }
         // console.log(recipes);
-        await updateDoc(doc(db, 'users', recipe.createdBy), {'myRecipes': recipes});
+        await updateDoc(doc(db, 'users', recipe.createdBy), {'pendingRecipes': recipes});
 
         // console.log('doc', docRef.id);
         res.status(200).send({ docRef, docId: docRef.id });
