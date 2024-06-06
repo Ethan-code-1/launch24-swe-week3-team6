@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
 import { Box, Card, CardContent, CardMedia, Typography, Grid, Button, TextField, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
+import { getAuth, signOut } from 'firebase/auth';
+import { useNavigate } from 'react-router-dom';
 
 const Admin = () => {
   const [openDialog, setOpenDialog] = useState(false);
   const [message, setMessage] = useState('');
   const [selectedRecipe, setSelectedRecipe] = useState(null);
+  const navigate = useNavigate();
 
   const recipesToApprove = [
     { id: 1, title: 'Submitted Recipe 1', imageUrl: 'https://www.southernliving.com/thmb/pKa7sB3W1hp0r9ElK4NUYLOCXCw=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/southern-living-27338_Green_Chile_Mac_And_Cheese_With_Chicken_303-7416f067f07f4bf3b6b8aaeddff4542b.jpg' },
@@ -34,11 +37,33 @@ const Admin = () => {
     handleCloseDialog();
   };
 
+  const handleLogout = async () => {
+    const auth = getAuth();
+    await signOut(auth);
+    alert('Log out successfully');
+    navigate('/login');
+  };
+
   return (
     <Box sx={{ flexGrow: 1, p: 2 }}>
-      <Typography variant="h3" sx={{ mb: 2 }}>
-        Admin Page
-      </Typography>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+        <Typography variant="h3">
+          Admin Page
+        </Typography>
+        <Button
+          onClick={handleLogout}
+          variant="contained"
+          sx={{
+            backgroundColor: '#2e6123',
+            color: 'white',
+            '&:hover': {
+              backgroundColor: '#24551e',
+            },
+          }}
+        >
+          Log out
+        </Button>
+      </Box>
       <Grid container spacing={2}>
         {recipesToApprove.map(recipe => (
           <Grid key={recipe.id} item xs={12} sm={6} md={3}>
