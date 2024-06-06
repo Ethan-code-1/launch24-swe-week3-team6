@@ -6,6 +6,9 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import '../styles/MyRecipes.css';
 import axios from 'axios';
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { storage } from "./../../firebase.js";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { v4 } from 'uuid';
 
 const MyRecipes = () => {
   const [showYourRecipes, setShowYourRecipes] = useState(true);
@@ -86,7 +89,22 @@ const MyRecipes = () => {
   async function handleSubmit() {
     console.log('Submitted', uid);
     console.log('Image:', image); 
-    const result = await axios.post(`http://localhost:5001/myRecipes/draft`, {'name': title, 'desc': desc, 'cuisineType': cuisineType, 'mealType': mealType, 'uid': uid });
+    const imgRef = ref(storage, `recipeImages/${v4()}`);
+    console.log('imgRef', imgRef);
+    const imgSnapshot = await uploadBytes(imgRef, image);
+    console.log('imgSnapShot', imgSnapshot);
+    const downloadUrl = await getDownloadURL(imgSnapshot.ref);
+    console.log('downloadUrl', downloadUrl);
+    const data = {
+      'name': title, 
+      'desc': desc, 
+      'cuisineType': cuisineType, 
+      'mealType': mealType, 
+      'uid': uid,
+      'img': downloadUrl
+    }
+    console.log(data);
+    const result = await axios.post(`http://localhost:5001/myRecipes/draft`, data);
     console.log(result);
     await fetchCreatedRecipes(uid);
     toggleAddNewRecipe();
@@ -266,7 +284,7 @@ const MyRecipes = () => {
                   <CardMedia
                     component="img"
                     sx={{ height: 140, borderBottom: '7px solid #2e6123', minHeight: '18vh', maxHeight: '18vh' }}
-                    image={recipe.imageUrl}
+                    image={recipe.img}
                     alt={recipe.name}
                   />
                 </Box>

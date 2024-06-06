@@ -4,8 +4,9 @@ import request from 'request';
 import dotenv from "dotenv";
 import OpenAI from "openai";
 
-import {db} from "./../firebase.js";
+import {db, storage} from "./../firebase.js";
 import { collection, getDocs, updateDoc, doc, addDoc, getDoc, deleteDoc, query, where } from "firebase/firestore";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 const requestGet = util.promisify(request.get);
 const router = express.Router();
@@ -17,21 +18,35 @@ const openai = new OpenAI({apiKey: process.env.OPENAI_API_KEY});
 router.post('/draft', async (req, res) => {
     try {
         const recipe = req.body;
+        console.log(recipe);
+        // const image = JSON.parse(recipe.img);
+        // console.log('image', image);
+
+        // generate steps
         const msg = 'Create a recipe from this description: ' + recipe.name + recipe.desc;
-        console.log(msg)
         const completion = await openai.chat.completions.create({
             messages: [{role: 'user', content: msg}],
             model: "gpt-3.5-turbo",
         });
-        // console.log('completion', completion.choices[0]);
+
+        // create recipy and add recipe doc
         const ans = completion.choices[0].message.content;
         recipe["steps"] = ans;
         recipe['createdBy'] = recipe.uid;
         delete recipe['uid'];
+        // delete recipe['img']
         const docRef = await addDoc(collection(db, 'recipes'), recipe);
-        // console.log('addedDoc', docRef);
+
+        // const imgRef = ref(storage, `recipeImages/${docRef.id}`);
+        // console.log('imgRef', imgRef);
+        // const imgSnapshot = await uploadBytes(imgRef, image);
+        // console.log('imgSnapShot', imgSnapshot);
+        // const downloadUrl = getDownloadURL(imgSnapshot.ref);
+        // console.log('downloadUrl', downloadUrl);
+        // await updateDoc(docRef, {'img': downloadUrl});
+        
+        // add recipe to user's created recipes
         let recipes = (await getDoc(doc(db, 'users', recipe.createdBy))).data()['myRecipes'];
-        console.log('hello', recipes)
         if (recipes) {
             console.log('pushing', recipes)
             recipes.push(docRef.id);
