@@ -94,6 +94,10 @@ const MyRecipes = () => {
     const imgSnapshot = await uploadBytes(imgRef, image);
     console.log('imgSnapShot', imgSnapshot);
     const downloadUrl = await getDownloadURL(imgSnapshot.ref);
+    console.log(downloadUrl);
+    if (downloadUrl === "https://firebasestorage.googleapis.com/v0/b/recipe-app-40db3.appspot.com/o/recipeImages%2Fd59015de-3114-4f3c-9177-06d9a35db09e?alt=media&token=3299610d-a9fb-437b-9a18-5f699b20c30c") {
+      downloadUrl = "https://cdn-icons-png.flaticon.com/512/5635/5635436.png";
+    }
     console.log('downloadUrl', downloadUrl);
     const data = {
       'name': title, 
