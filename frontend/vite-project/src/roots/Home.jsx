@@ -12,7 +12,7 @@ const Home = () => {
 
   return (
     <Box sx={{ flexGrow: 1, p: 2 }}>
-      <Card sx={{ display: 'flex', width: '100%', mb: 4 }}>
+      <Card sx={{ display: 'flex', width: '100%', mb: 4, position: 'relative' }}>
         <Box sx={{ display: 'flex', flexDirection: 'column', flex: 1, justifyContent: 'center', alignItems: 'center', textAlign: 'center' }}>
           <CardContent>
             <Typography component="div" variant="h2" sx={{ fontWeight: 'bold' }}>
@@ -22,11 +22,11 @@ const Home = () => {
               Start exploring recipes today! Search user generated ones or even create your own!
             </Typography>
             <Link
-            to={{
-              pathname: '/recipes',
-            }}
-            style={{ textDecoration: "none" }}>
-            <Button
+              to={{
+                pathname: '/recipes',
+              }}
+              style={{ textDecoration: "none" }}>
+              <Button
                 variant="contained"
                 sx={{
                   mt: 2,
@@ -40,15 +40,27 @@ const Home = () => {
               >
                 Browse Recipes
               </Button>
-              </Link>
+            </Link>
           </CardContent>
         </Box>
-        <CardMedia
-          component="img"
-          sx={{ width: '50%', objectFit: 'contain' }}
-          image="topHome.jpeg"
-          alt="Welcome image"
-        />
+        <Box sx={{ position: 'relative', width: '50%', border : '2px solid #2e6123'}}>
+          <CardMedia
+            component="img"
+            sx={{ width: '100%', objectFit: 'contain' }}
+            image="topHome.jpeg"
+            alt="Welcome image"
+          />
+          <Box
+            sx={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              width: '100%',
+              height: '100%',
+              backgroundColor: 'rgba(46,97,35, 0.25)', 
+            }}
+          />
+        </Box>
       </Card>
 
       <Card className="homeLongBanner" sx={{ display: 'flex', width: '100%', mb: 4, p: 2, borderLeft: '20px solid #2e6123' }}>
@@ -58,32 +70,34 @@ const Home = () => {
               Explore
             </Typography>
             <Typography variant="h2" sx={{ fontWeight: 'bold' }}>
-              <CountUp start={0} end={50} duration={2} />+
+              <CountUp start={0} end={10000} duration={2} />+
             </Typography>
             <Typography variant="h6">
               Recipes
             </Typography>
           </Grid>
-          <Grid item xs={12} md={4} sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', textAlign: 'center' }}>
-            <Typography variant="h6">
-              Filter by
-            </Typography>
-            <Typography variant="h2" sx={{ fontWeight: 'bold' }}>
-              <CountUp start={0} end={15} duration={2} />+
-            </Typography>
-            <Typography variant="h6">
-              Ingredients
-            </Typography>
-          </Grid>
+          
           <Grid item xs={12} md={4} sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', textAlign: 'center' }}>
             <Typography variant="h6">
               Sort by
             </Typography>
             <Typography variant="h2" sx={{ fontWeight: 'bold' }}>
-              <CountUp start={0} end={10} duration={2} />+
+              <CountUp start={0} end={35} duration={2} />+
             </Typography>
             <Typography variant="h6">
               Diets
+            </Typography>
+          </Grid>
+
+          <Grid item xs={12} md={4} sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', textAlign: 'center' }}>
+            <Typography variant="h6">
+              Filter by
+            </Typography>
+            <Typography variant="h2" sx={{ fontWeight: 'bold' }}>
+              <CountUp start={0} end={5} duration={2} />
+            </Typography>
+            <Typography variant="h6">
+              Meal Types
             </Typography>
           </Grid>
         </Grid>
@@ -195,7 +209,6 @@ const Home = () => {
       <br></br>
       <br></br>
     </Box>
-
   );
 };
 
