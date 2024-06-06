@@ -398,11 +398,15 @@ const Recipes = () => {
                 onMouseOut={(e) => (e.currentTarget.style.transform = "translateY(0)")}
               >
                 <Link
+                  to={`recipeView/${recipe.id}`}
+                  style={{ textDecoration: "none", color: "inherit" }}  // Ensures text color stays as it is
+                >
+                {/* <Link
                   to={recipe.userMade
                         ? `recipeView/userCreated/${recipe.id}`
                         : `recipeView/official/${recipe.id}`}
                   style={{ textDecoration: "none", color: "inherit" }}  // Ensures text color stays as it is
-                >
+                ></Link> */}
                   <CardMedia
                     component="img"
                     height="140"
