@@ -10,6 +10,8 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { storage } from "./../../firebase.js";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { v4 } from 'uuid';
+import RecipeCard from '../components/recipeCard.jsx';
+import { Link } from "react-router-dom";
 
 const MyRecipes = () => {
   const [showYourRecipes, setShowYourRecipes] = useState(true);
@@ -356,7 +358,8 @@ const MyRecipes = () => {
       <Grid container spacing={2}>
         {yourRecipes && getRecipes().map(recipe => (
           <Grid key={recipe.id} item xs={12} sm={6} md={3}>
-            <a 
+            {recipe.userMade ? (
+              <a 
               href={`./recipeView/${recipe.id}`} 
               onClick={(e) => {
                 if (e.defaultPrevented) return; 
@@ -364,66 +367,19 @@ const MyRecipes = () => {
               }}
               style={{textDecoration:'none'}}
             >
-              <Card className="recipe-card">
-                <Box sx={{ position: 'relative' }}>
-                  {showYourRecipes && (
-                    <IconButton
-                      aria-label="edit"
-                      onClick={(e) => {
-                        e.preventDefault(); // Prevents the default anchor tag action
-                        e.stopPropagation(); // Stops the propagation to parent elements
-                        handleEdit(recipe);
-                      }}
-                      sx={{ position: 'absolute', top: '0', right: '0', zIndex: 1000 }}
-                    >
-                      <EditIcon style={{ zIndex: 200, color: 'white', background: '#0000006b' }} />
-                    </IconButton>
-                  )}
-                  {!showYourRecipes && (
-                    <IconButton
-                      aria-label="unfavorite"
-                      onClick={(e) => {
-                        e.preventDefault(); // Prevents the default anchor tag action
-                        e.stopPropagation(); // Stops the propagation to parent elements
-                        handleUnfavorite(recipe.id);
-                      }}
-                      sx={{ position: 'absolute', top: '0', right: '0', zIndex: 1 }}
-                      style={{ color: '#ff0000', background: '#0000006b' }}
-                    >
-                      <FavoriteIcon />
-                    </IconButton>
-                  )}
-                  <IconButton
-                    aria-label="delete"
-                    onClick={(e) => {
-                      e.preventDefault(); // Prevents the default anchor tag action
-                      e.stopPropagation(); // Stops the propagation to parent elements
-                      handleDelete(recipe.id, false);
-                    }}
-                    sx={{ position: 'absolute', bottom: '0', right: '0', zIndex: 1000 }}
-                  >
-                    <DeleteIcon style={{ zIndex: 200, color: 'white', background: '#0000006b' }} />
-                  </IconButton>
-                  <CardMedia
-                    component="img"
-                    sx={{ height: 140, borderBottom: '7px solid #2e6123', minHeight: '18vh', maxHeight: '18vh' }}
-                    image={recipe.img}
-                    alt={recipe.name}
-                  />
-                </Box>
-                <CardContent>
-                  <Typography variant="h6">{recipe.title}</Typography>
-                  {recipe.author && (
-                    <Typography variant="subtitle2" color="text.secondary">Author: {recipe.author}</Typography>
-                  )}
-                  <Typography variant="body2" color="text.secondary">
-                    {recipe.desc.length > 40 ? `${recipe.desc.substring(0, 40)}...` : recipe.desc}
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">Cuisine: {recipe.cuisineType}</Typography>
-                  <Typography variant="body2" color="text.secondary">Meal Type: {recipe.mealType}</Typography>
-                </CardContent>
-              </Card>
+              <RecipeCard recipe={recipe}/>
             </a>
+            ) : 
+            (
+              <Link
+                  to={`/recipeView/${recipe.id}`}
+                  state={ {'recipe': JSON.stringify(recipe), 'isStr': true} }
+                  style={{ textDecoration: "none", color: "inherit" }} // Ensures text color stays as it is
+                >
+              <RecipeCard recipe={recipe}/>
+            </Link>
+            )}
+            
           </Grid>
         ))}
       </Grid>

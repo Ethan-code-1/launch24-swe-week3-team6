@@ -43,18 +43,27 @@ const RecipeView = () => {
 
   const { rid } = useParams();
   const location = useLocation();
-  const edamamRecipe = location.state?.recipe;
+  console.log(location);
+  // let s = JSON.parse(location.state);
+  // console
+  let edamamRecipe = location.state?.recipe;
+  if (location.state && location.state.isStr) {
+    edamamRecipe = JSON.parse(edamamRecipe);
+  }
   // console.log("edeam nutrients: ", edamamRecipe.nutrients);
   // const averageRating = 3.5; // Example average rating
 
   const fetchData = async () => {
     try {
       const res = await axios.get(`http://localhost:5001/recipe/${rid}`);
-
+      console.log(res.data);
       // Assuming your response includes averageRating now
       const { rec, reviews, averageRating, count, totalComments } = res.data;
 
       // Update state with the new data
+      if (!rec.userMade) {
+        edamamRecipe = rec;
+      }
       setRecipe(rec);
       setNutritionFacts(rec.nutritionFacts);
       setImage(rec.img);
