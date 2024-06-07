@@ -165,13 +165,24 @@ const Navbar = () => {
 
   const renderContent = () => {
     if (location.pathname.split('/').length > 2) {
-      switch (location.pathname.split('/')[1]) {
-        case 'recipeView':
-          return <RecipeView />;
-        default:
-          return null;
+      if (location.pathname.split('/')[1] === "recipes") {
+        switch (location.pathname.split('/')[1]) {
+          case 'recipes':
+            return <Recipes />;
+          default:
+            return null;
+        }
       }
-    } else {
+      else {
+        switch (location.pathname.split('/')[1]) {
+          case 'recipeView':
+            return <RecipeView />;
+          default:
+            return null;
+        }
+      }
+    }
+    else {
       switch (location.pathname) {
         case '/login':
           return <Login />;

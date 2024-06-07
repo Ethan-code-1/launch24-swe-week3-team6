@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import axios from 'axios';
 
 const Home = () => {
+  // TODO: connect to recipe page (Kening)
   async function handleClick(type) {
     const recipes = (await axios.get(`http://localhost:5001/home/${type}`)).data;
     console.log(recipes);
@@ -123,9 +124,13 @@ const Home = () => {
               <Typography variant="body2" color="text.secondary">
                 Explore popular Mexican food recipes trending online now.
               </Typography>
-              <Button variant="outlined" sx={{ mt: 2, borderColor: '#2e6123', color: '#2e6123', '&:hover' : {backgroundColor: 'rgba(46, 97, 35, 0.04)', borderColor: '#2e6123'} }} onClick={() => handleClick("mexican")}>
+              <Link
+                to={'/recipes/mexican'}
+                style={{ textDecoration: "none", color: "inherit" }}>
+              <Button variant="outlined" sx={{ mt: 2, borderColor: '#2e6123', color: '#2e6123', '&:hover' : {backgroundColor: 'rgba(46, 97, 35, 0.04)', borderColor: '#2e6123'} }}>
                 View Recipes
               </Button>
+              </Link>
             </CardContent>
           </Card>
         </Grid>
@@ -144,9 +149,13 @@ const Home = () => {
               <Typography variant="body2" color="text.secondary">
                 Craving delicious Vegan options? We have you covered.
               </Typography>
-              <Button variant="outlined" sx={{ mt: 2, borderColor: '#2e6123', color: '#2e6123', '&:hover' : {backgroundColor: 'rgba(46, 97, 35, 0.04)', borderColor: '#2e6123'} }} onClick={() => handleClick("vegan")}>
+              <Link
+                to={'/recipes/vegan'}
+                style={{ textDecoration: "none", color: "inherit" }}>
+              <Button variant="outlined" sx={{ mt: 2, borderColor: '#2e6123', color: '#2e6123', '&:hover' : {backgroundColor: 'rgba(46, 97, 35, 0.04)', borderColor: '#2e6123'} }} >
                 View Recipes
               </Button>
+              </Link>
             </CardContent>
           </Card>
         </Grid>
@@ -165,9 +174,13 @@ const Home = () => {
               <Typography variant="body2" color="text.secondary">
                 Looking for something to satisfy your sweet tooth? Look no longer.
               </Typography>
-              <Button variant="outlined" sx={{ mt: 2, borderColor: '#2e6123', color: '#2e6123', '&:hover' : {backgroundColor: 'rgba(46, 97, 35, 0.04)', borderColor: '#2e6123'} }} onClick={() => handleClick("desserts")}>
+              <Link
+                to={'/recipes/desserts'}
+                style={{ textDecoration: "none", color: "inherit" }}>
+              <Button variant="outlined" sx={{ mt: 2, borderColor: '#2e6123', color: '#2e6123', '&:hover' : {backgroundColor: 'rgba(46, 97, 35, 0.04)', borderColor: '#2e6123'} }} >
                 View Recipes
               </Button>
+              </Link>
             </CardContent>
           </Card>
         </Grid>
@@ -186,9 +199,13 @@ const Home = () => {
               <Typography variant="body2" color="text.secondary">
                 Struggling with Keto diet restrictions? Explore our array of options!
               </Typography>
+              <Link
+                to={'/recipes/keto'}
+                style={{ textDecoration: "none", color: "inherit" }}>
               <Button variant="outlined" sx={{ mt: 2, borderColor: '#2e6123', color: '#2e6123', '&:hover' : {backgroundColor: 'rgba(46, 97, 35, 0.04)', borderColor: '#2e6123'} }} onClick={() => handleClick("keto")}>
                 View Recipes
               </Button>
+              </Link>
             </CardContent>
           </Card>
         </Grid>
