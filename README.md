@@ -40,8 +40,9 @@ A recipe platform that provides users with cooking guides and a space to discuss
 3. **Set Up Environment Variables**
     Create a .env file in the backend directory with the following content, replacing the placeholders with your actual Spotify API credentials:
    ```sh
-    CLIENT_ID=your_spotify_client_id
-    CLIENT_SECRET=your_spotify_client_secret
+   APP_ID=your APP ID from Edamam API
+   APP_KEY=your APP KEY from Edamam API
+   OPENAI_API_KEY=your API KEY from openai API
 
 ### Linking Your Project to Firebase with `serviceAccount.js`
 
