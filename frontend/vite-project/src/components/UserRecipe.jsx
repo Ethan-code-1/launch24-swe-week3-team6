@@ -219,7 +219,7 @@ const toggleReplyWindow = (id, v, f) => {
                     className="average-stars"
                   />
                   <div className="page-subtitle">
-                    {averageRating} from {reviewCount} votes{" "}
+                    {averageRating.toFixed(1)} from {reviewCount} votes{" "}
                   </div>
                   <div className="page-subtitle"> &nbsp; &#124; &nbsp; </div>
                   <div className="page-subtitle">{totalComments} comments</div>
@@ -267,178 +267,169 @@ const toggleReplyWindow = (id, v, f) => {
               </div>
             </form>
             <div className="review-subline"></div>
-            {revs &&
-              revs.map((rev) => {
-                return (
-                  <div className="reviews" key={rev.id}>
-                    <div className="review">
-                      <div>
-                        <img
-                          src={Profile}
-                          alt="User Profile"
-                          className="profile-picture"
-                        />
-                      </div>
-
-                      <div>
-                        <div className="review-info">
-                          <div className="review-username">
-                            {rev.user.name}
-                          </div>
-                          <div className="review-date">{rev.timestamp}</div>
-                        </div>
-
-                        <AverageStars
-                          rating={rev.rating ? rev.rating : 5.0}
-                          className="review-stars"
-                        />
-                        <div className="review-comment">{rev.review}</div>
-
-                        <div className="review-actions">
-                          <div className="upvote-section">
-                            <button
-                              className="upvote-button"
-                              onClick={() => handleSetUpvote(rev.id)}
-                            >
-                              {upvotes[rev.id] ? (
-                                <img
-                                  src={UpvoteFilled}
-                                  alt="Upvote Filled"
-                                  className="upvote"
-                                />
-                              ) : (
-                                <img
-                                  src={Upvote}
-                                  alt="Upvote"
-                                  className="upvote"
-                                />
-                              )}
-                            </button>
-
-                            <div className="upvote-number">
-                              {rev.votes.length}
-                            </div>
-                          </div>
-                          <div
-                            className="review-replies"
-                            onClick={() => {
-                              toggleReplyWindow(rev.id, showReplies, setShowReplies);
-                            }}
-                          >
-                            <text>{showReplies.includes(rev.id) ? "Hide Replies" : "View Replies"}</text>
-                          </div>
-
-                          <div className="comment-section">
-                            <button
-                              className="comment-button"
-                              onClick={() => {
-                                toggleReplyWindow(
-                                  rev.id,
-                                  showReply,
-                                  setShowReply
-                                );
-                              }}
-                            >
-                              <img
-                                src={Reply}
-                                alt="Reply"
-                                className="comment"
-                              />
-                              <div className="comment-text">Reply</div>
-                            </button>
-                          </div>
-                        </div>
-
-                        {showReply.includes(rev.id) && (
-                          <div className="reply-window">
-                            <textarea
-                              className="review-input"
-                              maxLength="400"
-                              type="text"
-                              placeholder="Write a reply"
-                              value={reply}
-                              onChange={(e) => setReply(e.target.value)}
-                            />
-                            <div className="reply-button-container">
-                              <Button
-                                variant="contained"
-                                onClick={(e) => {
-                                  handleSubmitReply(e, rev.id);
-                                }}
-                                id="post-button"
-                              >
-                                Submit Reply
-                              </Button>
-                            </div>
-                          </div>
-                        )}
-
-                        {showReplies.includes(rev.id) && (
-                          <>
-                            <h3>Replies</h3>
-                            {rev.replies.map((rep) => {
-                              return (
-                                <div className="review" key={rep.id}>
-                                  <div>
-                                    <img
-                                      src={Profile}
-                                      alt="User Profile"
-                                      className="profile-picture"
-                                    />
-                                  </div>
-
-                                  <div>
-                                    <div className="review-info">
-                                      <div className="review-username">
-                                        {rep.user.name}
-                                      </div>
-                                      <div className="review-date">
-                                        {rep.time}
-                                      </div>
-                                    </div>
-
-                                    <div className="review-comment">
-                                      {rep.content}
-                                    </div>
-
-                                    <div className="review-actions">
-                                      <div className="upvote-section">
-                                        <button
-                                          className="upvote-button"
-                                          onClick={() => handleSetUpvote(rep.id)}
-                                        >
-                                          {upvotes[rep.id] ? (
-                                            <img
-                                              src={UpvoteFilled}
-                                              alt="Upvote Filled"
-                                              className="upvote"
-                                            />
-                                          ) : (
-                                            <img
-                                              src={Upvote}
-                                              alt="Upvote"
-                                              className="upvote"
-                                            />
-                                          )}
-                                        </button>
-
-                                        <div className="upvote-number">
-                                          {rev.replies.length}
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                              );
-                            })}
-                          </>
-                        )}
-                      </div>
-                    </div>
-                    <div className="review-subline"></div>
+{revs &&
+  revs.sort((a, b) => b.votes.length - a.votes.length)
+    .map((rev) => {
+      return (
+        <div className="reviews" key={rev.id}>
+          <div className="review">
+            <div>
+              <img
+                src={Profile}
+                alt="User Profile"
+                className="profile-picture"
+              />
+            </div>
+            <div>
+              <div className="review-info">
+                <div className="review-username">
+                  {rev.user.name}
+                </div>
+                <div className="review-date">{rev.timestamp}</div>
+              </div>
+              <AverageStars
+                rating={rev.rating ? rev.rating : 5.0}
+                className="review-stars"
+              />
+              <div className="review-comment">{rev.review}</div>
+              <div className="review-actions">
+                <div className="upvote-section">
+                  <button
+                    className="upvote-button"
+                    onClick={() => handleSetUpvote(rev.id)}
+                  >
+                    {rev.votes.includes(uid) ? (
+                      <img
+                        src={UpvoteFilled}
+                        alt="Upvote Filled"
+                        className="upvote"
+                      />
+                    ) : (
+                      <img
+                        src={Upvote}
+                        alt="Upvote"
+                        className="upvote"
+                      />
+                    )}
+                  </button>
+                  <div className="upvote-number">
+                    {rev.votes.length}
                   </div>
-                );
-              })}
+                </div>
+                <div
+                  className="review-replies"
+                  onClick={() => {
+                    toggleReplyWindow(rev.id, showReplies, setShowReplies);
+                  }}
+                >
+                  <text>{showReplies.includes(rev.id) ? "Hide Replies" : "View Replies"}</text>
+                </div>
+                <div className="comment-section">
+                  <button
+                    className="comment-button"
+                    onClick={() => {
+                      toggleReplyWindow(
+                        rev.id,
+                        showReply,
+                        setShowReply
+                      );
+                    }}
+                  >
+                    <img
+                      src={Reply}
+                      alt="Reply"
+                      className="comment"
+                    />
+                    <div className="comment-text">Reply</div>
+                  </button>
+                </div>
+              </div>
+              {showReply.includes(rev.id) && (
+                <div className="reply-window">
+                  <textarea
+                    className="review-input"
+                    maxLength="400"
+                    type="text"
+                    placeholder="Write a reply"
+                    value={reply}
+                    onChange={(e) => setReply(e.target.value)}
+                  />
+                  <div className="reply-button-container">
+                    <Button
+                      variant="contained"
+                      onClick={(e) => {
+                        handleSubmitReply(e, rev.id);
+                      }}
+                      id="post-button"
+                    >
+                      Submit Reply
+                    </Button>
+                  </div>
+                </div>
+              )}
+              {showReplies.includes(rev.id) && (
+                <>
+                  <h3>Replies</h3>
+                  {rev.replies.map((rep) => {
+                    return (
+                      <div className="review" key={rep.id}>
+                        <div>
+                          <img
+                            src={Profile}
+                            alt="User Profile"
+                            className="profile-picture"
+                          />
+                        </div>
+                        <div>
+                          <div className="review-info">
+                            <div className="review-username">
+                              {rep.user.name}
+                            </div>
+                            <div className="review-date">
+                              {rep.time}
+                            </div>
+                          </div>
+                          <div className="review-comment">
+                            {rep.content}
+                          </div>
+                          <div className="review-actions">
+                            <div className="upvote-section">
+                              <button
+                                className="upvote-button"
+                                onClick={() => handleSetUpvote(rep.id)}
+                              >
+                                {upvotes[rep.id] ? (
+                                  <img
+                                    src={UpvoteFilled}
+                                    alt="Upvote Filled"
+                                    className="upvote"
+                                  />
+                                ) : (
+                                  <img
+                                    src={Upvote}
+                                    alt="Upvote"
+                                    className="upvote"
+                                  />
+                                )}
+                              </button>
+                              <div className="upvote-number">
+                                {rev.replies.length}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </>
+              )}
+            </div>
+          </div>
+          <div className="review-subline"></div>
+        </div>
+      );
+    })}
+
           </div>
         </div>
 
