@@ -395,12 +395,18 @@ const Recipes = () => {
             <Button
               variant="contained"
               onClick={handleSubmit}
-              sx={{ backgroundColor: "purple", marginRight: "30px" }}
+              sx={{
+                backgroundColor: "darkgreen",
+                marginRight: "30px",
+                "&:hover": {
+                  backgroundColor: "darkgreen",
+                },
+              }}
             >
               Search
             </Button>
             <Box sx={{ display: "flex", alignItems: "center" }}>
-              <Typography sx={{ marginRight: "10px", color: "purple" }}>
+              <Typography sx={{ marginRight: "10px", color: "darkgreen" }}>
                 Filter Recipes By:
               </Typography>
               <Select
@@ -412,18 +418,18 @@ const Recipes = () => {
                 }
                 sx={{
                   width: "120px",
-                  "& .MuiSelect-icon": { color: "purple" },
+                  "& .MuiSelect-icon": { color: "darkgreen" },
                   "& .MuiSelect-select": {
-                    color: "purple",
-                    borderColor: "purple",
-                    "&:focus": { borderColor: "purple" }, // Override focused state border color
+                    color: "green",
+                    borderColor: "green",
+                    "&:focus": { borderColor: "darkgreen" }, // Override focused state border color
                   },
                 }}
               >
-                <MenuItem value="edamam" sx={{ color: "purple" }}>
+                <MenuItem value="edamam" sx={{ color: "darkgreen" }}>
                   Official
                 </MenuItem>
-                <MenuItem value="user" sx={{ color: "purple" }}>
+                <MenuItem value="user" sx={{ color: "darkgreen" }}>
                   User Created
                 </MenuItem>
               </Select>
