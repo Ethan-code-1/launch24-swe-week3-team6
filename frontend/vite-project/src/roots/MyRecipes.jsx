@@ -101,20 +101,37 @@ const MyRecipes = () => {
     const downloadUrl = await getImg();
 
     const data = {
-      'name': title,
-      'desc': desc,
-      'cuisineType': cuisineType,
-      'mealType': mealType,
-      'uid': uid,
-      'img': downloadUrl
+        'name': title,
+        'desc': desc,
+        'cuisineType': cuisineType,
+        'mealType': mealType,
+        'uid': uid,
+        'img': downloadUrl
     }
     console.log(data);
-    const result = await axios.post(`http://localhost:5001/myRecipes/draft`, data);
-    console.log(result);
-    alert("Recipe added!")
-    await fetchCreatedRecipes(uid);
-    toggleAddNewRecipe();
-  }
+    
+    try {
+      const result = await axios.post(`http://localhost:5001/myRecipes/draft`, data);
+      console.log('Document Reference:', result.data.docRef);
+      console.log('Document ID:', result.data.docId); // This will log the document ID
+      
+      const nutritionData = {
+            ...data,
+            docId: result.data.docId
+      };
+      
+      const nutrition = await axios.post(`http://localhost:5001/myRecipes/nutrition`, nutritionData);
+      console.log(nutrition);
+      console.log(result);
+
+      alert("Recipe added!");
+      await fetchCreatedRecipes(uid);
+      toggleAddNewRecipe();
+    } catch (error) {
+        console.error('Error adding recipe:', error);
+        alert("Failed to add recipe!");
+    }
+}
 
   async function fetchCreatedRecipes(uid) {
     console.log(uid);
