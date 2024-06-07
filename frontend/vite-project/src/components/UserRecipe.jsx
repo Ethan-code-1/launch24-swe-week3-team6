@@ -90,13 +90,34 @@ const handleUpvote = async (reviewId) => {
 };
 
 
-  const handleSetUpvote = (reviewId) => {
-    handleUpvote(reviewId);
-    setUpvotes((prevUpvotes) => ({
-      ...prevUpvotes,
-      [reviewId]: !prevUpvotes[reviewId],
-    }));
-  };
+const handleSetUpvote = async (reviewId) => {
+  try {
+    const body = {
+      uid: uid,
+      revId: reviewId,
+    };
+    const response = await axios.put(`http://localhost:5001/recipe/upvote/${rid}`, body);
+    
+    // Check the response message to determine whether the upvote was added or removed
+    if (response.data === "Upvoted successfully!") {
+      // Upvote added, update the upvotes state
+      setUpvotes((prevUpvotes) => ({
+        ...prevUpvotes,
+        [reviewId]: true,
+      }));
+    } else if (response.data === "Upvote removed successfully!") {
+      // Upvote removed, update the upvotes state
+      setUpvotes((prevUpvotes) => ({
+        ...prevUpvotes,
+        [reviewId]: false,
+      }));
+    }
+    fetchData();
+  } catch (error) {
+    console.error("Error:", error);
+  }
+};
+
 
   const handleSetChatView = () => {
     setShowChat(!showChat);
@@ -295,7 +316,7 @@ const toggleReplyWindow = (id, v, f) => {
                             </button>
 
                             <div className="upvote-number">
-                              {rev.replies.length}
+                              {rev.votes.length}
                             </div>
                           </div>
                           <div

@@ -117,7 +117,7 @@ router.put("/comment/:id", async (req, res) => {
         const revDocRef = doc(db, 'recipes', rid, 'reviews', data.revId);
         const revDoc = await getDoc(revDocRef)
         const replies = revDoc.data()['replies'];
-        replies.push({uid: data.uid, content: data.reply, time: data.timestamp});
+        replies.push({uid: data.uid, content: data.reply, time: data.timestamp, upvotes: 0});
         await updateDoc(revDocRef, {replies: replies});
         res.status(200).send("Added Successfully!");
     } catch (e) {
@@ -129,18 +129,31 @@ router.put("/upvote/:id", async (req, res) => {
   try {
     const rid = req.params.id;
     const data = req.body;
-    console.log(data);
-    const revDocRef = doc(db, "recipes", rid, "reviews", data.revId);
+    const revId = data.revId;
+    const revDocRef = doc(db, "recipes", rid, "reviews", revId);
     const revDocSnap = await getDoc(revDocRef);
     const revDocData = revDocSnap.data();
+    
     let upvotes = revDocData.upvotes;
-    upvotes += 1;
-    await updateDoc(revDocRef, { upvotes: upvotes });
-    res.status(200).send("Upvoted Successfully!");
+
+    // Check if the user has already upvoted, if yes, then remove the upvote
+    if (revDocData.votes.includes(data.uid)) {
+      upvotes -= 1;
+      const updatedVotes = revDocData.votes.filter(uid => uid !== data.uid);
+      await updateDoc(revDocRef, { upvotes: upvotes, votes: updatedVotes });
+      res.status(200).send("Upvote removed successfully!");
+    } else {
+      // If the user hasn't upvoted, then add the upvote
+      upvotes += 1;
+      const updatedVotes = [...revDocData.votes, data.uid];
+      await updateDoc(revDocRef, { upvotes: upvotes, votes: updatedVotes });
+      res.status(200).send("Upvoted successfully!");
+    }
   } catch (error) {
     console.error("Error:", error);
     res.status(500).send({ error: error.message });
   }
 });
+
 
 export default router;
