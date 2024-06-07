@@ -137,8 +137,6 @@ router.get("/favorites/:id", async (req, res) => {
 });
 
 
-
-
 router.post("/unfavorite", async (req, res) => {
     try {
         const { uid, recipeId } = req.body;
@@ -155,6 +153,9 @@ router.post("/unfavorite", async (req, res) => {
         res.status(500).send({ error: e.message });
     }
 });
+
+
+
 
 export default router;
 
