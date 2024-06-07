@@ -95,7 +95,13 @@ const MyRecipes = () => {
     console.log('imgRef', imgRef);
     const imgSnapshot = await uploadBytes(imgRef, image);
     console.log('imgSnapShot', imgSnapshot);
-    const downloadUrl = await getDownloadURL(imgSnapshot.ref);
+    let downloadUrl = await getDownloadURL(imgSnapshot.ref);
+    console.log(downloadUrl);
+    if (downloadUrl.startsWith("https://firebasestorage")) {
+    // If it starts with "https://firebasestorage", assign the new URL
+    downloadUrl = "https://cdn-icons-png.flaticon.com/512/5635/5635436.png";
+    }
+    
     console.log('downloadUrl', downloadUrl);
     const data = {
       'name': title,

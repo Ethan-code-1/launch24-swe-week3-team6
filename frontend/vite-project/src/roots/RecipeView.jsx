@@ -37,25 +37,36 @@ const RecipeView = () => {
   const [revs, setRevs] = useState(null);
   const [showReplies, setShowReplies] = useState([]);
   const [image, setImage] = useState("");
+  const [averageRating, setAverageRating] = useState(0);
+  const [reviewCount, setReviewCount] = useState(0);
+  const [totalComments, setTotalComments] = useState(0); // State for total comments
 
   const { rid } = useParams();
   const location = useLocation();
   const edamamRecipe = location.state?.recipe;
   // console.log("edeam nutrients: ", edamamRecipe.nutrients);
-  const averageRating = 3.5; // Example average rating
+  // const averageRating = 3.5; // Example average rating
 
   const fetchData = async () => {
     try {
       const res = await axios.get(`http://localhost:5001/recipe/${rid}`);
-      // console.log(res.data);
 
-      setRecipe(res.data.rec);
-      setNutritionFacts(res.data.rec.nutritionFacts);
-      setImage(res.data.rec.img);
-      // console.log(res.data.rec.nutritionFacts);
-      console.log(res.data.rec.img);
-      console.log(res.data.revs);
-      setRevs(res.data.revs);
+      // Assuming your response includes averageRating now
+      const { rec, reviews, averageRating, count, totalComments } = res.data;
+
+      // Update state with the new data
+      setRecipe(rec);
+      setNutritionFacts(rec.nutritionFacts);
+      setImage(rec.img);
+      setRevs(reviews);
+      setAverageRating(averageRating); // Assuming you have a state for averageRating
+      setReviewCount(count); // Set the review count
+      setTotalComments(totalComments); // Set the total comments
+
+      // For debugging
+      console.log(rec.img);
+      console.log(reviews);
+      console.log(averageRating);
     } catch (e) {
       console.error("Error fetching data", e);
     }
@@ -189,17 +200,31 @@ const RecipeView = () => {
                 <div className="page-title">
                   {edamamRecipe && edamamRecipe.name}
                 </div>
+                <div className="author-title">
+                  <h2>Recipe author: {edamamRecipe && edamamRecipe.author} </h2>
+                </div>
                 <div className="overview-container">
-                  <AverageStars
-                    rating={averageRating}
-                    className="average-stars"
-                  />
-                  <div className="page-subtitle">
-                    {" "}
-                    {averageRating} from 2 votes{" "}
-                  </div>
-                  <div className="page-subtitle"> &nbsp; &#124; &nbsp; </div>
-                  <div className="page-subtitle"> 2 comments</div>
+                  {reviewCount > 0 ? (
+                    <>
+                      <AverageStars
+                        rating={averageRating}
+                        className="average-stars"
+                      />
+                      <div className="page-subtitle">
+                        {averageRating} from {reviewCount} votes
+                      </div>
+                      <div className="page-subtitle">
+                        {" "}
+                        &nbsp; &#124; &nbsp;{" "}
+                      </div>
+                      <div className="page-subtitle">
+                        {" "}
+                        {totalComments} comments
+                      </div>
+                    </>
+                  ) : (
+                    <div className="page-subtitle"> No reviews </div>
+                  )}
                 </div>
 
                 <img
@@ -207,9 +232,8 @@ const RecipeView = () => {
                   alt="Recipe Image"
                   className="recipe-image"
                 />
-                {/* Unlike our firebase, edamam recipes do not have a description */}
                 <div className="recipe-info">
-                  Description Tags: #{edamamRecipe && edamamRecipe.cuisineType},{" "}
+                  Keywords: #{edamamRecipe && edamamRecipe.cuisineType},{" "}
                   <> </>#{edamamRecipe && edamamRecipe.meal}, <> </>#
                   {edamamRecipe && edamamRecipe.dishType}
                 </div>
@@ -227,32 +251,40 @@ const RecipeView = () => {
                       ))}
                     </ul>
                   </div>
+                  <div className="recipe-subtitle"> Directions: </div>
+                  <p> Are you interested in learning more about this recipe?</p>
+                  <p>
+                    Directions are listed in the author's website:{" "}
+                    {edamamRecipe && (
+                      <a
+                        href={edamamRecipe.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {edamamRecipe.name}
+                      </a>
+                    )}
+                  </p>
+
                   <div className="nutrition-facts-container">
                     <div className="recipe-subtitle"> Nutrition Facts </div>
                     <div className="nutrition-facts-grid">
-                      {/* {edamamRecipe.nutrients && ( */}
-                      {/* Rounding values to be consistent and better user experience */}
-                      <ul>
-                        <li> Calories: {Math.round(edamamRecipe.calories)}</li>
-
-                        {/* Mapping out the labels within the keys to get carbs, fat, and protein*/}
-                        <li>
-                          {edamamRecipe.nutrients.carbs.label}:<> </>
-                          {Math.round(edamamRecipe.nutrients.carbs.quantity)}
-                          {edamamRecipe.nutrients.carbs.unit}
-                        </li>
-                        <li>
-                          {edamamRecipe.nutrients.fat.label}:<> </>
-                          {Math.round(edamamRecipe.nutrients.fat.quantity)}
-                          {edamamRecipe.nutrients.fat.unit}
-                        </li>
-                        <li>
-                          {edamamRecipe.nutrients.protein.label}:<> </>
-                          {Math.round(edamamRecipe.nutrients.protein.quantity)}
-                          {edamamRecipe.nutrients.protein.unit}
-                        </li>
-                      </ul>
-                      {/* )} */}
+                      <li> Calories: {Math.round(edamamRecipe.calories)}</li>
+                      <li>
+                        {edamamRecipe.nutrients.carbs.label}: <> </>
+                        {Math.round(edamamRecipe.nutrients.carbs.quantity)}
+                        {edamamRecipe.nutrients.carbs.unit}
+                      </li>
+                      <li>
+                        {edamamRecipe.nutrients.fat.label}: <> </>
+                        {Math.round(edamamRecipe.nutrients.fat.quantity)}
+                        {edamamRecipe.nutrients.fat.unit}
+                      </li>
+                      <li>
+                        {edamamRecipe.nutrients.protein.label}: <> </>
+                        {Math.round(edamamRecipe.nutrients.protein.quantity)}
+                        {edamamRecipe.nutrients.protein.unit}
+                      </li>
                     </div>
                   </div>
                 </div>
@@ -268,6 +300,16 @@ const RecipeView = () => {
                     <Stars
                       rating={rating}
                       onRatingChange={handleRatingChange}
+                    />
+                  </div>
+                  <div>
+                    <textarea
+                      className="review-input"
+                      maxLength="400"
+                      type="text"
+                      placeholder="What did you think about this recipe? Join the discussion!"
+                      value={review} // Bind the input value to the state
+                      onChange={(e) => setReview(e.target.value)}
                     />
                   </div>
                   <div className="review-bottom">
@@ -492,26 +534,31 @@ const RecipeView = () => {
             <div className="top-section">
               <div className="page-title">{recipe && recipe.name}</div>
               <div className="overview-container">
-                <AverageStars
-                  rating={averageRating}
-                  className="average-stars"
-                />
-                <div className="page-subtitle">
-                  {" "}
-                  {averageRating} from 2 votes{" "}
-                </div>
-                <div className="page-subtitle"> &nbsp; &#124; &nbsp; </div>
-                <div className="page-subtitle"> 2 comments</div>
+                {reviewCount > 0 ? (
+                  <>
+                    <AverageStars
+                      rating={averageRating}
+                      className="average-stars"
+                    />
+                    <div className="page-subtitle">
+                      {" "}
+                      {averageRating} from {reviewCount} votes{" "}
+                    </div>
+                    <div className="page-subtitle"> &nbsp; &#124; &nbsp; </div>
+                    <div className="page-subtitle">
+                      {" "}
+                      {totalComments} comments
+                    </div>
+                  </>
+                ) : (
+                  <div className="page-subtitle"> No reviews </div>
+                )}
               </div>
 
-              <img
-                src={RecipeImage}
-                alt="Recipe Image"
-                className="recipe-image"
-              />
+              <img src={image} alt="Recipe Image" className="recipe-image" />
               <div className="recipe-info"> {recipe && recipe.desc}</div>
             </div>
-            {recipe && <Recipe recipe={recipe} />}
+            {recipe && <Recipe recipe={recipe} nutrition={nutritionFacts} />}
 
             <div className="bottom-section">
               <div className="review-title">Reviews</div>

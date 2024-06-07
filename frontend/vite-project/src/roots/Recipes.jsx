@@ -20,8 +20,6 @@ import {
   Alert,
 } from "@mui/material";
 
-// Notes:
-// stored fetching URL
 const Recipes = () => {
   // for Save Feature
   const [currentUser, setCurrentUser] = useState(null);
@@ -35,7 +33,7 @@ const Recipes = () => {
   console.log("hiiii");
   console.log(category);
 
-  const [allrecipes, setAllRecipes] = useState([]);
+  const [allRecipes, setAllRecipes] = useState([]);
   const [recipes, setRecipes] = useState([]);
   const [type, setType] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
@@ -77,7 +75,19 @@ const Recipes = () => {
         image: recipe.recipe.image,
         time: recipe.recipe.totalTime,
         id: extractID(recipe._links.self.href),
+        ingredients: recipe.recipe.ingredientLines,
+        dishType: recipe.recipe.dishType,
+        cuisineType: recipe.recipe.cuisineType,
+        author: recipe.recipe.source,
         userMade: false,
+        calories: recipe.recipe.calories,
+        // Nutritional facts object with keys
+        nutrients: {
+          carbs: recipe.recipe.totalNutrients.CHOCDF,
+          fat: recipe.recipe.totalNutrients.FAT,
+          protein: recipe.recipe.totalNutrients.PROCNT,
+        },
+        url: recipe.recipe.url,
       };
       //console.log(recipe._links.self.href);
       newRecipes.push(recipeObj);
@@ -114,6 +124,7 @@ const Recipes = () => {
             fat: recipe.recipe.totalNutrients.FAT,
             protein: recipe.recipe.totalNutrients.PROCNT,
           },
+          url: recipe.recipe.url,
         };
         //console.log(recipe._links.self.href);
         newRecipes.push(recipeObj);
@@ -170,6 +181,7 @@ const Recipes = () => {
             fat: recipe.recipe.totalNutrients.FAT,
             protein: recipe.recipe.totalNutrients.PROCNT,
           },
+          url: recipe.recipe.url,
         };
         //console.log(recipe._links.self.href);
         newRecipes.push(recipeObj);
@@ -209,7 +221,6 @@ const Recipes = () => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         // User is signed in
-
         setCurrentUser(user.uid);
         setFlag(false);
         //console.log(user.uid);
@@ -283,7 +294,19 @@ const Recipes = () => {
           image: recipe.recipe.image,
           time: recipe.recipe.totalTime,
           id: extractID(recipe._links.self.href),
+          ingredients: recipe.recipe.ingredientLines,
+          dishType: recipe.recipe.dishType,
+          cuisineType: recipe.recipe.cuisineType,
+          author: recipe.recipe.source,
           userMade: false,
+          calories: recipe.recipe.calories,
+          // Nutritional facts object with keys
+          nutrients: {
+            carbs: recipe.recipe.totalNutrients.CHOCDF,
+            fat: recipe.recipe.totalNutrients.FAT,
+            protein: recipe.recipe.totalNutrients.PROCNT,
+          },
+          url: recipe.recipe.url,
         };
         //console.log(recipe._links.self.href);
         newRecipes.push(recipeObj);
