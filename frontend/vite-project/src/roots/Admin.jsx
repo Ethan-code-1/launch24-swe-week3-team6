@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Card, CardContent, CardMedia, Typography, Button, TextField, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, IconButton } from '@mui/material';
+import { Box, Card, CardContent, CardMedia, Typography, Button, IconButton } from '@mui/material';
 import { getAuth, signOut } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -9,9 +9,6 @@ import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 const Admin = () => {
   const [recipes, setRecipes] = useState([]);
   const [currentRecipeIndex, setCurrentRecipeIndex] = useState(0);
-  const [openDialog, setOpenDialog] = useState(false);
-  const [message, setMessage] = useState('');
-  const [selectedRecipe, setSelectedRecipe] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -26,14 +23,20 @@ const Admin = () => {
     fetchRecipes();
   }, []);
 
-  const handleReject = () => {
-    setSelectedRecipe(recipes[currentRecipeIndex].id);
-    setOpenDialog(true);
-  };
-
-  const handleCloseDialog = () => {
-    setOpenDialog(false);
-    setMessage('');
+  const handleReject = async () => {
+    try {
+      const recipeId = recipes[currentRecipeIndex].id;
+      await axios.post(`http://localhost:5001/admin/reject_recipe/${recipeId}`);
+      const updatedRecipes = recipes.filter((recipe, index) => index !== currentRecipeIndex);
+      setRecipes(updatedRecipes);
+      if (currentRecipeIndex >= updatedRecipes.length) {
+        setCurrentRecipeIndex(updatedRecipes.length - 1);
+      }
+      // alert(`Recipe with ID: ${recipeId} rejected`);
+    } catch (error) {
+      console.error('Error rejecting recipe:', error);
+      alert(`Error rejecting recipe: ${error.message}`);
+    }
   };
 
   const handleAccept = async () => {
@@ -45,16 +48,11 @@ const Admin = () => {
       if (currentRecipeIndex >= updatedRecipes.length) {
         setCurrentRecipeIndex(updatedRecipes.length - 1);
       }
-      alert(`Recipe with ID: ${recipeId} accepted`);
+      // alert(`Recipe with ID: ${recipeId} accepted`);
     } catch (error) {
       console.error('Error accepting recipe:', error);
       alert(`Error accepting recipe: ${error.message}`);
     }
-  };
-
-  const handleSendMessage = async () => {
-    alert(`Message for recipe ID: ${selectedRecipe} - ${message}`);
-    handleCloseDialog();
   };
 
   const handleLogout = async () => {
@@ -117,7 +115,7 @@ const Admin = () => {
               <Typography variant="body2" color="text.secondary">{currentRecipe.desc}</Typography>
               <Typography variant="body2" color="text.secondary">Cuisine Type: {currentRecipe.cuisineType}</Typography>
               <Typography variant="body2" color="text.secondary">Meal Type: {currentRecipe.mealType}</Typography>
-              <Typography variant="body2" color="text.secondary">Created By: {currentRecipe.createdBy}</Typography>
+              <Typography variant="body2" color="text.secondary">Created By: User</Typography>
               <Typography variant="body2" color="text.secondary">Steps: {Array.isArray(currentRecipe.steps) ? currentRecipe.steps.join(', ') : currentRecipe.steps}</Typography>
               <Typography variant="body2" color="text.secondary">User Made: {currentRecipe.userMade}</Typography>
               <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
@@ -161,32 +159,6 @@ const Admin = () => {
           <ArrowForwardIosIcon />
         </IconButton>
       </Box>
-      <Dialog open={openDialog} onClose={handleCloseDialog}>
-        <DialogTitle>Reject Recipe</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            Please add a message for rejecting the recipe.
-          </DialogContentText>
-          <TextField
-            autoFocus
-            margin="dense"
-            label="Message"
-            type="text"
-            fullWidth
-            variant="standard"
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseDialog} color="primary">
-            Cancel
-          </Button>
-          <Button onClick={handleSendMessage} color="primary">
-            Send
-          </Button>
-        </DialogActions>
-      </Dialog>
     </Box>
   );
 };
