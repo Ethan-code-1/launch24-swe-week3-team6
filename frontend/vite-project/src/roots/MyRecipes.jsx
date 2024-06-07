@@ -345,7 +345,7 @@ const MyRecipes = () => {
               accept="image/*"
               onChange={handleImageChange}
             />
-            {image && <CheckCircleIcon sx={{ ml: 1, color: 'green' }} />}
+            {image && <CheckCircleIcon sx={{ ml: 1, color: 'white' }} />}
           </Button>
           {imagePreview && (
             <Box sx={{ mt: 2 }}>
