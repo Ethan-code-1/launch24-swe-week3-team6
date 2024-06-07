@@ -1,4 +1,4 @@
-# Flavor Fusion
+# Flavor Fusion 🌱
 
 A recipe platform that provides users with cooking guides and a space to discuss their favorite dish
 
