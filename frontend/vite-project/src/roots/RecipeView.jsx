@@ -750,31 +750,6 @@ const RecipeView = () => {
                           <div className="review-comment">
                             {rep.content}
                           </div>
-                          <div className="review-actions">
-                            <div className="upvote-section">
-                              <button
-                                className="upvote-button"
-                                onClick={() => handleSetUpvotes(rep.id)}
-                              >
-                                {upvotes[rep.id] ? (
-                                  <img
-                                    src={UpvoteFilled}
-                                    alt="Upvote Filled"
-                                    className="upvote"
-                                  />
-                                ) : (
-                                  <img
-                                    src={Upvote}
-                                    alt="Upvote"
-                                    className="upvote"
-                                  />
-                                )}
-                              </button>
-                              <div className="upvote-number">
-                                {rev.replies.length}
-                              </div>
-                            </div>
-                          </div>
                         </div>
                       </div>
                     );
