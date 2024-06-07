@@ -13,7 +13,7 @@ A recipe platform that provides users with cooking guides and a space to discuss
 
 ### Clone the Repository
    ```sh
-   git clone https://github.com/asatpathy314/spotify-app.git
+   git clone https://github.com/Ethan-code-1/launch24-swe-week3-team6.git
    ```
 
 ### Front-End Installation
