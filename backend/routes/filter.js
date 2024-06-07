@@ -88,13 +88,41 @@ router.get("/cuisine/:cuisineType", async (req, res) => {
 
 // GET: recipe page detail filtered by meal type
 router.get("/meal/:mealType/:cuisineType", async (req, res) => {
+  console.log("hello");
   const mealType = req.params.mealType;
   const cuisineType = req.params.cuisineType;
+  let response;
   try {
     // Retrieve recipes from Edamam
-    const response = await axios.get(
-      `https://api.edamam.com/api/recipes/v2?type=public&app_id=${app_id}&app_key=${app_key}&cuisineType=${cuisineType}&mealType=${mealType}`
-    );
+    // fetch all recipe
+    if (cuisineType == "all") {
+      console.log("all meals fetch");
+      response = await axios.get(
+        `https://api.edamam.com/api/recipes/v2?type=public&app_id=${app_id}&app_key=${app_key}&mealType=${mealType}`
+      );
+    }
+    else if (cuisineType == "vegan") {
+      response = await axios.get(
+        `https://api.edamam.com/api/recipes/v2?type=public&app_id=${app_id}&app_key=${app_key}&health=${cuisineType}`
+      );
+    }
+    else if (cuisineType == "desserts") {
+      response = await axios.get(
+        `https://api.edamam.com/api/recipes/v2?type=public&app_id=${app_id}&app_key=${app_key}&dishType=${cuisineType}`
+      ); 
+    }
+    else if (cuisineType == "keto") {
+      response = await axios.get(
+        `https://api.edamam.com/api/recipes/v2?type=public&app_id=${app_id}&app_key=${app_key}&health=keto-friendly`
+      ); 
+    }
+    // type is specified
+    else {
+      console.log("cuisine type filtered meal fetch");
+      response = await axios.get(
+        `https://api.edamam.com/api/recipes/v2?type=public&app_id=${app_id}&app_key=${app_key}&cuisineType=${cuisineType}&mealType=${mealType}`
+      );
+    } 
     const edamamResults = response.data.hits;
 
     // Retrieve recipes from Firestore

@@ -29,10 +29,6 @@ const Recipes = () => {
   const [recipeHome, setRecipeHome] = useState([]);
   const { category } = useParams();
 
-  const defaultCategory = category || null;
-  console.log("hiiii");
-  console.log(category);
-
   const [allRecipes, setAllRecipes] = useState([]);
   const [recipes, setRecipes] = useState([]);
   const [type, setType] = useState("");
@@ -64,7 +60,6 @@ const Recipes = () => {
 
   const fetchRecipesHome = async () => {
     const response = await axios.get(`http://localhost:5001/home/${category}`);
-    console.log(response);
     const newRecipes = [];
 
     // Process edamamResults
@@ -100,7 +95,6 @@ const Recipes = () => {
       const response = await axios.get(
         `http://localhost:5001/api/recipes/cuisine/all`
       );
-      console.log("edamamresults", response.data.edamamResults);
 
       const newRecipes = [];
 
@@ -280,8 +274,16 @@ const Recipes = () => {
 
   const handleMealType = async (meal) => {
     try {
+      console.log("testing");
+
+      let cuisineType = type ? type : "all";
+      if (category != null ) {
+        cuisineType = category;
+      } 
+      console.log(cuisineType);
+      console.log(meal);
       const response = await axios.get(
-        `http://localhost:5001/api/recipes/meal/${meal}/${type}`
+        `http://localhost:5001/api/recipes/meal/${meal}/${cuisineType}`
       );
 
       const newRecipes = [];
