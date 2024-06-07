@@ -127,18 +127,7 @@ const Recipes = () => {
           image: recipe.image || null,
           time: recipe.totalTime || null,
           id: recipe.id,
-          ingredients: recipe.recipe.ingredientLines,
-          dishType: recipe.recipe.dishType,
-          cuisineType: recipe.recipe.cuisineType,
-          author: recipe.recipe.source,
-          userMade: false,
-          calories: recipe.recipe.calories,
           userMade: recipe.userMade,
-          nutrients: {
-            carbs: recipe.recipe.totalNutrients.CHOCDF,
-            fat: recipe.recipe.totalNutrients.FAT,
-            protein: recipe.recipe.totalNutrients.PROCNT,
-          },
         };
         newRecipes.push(recipeObj);
       });
@@ -166,10 +155,21 @@ const Recipes = () => {
         const recipeObj = {
           name: recipe.recipe.label,
           meal: recipe.recipe.mealType,
-          image: recipe.recipe.images,
+          image: recipe.recipe.image,
           time: recipe.recipe.totalTime,
           id: extractID(recipe._links.self.href),
+          ingredients: recipe.recipe.ingredientLines,
+          dishType: recipe.recipe.dishType,
+          cuisineType: recipe.recipe.cuisineType,
+          author: recipe.recipe.source,
           userMade: false,
+          calories: recipe.recipe.calories,
+          // Nutritional facts object with keys
+          nutrients: {
+            carbs: recipe.recipe.totalNutrients.CHOCDF,
+            fat: recipe.recipe.totalNutrients.FAT,
+            protein: recipe.recipe.totalNutrients.PROCNT,
+          },
         };
         //console.log(recipe._links.self.href);
         newRecipes.push(recipeObj);
