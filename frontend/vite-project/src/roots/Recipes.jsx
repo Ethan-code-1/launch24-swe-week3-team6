@@ -248,7 +248,7 @@ const Recipes = () => {
       try {
         // console.log(currentUser, recipe);
         await axios.post(
-          `http://localhost:5001/api/auth/${currentUser}/${recipe.id}`, recipe
+          `http://localhost:5001/api/auth/save/${currentUser}/${recipe.id}`, recipe
         );
         setNotification(true); // Show notification on successful save
       } catch (error) {
