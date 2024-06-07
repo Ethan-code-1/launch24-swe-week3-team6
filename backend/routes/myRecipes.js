@@ -17,9 +17,7 @@ const openai = new OpenAI({apiKey: process.env.OPENAI_API_KEY});
 router.post('/draft', async (req, res) => {
     try {
         const recipe = req.body;
-        // console.log(recipe);
-        // const image = JSON.parse(recipe.img);
-        // console.log('image', image);
+        console.log(recipe);
 
         // generate steps
         const msg = 'Create a recipe from this description: ' + recipe.name + recipe.desc;
@@ -93,6 +91,7 @@ router.get("/created/:id", async (req, res) => {
         let recipes = (await getDoc(doc(db, 'users', uid))).data()['myRecipes'];
         recipes = await Promise.all(recipes.map(async (recId) => {
             const recDoc = await getDoc(doc(db, 'recipes', recId));
+            console.log('id', recDoc.id, recDoc.data());
             let rec = recDoc.data();
             rec['id'] = recDoc.id;
             rec['author'] = author;

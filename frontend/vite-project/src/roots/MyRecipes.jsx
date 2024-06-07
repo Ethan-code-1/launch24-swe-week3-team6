@@ -67,10 +67,11 @@ const MyRecipes = () => {
   };
 
   const handleSave = async (rid) => {
+    editingRecipe['img'] = await getImg();
+    console.log(editingRecipe);
     const r = await axios.put(`http://localhost:5001/myRecipes/edit/${rid}`, editingRecipe);
     console.log(r);
     await fetchCreatedRecipes(uid);
-    alert('Saved');
     setEditingRecipe(null);
   };
 
@@ -88,21 +89,17 @@ const MyRecipes = () => {
     reader.readAsDataURL(file);
   };
 
+  async function getImg() {
+    const imgRef = ref(storage, `recipeImages/${v4()}`);
+    const imgSnapshot = await uploadBytes(imgRef, image);
+    return await getDownloadURL(imgSnapshot.ref);
+  }
+
   async function handleSubmit() {
     console.log('Submitted', uid);
-    console.log('Image:', image);
-    const imgRef = ref(storage, `recipeImages/${v4()}`);
-    console.log('imgRef', imgRef);
-    const imgSnapshot = await uploadBytes(imgRef, image);
-    console.log('imgSnapShot', imgSnapshot);
-    let downloadUrl = await getDownloadURL(imgSnapshot.ref);
-    console.log(downloadUrl);
-    if (downloadUrl.startsWith("https://firebasestorage")) {
-        // If it starts with "https://firebasestorage", assign the new URL
-        downloadUrl = "https://cdn-icons-png.flaticon.com/512/5635/5635436.png";
-    }
+    console.log('Image:', image); 
+    const downloadUrl = await getImg();
 
-    console.log('downloadUrl', downloadUrl);
     const data = {
         'name': title,
         'desc': desc,
@@ -437,15 +434,17 @@ const MyRecipes = () => {
           aria-labelledby="edit-recipe-modal"
           aria-describedby="edit-recipe-modal-description"
         >
-          <Box sx={{
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            width: 400,
-            bgcolor: 'background.paper',
-            boxShadow: 24,
-            p: 4
+          <Box sx={{ 
+            position: 'absolute', 
+            top: '50%', 
+            left: '50%', 
+            transform: 'translate(-50%, -50%)', 
+            width: 400, 
+            height: 600,
+            bgcolor: 'background.paper', 
+            boxShadow: 24, 
+            p: 4 ,
+            overflowY: 'scroll'
           }}>
             <Typography variant="h6" id="edit-recipe-modal">Edit Recipe</Typography>
             <TextField
@@ -492,6 +491,26 @@ const MyRecipes = () => {
                 ))}
               </Select>
             </FormControl>
+            <Button
+            variant="contained"
+            component="label"
+            sx={{ mb: 2 }}
+          >
+            Upload Image
+            <input
+              type="file"
+              hidden
+              accept="image/*"
+              onChange={handleImageChange}
+            />
+            {image && <CheckCircleIcon sx={{ ml: 1, color: 'green' }} />}
+          </Button>
+          {imagePreview && (
+            <Box sx={{ mt: 2 }}>
+              <img src={imagePreview} alt="Recipe" style={{ maxWidth: '100%', maxHeight: '200px' }} />
+            </Box>
+          )}
+          <br></br>
             <Button variant="contained" color="primary" onClick={() => handleSave(editingRecipe.id)}>Save</Button>
           </Box>
         </Modal>
