@@ -20,7 +20,7 @@ A recipe platform that provides users with cooking guides and a space to discuss
 
 1. **Go to Front-End Folder**
    ```sh
-   cd spotify-app/frontend
+   cd frontend
 
 2. **Install Dependencies**
    ```sh
@@ -30,7 +30,7 @@ A recipe platform that provides users with cooking guides and a space to discuss
 
 1. **Go to Back-End Folder**
    ```sh
-   cd spotify-app/backend
+   cd backend
    ```
 
 2. **Install Dependencies**
