@@ -98,26 +98,43 @@ const MyRecipes = () => {
     let downloadUrl = await getDownloadURL(imgSnapshot.ref);
     console.log(downloadUrl);
     if (downloadUrl.startsWith("https://firebasestorage")) {
-    // If it starts with "https://firebasestorage", assign the new URL
-    downloadUrl = "https://cdn-icons-png.flaticon.com/512/5635/5635436.png";
+        // If it starts with "https://firebasestorage", assign the new URL
+        downloadUrl = "https://cdn-icons-png.flaticon.com/512/5635/5635436.png";
     }
-    
+
     console.log('downloadUrl', downloadUrl);
     const data = {
-      'name': title,
-      'desc': desc,
-      'cuisineType': cuisineType,
-      'mealType': mealType,
-      'uid': uid,
-      'img': downloadUrl
+        'name': title,
+        'desc': desc,
+        'cuisineType': cuisineType,
+        'mealType': mealType,
+        'uid': uid,
+        'img': downloadUrl
     }
     console.log(data);
-    const result = await axios.post(`http://localhost:5001/myRecipes/draft`, data);
-    console.log(result);
-    alert("Recipe added!")
-    await fetchCreatedRecipes(uid);
-    toggleAddNewRecipe();
-  }
+    
+    try {
+      const result = await axios.post(`http://localhost:5001/myRecipes/draft`, data);
+      console.log('Document Reference:', result.data.docRef);
+      console.log('Document ID:', result.data.docId); // This will log the document ID
+      
+      const nutritionData = {
+            ...data,
+            docId: result.data.docId
+      };
+      
+      const nutrition = await axios.post(`http://localhost:5001/myRecipes/nutrition`, nutritionData);
+      console.log(nutrition);
+      console.log(result);
+
+      alert("Recipe added!");
+      await fetchCreatedRecipes(uid);
+      toggleAddNewRecipe();
+    } catch (error) {
+        console.error('Error adding recipe:', error);
+        alert("Failed to add recipe!");
+    }
+}
 
   async function fetchCreatedRecipes(uid) {
     console.log(uid);

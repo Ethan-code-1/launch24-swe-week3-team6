@@ -64,9 +64,9 @@ const RecipeView = () => {
       setTotalComments(totalComments); // Set the total comments
 
       // For debugging
-      console.log(rec.img);
-      console.log(reviews);
-      console.log(averageRating);
+      // console.log(rec.img);
+      // console.log(reviews);
+      // console.log(averageRating);
     } catch (e) {
       console.error("Error fetching data", e);
     }
