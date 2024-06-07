@@ -183,12 +183,22 @@ const fetchData = async () => {
       <div className='body'>
         <div className='top-section'>
           <div className='page-title'>{recipe && recipe.name}</div>
-          <div className='overview-container'>
-            <AverageStars rating={averageRating} className='average-stars'/>
-            <div className='page-subtitle'> {averageRating} from {reviewCount} votes </div>
-            <div className='page-subtitle'> &nbsp; &#124; &nbsp; </div>
-            <div className='page-subtitle'> {totalComments} comments</div>
+            <div className='overview-container'>
+            {reviewCount > 0 ? (
+        <>
+          <AverageStars rating={averageRating} className='average-stars' />
+          <div className='page-subtitle'> {averageRating} from {reviewCount} votes </div>
+          <div className='page-subtitle'> &nbsp; &#124; &nbsp; </div>
+          <div className='page-subtitle'> {totalComments} comments</div>
+              </>
+            ) : (
+                <div className='page-subtitle'> No reviews </div>
+                
+            )}
+            
           </div>
+          
+
 
           <img src={image} alt='Recipe Image' className='recipe-image' />
           <div className='recipe-info'> {recipe && recipe.desc}</div>

@@ -48,7 +48,7 @@ router.get("/:id", async (req, res) => {
 
         // Calculate average rating
         let averageRating = count === 0 ? 0 : reviewTotal / count;
-        console.log(totalComments)
+        // console.log(totalComments)
 
         res.json({
             rec,
