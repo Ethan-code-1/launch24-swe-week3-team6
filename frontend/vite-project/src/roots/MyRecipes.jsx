@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Card, CardContent, CardMedia, Typography, Grid, Button, TextField, IconButton, Modal, Autocomplete, MenuItem, Select, FormControl, InputLabel } from '@mui/material';
 import FavoriteIcon from '@mui/icons-material/Favorite';
-import EditIcon from '@mui/icons-material/Edit'; 
+import EditIcon from '@mui/icons-material/Edit';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import DeleteIcon from '@mui/icons-material/Delete';
 import '../styles/MyRecipes.css';
 import axios from 'axios';
 import { getAuth, onAuthStateChanged } from "firebase/auth";
@@ -13,17 +14,18 @@ import { v4 } from 'uuid';
 const MyRecipes = () => {
   const [showYourRecipes, setShowYourRecipes] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
-  const [addingNewRecipe, setAddingNewRecipe] = useState(false); 
+  const [addingNewRecipe, setAddingNewRecipe] = useState(false);
   const [title, setTitle] = useState('');
   const [desc, setDesc] = useState('');
   const [cuisineType, setCuisineType] = useState('');
   const [mealType, setMealType] = useState('');
-  const [image, setImage] = useState(null); 
-  const [imagePreview, setImagePreview] = useState(''); 
+  const [image, setImage] = useState(null);
+  const [imagePreview, setImagePreview] = useState('');
   const [uid, setUid] = useState('');
   const [yourRecipes, setYourRecipes] = useState([]);
   const [favoritedRecipes, setFavoritedRecipes] = useState([]);
   const [editingRecipe, setEditingRecipe] = useState(null);
+  const [pendingRecipes, setPendingRecipes] = useState([]);
 
   const cuisineTypes = [
     'American', 'Asian', 'British', 'Caribbean', 'Central European', 'Chinese',
@@ -43,7 +45,7 @@ const MyRecipes = () => {
     try {
       const result = await axios.get(`http://localhost:5001/myRecipes/favorites/${uid}`);
       setFavoritedRecipes(result.data);
-      console.log("result", result.data); 
+      console.log("result", result.data);
     } catch (error) {
       console.error('Error fetching favorited recipes:', error);
     }
@@ -99,10 +101,10 @@ const MyRecipes = () => {
     const downloadUrl = await getImg();
 
     const data = {
-      'name': title, 
-      'desc': desc, 
-      'cuisineType': cuisineType, 
-      'mealType': mealType, 
+      'name': title,
+      'desc': desc,
+      'cuisineType': cuisineType,
+      'mealType': mealType,
       'uid': uid,
       'img': downloadUrl
     }
@@ -121,13 +123,39 @@ const MyRecipes = () => {
     console.log(result);
   }
 
+  async function fetchPendingRecipes(uid) {
+    try {
+      const result = await axios.get(`http://localhost:5001/myRecipes/pending/${uid}`);
+      setPendingRecipes(result.data);
+    } catch (error) {
+      console.error('Error fetching pending recipes:', error);
+    }
+  }
+
+  const handleDelete = async (recipeId, isPending) => {
+    try {
+      const endpoint = isPending ? `http://localhost:5001/myRecipes/pending/${recipeId}` : `http://localhost:5001/myRecipes/${recipeId}`;
+      await axios.delete(endpoint, { data: { uid } });
+      if (isPending) {
+        setPendingRecipes(prevRecipes => prevRecipes.filter(recipe => recipe.id !== recipeId));
+      } else {
+        setYourRecipes(prevRecipes => prevRecipes.filter(recipe => recipe.id !== recipeId));
+      }
+      alert('Recipe deleted successfully');
+    } catch (error) {
+      console.error('Error deleting recipe:', error);
+    }
+  };
+  
+
   useEffect(() => {
     const auth = getAuth();
     onAuthStateChanged(auth, (user) => {
       if (user) {
         setUid(user.uid);
         fetchCreatedRecipes(user.uid);
-        fetchFavoritedRecipes(user.uid); 
+        fetchFavoritedRecipes(user.uid);
+        fetchPendingRecipes(user.uid);
       } else {
         alert('Not logged in');
       }
@@ -137,7 +165,69 @@ const MyRecipes = () => {
   return (
     <Box sx={{ flexGrow: 1, p: 2 }}>
       <Typography variant="h3" sx={{ mb: 2 }}>
-        {showYourRecipes ? 'Recipes you Created:' : 'Recipes you Favorited:'}
+        Your Pending Recipes:
+      </Typography>
+
+      <Grid container spacing={2} sx={{ mb: 4 }}>
+        {pendingRecipes && pendingRecipes.map(recipe => (
+          <Grid key={recipe.id} item xs={12} sm={6} md={3}>
+            <a 
+              href={`./recipeView/${recipe.id}`} 
+              onClick={(e) => {
+                if (e.defaultPrevented) return; 
+                handleOpenRecipe(recipe.id);
+              }}
+              style={{textDecoration:'none'}}
+            >
+              <Card className="recipe-card">
+                <Box sx={{ position: 'relative' }}>
+                  <IconButton
+                    aria-label="edit"
+                    onClick={(e) => {
+                      e.preventDefault(); // Prevents the default anchor tag action
+                      e.stopPropagation(); // Stops the propagation to parent elements
+                      handleEdit(recipe);
+                    }}
+                    sx={{ position: 'absolute', top: '0', right: '0', zIndex: 1000 }}
+                  >
+                    <EditIcon style={{ zIndex: 200, color: 'white', background: '#0000006b' }} />
+                  </IconButton>
+                  <IconButton
+                    aria-label="delete"
+                    onClick={(e) => {
+                      e.preventDefault(); // Prevents the default anchor tag action
+                      e.stopPropagation(); // Stops the propagation to parent elements
+                      handleDelete(recipe.id, true);
+                    }}
+                    sx={{ position: 'absolute', bottom: '0', right: '0', zIndex: 1000 }}
+                  >
+                    <DeleteIcon style={{ zIndex: 200, color: 'red', background: '#0000006b' }} />
+                  </IconButton>
+                  <CardMedia
+                    component="img"
+                    sx={{ height: 140, borderBottom: '7px solid #2e6123', minHeight: '18vh', maxHeight: '18vh' }}
+                    image={recipe.img}
+                    alt={recipe.name}
+                  />
+                </Box>
+                <CardContent>
+                  <Typography variant="h6">{recipe.title}</Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    {recipe.desc.length > 40 ? `${recipe.desc.substring(0, 40)}...` : recipe.desc}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">Cuisine: {recipe.cuisineType}</Typography>
+                  <Typography variant="body2" color="text.secondary">Meal Type: {recipe.mealType}</Typography>
+                </CardContent>
+              </Card>
+            </a>
+          </Grid>
+        ))}
+      </Grid>
+
+      <hr />
+
+      <Typography variant="h3" sx={{ mb: 2 }}>
+        {showYourRecipes ? 'Recipes you Published:' : 'Recipes you Favorited:'}
       </Typography>
 
       <Card sx={{ width: '100%', mb: 4 }}>
@@ -241,7 +331,7 @@ const MyRecipes = () => {
               <img src={imagePreview} alt="Recipe" style={{ maxWidth: '100%', maxHeight: '200px' }} />
             </Box>
           )}
-          <Button variant="contained" color="primary" style = {{display: 'block'}} onClick={handleSubmit}>Submit</Button>
+          <Button variant="contained" color="primary" style={{ display: 'block' }} onClick={handleSubmit}>Submit</Button>
         </Card>
       )}
 
@@ -285,6 +375,17 @@ const MyRecipes = () => {
                       <FavoriteIcon />
                     </IconButton>
                   )}
+                  <IconButton
+                    aria-label="delete"
+                    onClick={(e) => {
+                      e.preventDefault(); // Prevents the default anchor tag action
+                      e.stopPropagation(); // Stops the propagation to parent elements
+                      handleDelete(recipe.id, false);
+                    }}
+                    sx={{ position: 'absolute', bottom: '0', right: '0', zIndex: 1000 }}
+                  >
+                    <DeleteIcon style={{ zIndex: 200, color: 'white', background: '#0000006b' }} />
+                  </IconButton>
                   <CardMedia
                     component="img"
                     sx={{ height: 140, borderBottom: '7px solid #2e6123', minHeight: '18vh', maxHeight: '18vh' }}

@@ -3,6 +3,7 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../../firebase";
+import { useParams } from "react-router-dom";
 import {
   Box,
   Card,
@@ -19,15 +20,20 @@ import {
   Alert,
 } from "@mui/material";
 
-// Notes:
-// stored fetching URL
 const Recipes = () => {
   // for Save Feature
   const [currentUser, setCurrentUser] = useState(null);
   const [flag, setFlag] = useState(false);
   const [notification, setNotification] = useState(false);
 
-  const [allrecipes, setAllRecipes] = useState([]);
+  const [recipeHome, setRecipeHome] = useState([]);
+  const { category } = useParams();
+
+  const defaultCategory = category || null;
+  console.log("hiiii");
+  console.log(category);
+
+  const [allRecipes, setAllRecipes] = useState([]);
   const [recipes, setRecipes] = useState([]);
   const [type, setType] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
@@ -56,11 +62,45 @@ const Recipes = () => {
   // setting the array for result of recipes with the keyword
   const [searchResults, setSearchResults] = useState([]);
 
+  const fetchRecipesHome = async () => {
+    const response = await axios.get(`http://localhost:5001/home/${category}`);
+    console.log(response);
+    const newRecipes = [];
+
+    // Process edamamResults
+    response.data.forEach((recipe) => {
+      const recipeObj = {
+        name: recipe.recipe.label,
+        meal: recipe.recipe.mealType,
+        image: recipe.recipe.image,
+        time: recipe.recipe.totalTime,
+        id: extractID(recipe._links.self.href),
+        ingredients: recipe.recipe.ingredientLines,
+        dishType: recipe.recipe.dishType,
+        cuisineType: recipe.recipe.cuisineType,
+        author: recipe.recipe.source,
+        userMade: false,
+        calories: recipe.recipe.calories,
+        // Nutritional facts object with keys
+        nutrients: {
+          carbs: recipe.recipe.totalNutrients.CHOCDF,
+          fat: recipe.recipe.totalNutrients.FAT,
+          protein: recipe.recipe.totalNutrients.PROCNT,
+        },
+        url: recipe.recipe.url,
+      };
+      //console.log(recipe._links.self.href);
+      newRecipes.push(recipeObj);
+    });
+    setRecipes(newRecipes);
+  };
+
   const fetchAllRecipes = async () => {
     try {
       const response = await axios.get(
         `http://localhost:5001/api/recipes/cuisine/all`
       );
+      console.log("edamamresults", response.data.edamamResults);
 
       const newRecipes = [];
 
@@ -72,7 +112,19 @@ const Recipes = () => {
           image: recipe.recipe.image,
           time: recipe.recipe.totalTime,
           id: extractID(recipe._links.self.href),
+          ingredients: recipe.recipe.ingredientLines,
+          dishType: recipe.recipe.dishType,
+          cuisineType: recipe.recipe.cuisineType,
+          author: recipe.recipe.source,
           userMade: false,
+          calories: recipe.recipe.calories,
+          // Nutritional facts object with keys
+          nutrients: {
+            carbs: recipe.recipe.totalNutrients.CHOCDF,
+            fat: recipe.recipe.totalNutrients.FAT,
+            protein: recipe.recipe.totalNutrients.PROCNT,
+          },
+          url: recipe.recipe.url,
         };
         //console.log(recipe._links.self.href);
         newRecipes.push(recipeObj);
@@ -117,7 +169,19 @@ const Recipes = () => {
           image: recipe.recipe.image,
           time: recipe.recipe.totalTime,
           id: extractID(recipe._links.self.href),
+          ingredients: recipe.recipe.ingredientLines,
+          dishType: recipe.recipe.dishType,
+          cuisineType: recipe.recipe.cuisineType,
+          author: recipe.recipe.source,
           userMade: false,
+          calories: recipe.recipe.calories,
+          // Nutritional facts object with keys
+          nutrients: {
+            carbs: recipe.recipe.totalNutrients.CHOCDF,
+            fat: recipe.recipe.totalNutrients.FAT,
+            protein: recipe.recipe.totalNutrients.PROCNT,
+          },
+          url: recipe.recipe.url,
         };
         //console.log(recipe._links.self.href);
         newRecipes.push(recipeObj);
@@ -157,7 +221,6 @@ const Recipes = () => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         // User is signed in
-
         setCurrentUser(user.uid);
         setFlag(false);
         //console.log(user.uid);
@@ -172,8 +235,13 @@ const Recipes = () => {
       setRecipes([]); // Reset recipes state
       fetchRecipes(type);
     } else {
-      fetchAllRecipes();
+      if (category == null) {
+        fetchAllRecipes();
+      } else {
+        fetchRecipesHome();
+      }
     }
+
     // Clean up subscription on unmount
     return () => unsubscribe();
   }, [type]);
@@ -226,7 +294,19 @@ const Recipes = () => {
           image: recipe.recipe.image,
           time: recipe.recipe.totalTime,
           id: extractID(recipe._links.self.href),
+          ingredients: recipe.recipe.ingredientLines,
+          dishType: recipe.recipe.dishType,
+          cuisineType: recipe.recipe.cuisineType,
+          author: recipe.recipe.source,
           userMade: false,
+          calories: recipe.recipe.calories,
+          // Nutritional facts object with keys
+          nutrients: {
+            carbs: recipe.recipe.totalNutrients.CHOCDF,
+            fat: recipe.recipe.totalNutrients.FAT,
+            protein: recipe.recipe.totalNutrients.PROCNT,
+          },
+          url: recipe.recipe.url,
         };
         //console.log(recipe._links.self.href);
         newRecipes.push(recipeObj);
@@ -315,12 +395,18 @@ const Recipes = () => {
             <Button
               variant="contained"
               onClick={handleSubmit}
-              sx={{ backgroundColor: "purple", marginRight: "30px" }}
+              sx={{
+                backgroundColor: "darkgreen",
+                marginRight: "30px",
+                "&:hover": {
+                  backgroundColor: "darkgreen",
+                },
+              }}
             >
               Search
             </Button>
             <Box sx={{ display: "flex", alignItems: "center" }}>
-              <Typography sx={{ marginRight: "10px", color: "purple" }}>
+              <Typography sx={{ marginRight: "10px", color: "darkgreen" }}>
                 Filter Recipes By:
               </Typography>
               <Select
@@ -332,18 +418,18 @@ const Recipes = () => {
                 }
                 sx={{
                   width: "120px",
-                  "& .MuiSelect-icon": { color: "purple" },
+                  "& .MuiSelect-icon": { color: "darkgreen" },
                   "& .MuiSelect-select": {
-                    color: "purple",
-                    borderColor: "purple",
-                    "&:focus": { borderColor: "purple" }, // Override focused state border color
+                    color: "green",
+                    borderColor: "green",
+                    "&:focus": { borderColor: "darkgreen" }, // Override focused state border color
                   },
                 }}
               >
-                <MenuItem value="edamam" sx={{ color: "purple" }}>
+                <MenuItem value="edamam" sx={{ color: "darkgreen" }}>
                   Official
                 </MenuItem>
-                <MenuItem value="user" sx={{ color: "purple" }}>
+                <MenuItem value="user" sx={{ color: "darkgreen" }}>
                   User Created
                 </MenuItem>
               </Select>
@@ -414,10 +500,8 @@ const Recipes = () => {
                 }
               >
                 <Link
-                  to={`/recipeView/${recipe.id.split("/").pop()}`}
-                  onClick={(e) => {
-                    handleOpenRecipe(recipe.id);
-                  }}
+                  to={`/recipeView/${recipe.id}`}
+                  state={filterByEdamam ? { recipe } : null}
                   style={{ textDecoration: "none", color: "inherit" }} // Ensures text color stays as it is
                 >
                   {/* <Link
@@ -448,7 +532,10 @@ const Recipes = () => {
                       color="text.secondary"
                       sx={{ color: "inherit" }}
                     >
-                      Time Takes: {recipe.time} mins
+                      Time Takes:{" "}
+                      {recipe.time === 0 || recipe.time === null
+                        ? "N/A"
+                        : `${recipe.time} mins`}
                     </Typography>
                   </CardContent>
                 </Link>

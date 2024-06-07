@@ -2,7 +2,7 @@ import {initializeApp} from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 import { getStorage } from 'firebase/storage';
 
-import serviceAccount from './permissions.json' assert { type: 'json' };
+import serviceAccount from './permissions.json' with { type: 'json' };
 
 
 const app = initializeApp(serviceAccount);

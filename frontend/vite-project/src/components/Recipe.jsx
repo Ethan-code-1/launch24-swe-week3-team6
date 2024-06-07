@@ -6,8 +6,8 @@ const Recipe = (data) => {
 
   const nutrition = data.nutrition;
 
-  console.log("nutrition" + nutrition);
-  console.log(typeof nutrition);
+  // console.log("nutrition" + nutrition);
+  // console.log(typeof nutrition);
 
   function extractNutritionData(nutritionString) {
     const regex = /{ value: "(.*?)", label: "(.*?)" }/g;
