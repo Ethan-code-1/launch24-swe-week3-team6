@@ -79,7 +79,7 @@ const RecipeView = () => {
       if (user) {
         setUid(user.uid);
       } else {
-        alert("Not logged in");
+        //alert("Not logged in");
       }
     });
   }, []);

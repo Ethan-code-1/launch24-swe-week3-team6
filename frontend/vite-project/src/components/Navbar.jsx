@@ -1,4 +1,3 @@
-// Navbar.jsx
 import React, { useState, useEffect } from 'react';
 import { styled, useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
@@ -152,7 +151,7 @@ const Navbar = () => {
   const handleLogout = async () => {
     const auth = getAuth();
     await signOut(auth);
-    alert('Log out successfully');
+    navigate('/login'); // Navigate to login route after logout
   };
 
   const handleDrawerOpen = () => {
@@ -378,28 +377,6 @@ const Navbar = () => {
                     <BookIcon />
                   </ListItemIcon>
                   <ListItemText primary="My Recipes" sx={{ opacity: open ? 1 : 0 }} />
-                </ListItemButton>
-              </ListItem>
-              <ListItem disablePadding sx={{ display: 'block' }}>
-                <ListItemButton
-                  sx={{
-                    minHeight: 48,
-                    justifyContent: open ? 'initial' : 'center',
-                    px: 2.5,
-                  }}
-                  component={Link}
-                  to="/recipeView"
-                >
-                  <ListItemIcon
-                    sx={{
-                      minWidth: 0,
-                      mr: open ? 3 : 'auto',
-                      justifyContent: 'center',
-                    }}
-                  >
-                    <VisibilityIcon />
-                  </ListItemIcon>
-                  <ListItemText primary="Recipe View" sx={{ opacity: open ? 1 : 0 }} />
                 </ListItemButton>
               </ListItem>
             </>

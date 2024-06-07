@@ -174,7 +174,7 @@ const MyRecipes = () => {
         fetchFavoritedRecipes(user.uid);
         fetchPendingRecipes(user.uid);
       } else {
-        alert('Not logged in');
+        //alert('Not logged in');
       }
     });
   }, [])
