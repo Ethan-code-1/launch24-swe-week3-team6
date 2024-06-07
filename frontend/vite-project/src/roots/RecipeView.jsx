@@ -38,27 +38,38 @@ const RecipeView = () => {
   const [revs, setRevs] = useState(null);
   const [showReplies, setShowReplies] = useState([]);
   const [image, setImage] = useState("");
+  const [averageRating, setAverageRating] = useState(0);
+  const [reviewCount, setReviewCount] = useState(0);
+  const [totalComments, setTotalComments] = useState(0); // State for total comments
 
   const { rid } = useParams();
 
-  const averageRating = 3.5; // Example average rating
+  // const averageRating = 3.5; // Example average rating
 
-  const fetchData = async () => {
+const fetchData = async () => {
     try {
       const res = await axios.get(`http://localhost:5001/recipe/${rid}`);
-      // console.log(res.data);
-
-      setRecipe(res.data.rec);
-      setNutritionFacts(res.data.rec.nutritionFacts);
-      setImage(res.data.rec.img);
-      // console.log(res.data.rec.nutritionFacts);
-      console.log(res.data.rec.img);
-      console.log(res.data.revs);
-      setRevs(res.data.revs);
+        
+      // Assuming your response includes averageRating now
+      const { rec, reviews, averageRating, count, totalComments } = res.data;
+        
+      // Update state with the new data
+      setRecipe(rec);
+      setNutritionFacts(rec.nutritionFacts);
+      setImage(rec.img);
+      setRevs(reviews);
+      setAverageRating(averageRating); // Assuming you have a state for averageRating
+      setReviewCount(count); // Set the review count
+      setTotalComments(totalComments); // Set the total comments
+        
+      // For debugging
+      console.log(rec.img);
+      console.log(reviews);
+      console.log(averageRating);
     } catch (e) {
-      console.error("Error fetching data", e);
+        console.error("Error fetching data", e);
     }
-  };
+};
 
   useEffect(() => {
     fetchData();
@@ -174,9 +185,9 @@ const RecipeView = () => {
           <div className='page-title'>{recipe && recipe.name}</div>
           <div className='overview-container'>
             <AverageStars rating={averageRating} className='average-stars'/>
-            <div className='page-subtitle'> {averageRating} from 2 votes </div>
+            <div className='page-subtitle'> {averageRating} from {reviewCount} votes </div>
             <div className='page-subtitle'> &nbsp; &#124; &nbsp; </div>
-            <div className='page-subtitle'> 2 comments</div>
+            <div className='page-subtitle'> {totalComments} comments</div>
           </div>
 
           <img src={image} alt='Recipe Image' className='recipe-image' />

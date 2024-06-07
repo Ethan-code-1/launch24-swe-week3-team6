@@ -8,7 +8,64 @@ const router = express.Router();
 dotenv.config();
 
 // get diff categories
+// get diff categories
+// get diff categories
 router.get("/:id", async (req, res) => {
+    try {
+        const rid = req.params.id;
+        const recDoc = await getDoc(doc(db, 'recipes', rid));
+        const rec = recDoc.data();
+
+        let reviews = await getDocs(collection(db, 'recipes', rid, 'reviews'));
+
+        let reviewTotal = 0;
+        let count = 0;
+        let totalComments = 0; // Initialize total comments counter
+
+        if (reviews) {
+            reviews = await Promise.all(reviews.docs.map(async (review) => {
+                let revData = review.data();
+                reviewTotal += revData.rating;
+                count += 1; // Count the review itself
+                totalComments += 1; // Add to total comments
+
+                const userDoc = await getDoc(doc(db, 'users', revData.uid));
+                const userData = userDoc.data();
+                revData['user'] = userData;
+                revData['id'] = review.id;
+
+                revData['replies'] = await Promise.all(revData.replies.map(async (rep) => {
+                    totalComments += 1; // Count each reply
+                    const uDoc = await getDoc(doc(db, 'users', rep.uid));
+                    rep['user'] = uDoc.data();
+                    return rep;
+                }));
+                return revData;
+            }));
+        } else {
+            reviews = [];
+        }
+
+        // Calculate average rating
+        let averageRating = count === 0 ? 0 : reviewTotal / count;
+        console.log(totalComments)
+
+        res.json({
+            rec,
+            reviews,
+            averageRating,
+            count,
+            totalComments // Include total comments in the response
+        });
+    } catch (e) {
+        console.error("Error fetching data", e);
+        res.status(500).send("Internal Server Error");
+    }
+});
+
+
+
+router.get("/reviews/:id", async (req, res) => {
     try {
         const rid = req.params.id
         const recDoc = await getDoc(doc(db, 'recipes', rid));
