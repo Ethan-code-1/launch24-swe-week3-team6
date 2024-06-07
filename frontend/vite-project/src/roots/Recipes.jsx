@@ -533,7 +533,9 @@ const Recipes = () => {
                       sx={{ color: "inherit" }}
                     >
                       Time Takes:{" "}
-                      {recipe.time === 0 ? "N/A" : `${recipe.time} mins`}
+                      {recipe.time === 0 || recipe.time === null
+                        ? "N/A"
+                        : `${recipe.time} mins`}
                     </Typography>
                   </CardContent>
                 </Link>
