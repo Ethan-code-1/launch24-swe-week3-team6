@@ -65,10 +65,11 @@ const MyRecipes = () => {
   };
 
   const handleSave = async (rid) => {
+    editingRecipe['img'] = await getImg();
+    console.log(editingRecipe);
     const r = await axios.put(`http://localhost:5001/myRecipes/edit/${rid}`, editingRecipe);
     console.log(r);
     await fetchCreatedRecipes(uid);
-    alert('Saved');
     setEditingRecipe(null);
   };
 
@@ -86,15 +87,17 @@ const MyRecipes = () => {
     reader.readAsDataURL(file);
   };
 
+  async function getImg() {
+    const imgRef = ref(storage, `recipeImages/${v4()}`);
+    const imgSnapshot = await uploadBytes(imgRef, image);
+    return await getDownloadURL(imgSnapshot.ref);
+  }
+
   async function handleSubmit() {
     console.log('Submitted', uid);
     console.log('Image:', image); 
-    const imgRef = ref(storage, `recipeImages/${v4()}`);
-    console.log('imgRef', imgRef);
-    const imgSnapshot = await uploadBytes(imgRef, image);
-    console.log('imgSnapShot', imgSnapshot);
-    const downloadUrl = await getDownloadURL(imgSnapshot.ref);
-    console.log('downloadUrl', downloadUrl);
+    const downloadUrl = await getImg();
+
     const data = {
       'name': title, 
       'desc': desc, 
@@ -319,9 +322,11 @@ const MyRecipes = () => {
             left: '50%', 
             transform: 'translate(-50%, -50%)', 
             width: 400, 
+            height: 600,
             bgcolor: 'background.paper', 
             boxShadow: 24, 
-            p: 4 
+            p: 4 ,
+            overflowY: 'scroll'
           }}>
             <Typography variant="h6" id="edit-recipe-modal">Edit Recipe</Typography>
             <TextField
@@ -368,6 +373,26 @@ const MyRecipes = () => {
                 ))}
               </Select>
             </FormControl>
+            <Button
+            variant="contained"
+            component="label"
+            sx={{ mb: 2 }}
+          >
+            Upload Image
+            <input
+              type="file"
+              hidden
+              accept="image/*"
+              onChange={handleImageChange}
+            />
+            {image && <CheckCircleIcon sx={{ ml: 1, color: 'green' }} />}
+          </Button>
+          {imagePreview && (
+            <Box sx={{ mt: 2 }}>
+              <img src={imagePreview} alt="Recipe" style={{ maxWidth: '100%', maxHeight: '200px' }} />
+            </Box>
+          )}
+          <br></br>
             <Button variant="contained" color="primary" onClick={() => handleSave(editingRecipe.id)}>Save</Button>
           </Box>
         </Modal>
