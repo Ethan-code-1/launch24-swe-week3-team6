@@ -17,7 +17,6 @@ const openai = new OpenAI({apiKey: process.env.OPENAI_API_KEY});
 router.post('/draft', async (req, res) => {
     try {
         const recipe = req.body;
-        console.log(recipe);
 
         // generate steps
         const msg = 'Create a recipe from this description: ' + recipe.name + recipe.desc;
@@ -85,20 +84,33 @@ router.post('/nutrition', async (req, res) => {
 
 router.get("/created/:id", async (req, res) => {
     try {
+        async function getRec(recipes, coll) {
+            return await Promise.all(recipes.map(async (recId) => {
+                const recDoc = await getDoc(doc(db, coll, recId));
+                // console.log('id', recDoc.id, recDoc.data());
+                let rec = recDoc.data();
+                rec['id'] = recDoc.id;
+                rec['author'] = author;
+                return rec;
+            }))
+        }
+
         const uid = req.params.id
         const authorDoc = await getDoc(doc(db, 'users', uid));
         const author = authorDoc.data()['name'];
-        let recipes = (await getDoc(doc(db, 'users', uid))).data()['myRecipes'];
-        recipes = await Promise.all(recipes.map(async (recId) => {
-            const recDoc = await getDoc(doc(db, 'recipes', recId));
-            console.log('id', recDoc.id, recDoc.data());
-            let rec = recDoc.data();
-            rec['id'] = recDoc.id;
-            rec['author'] = author;
-            return rec;
-        }))
+        const userData = (await getDoc(doc(db, 'users', uid))).data()
+
+        const result = {'recipes': [], 'pending_recipes': []};
+        if (userData['myRecipes']) {
+            result['recipes'] = await getRec(userData['myRecipes'], 'recipes');
+        }
+        if (userData['pendingRecipes']) {
+            result['pending_recipes'] = await getRec(userData['pendingRecipes'], 'pending_recipes');
+        }
+        // console.log('results', result);
+        
         // console.log(recipes)
-        res.status(200).json(recipes);
+        res.status(200).json(result);
     } catch (e) {
         res.status(500).send({ error: e.message });
     }

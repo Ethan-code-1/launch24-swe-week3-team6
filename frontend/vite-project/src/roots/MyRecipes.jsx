@@ -136,18 +136,19 @@ const MyRecipes = () => {
   async function fetchCreatedRecipes(uid) {
     console.log(uid);
     const result = (await axios.get(`http://localhost:5001/myRecipes/created/${uid}`)).data;
-    setYourRecipes(result);
+    setYourRecipes(result.recipes);
+    setPendingRecipes(result.pending_recipes);
     console.log(result);
   }
 
-  async function fetchPendingRecipes(uid) {
-    try {
-      const result = await axios.get(`http://localhost:5001/myRecipes/pending/${uid}`);
-      setPendingRecipes(result.data);
-    } catch (error) {
-      console.error('Error fetching pending recipes:', error);
-    }
-  }
+  // async function fetchPendingRecipes(uid) {
+  //   try {
+  //     const result = await axios.get(`http://localhost:5001/myRecipes/pending/${uid}`);
+  //     setPendingRecipes(result.data);
+  //   } catch (error) {
+  //     console.error('Error fetching pending recipes:', error);
+  //   }
+  // }
 
   const handleDelete = async (recipeId, isPending) => {
     try {
@@ -172,7 +173,7 @@ const MyRecipes = () => {
         setUid(user.uid);
         fetchCreatedRecipes(user.uid);
         fetchFavoritedRecipes(user.uid);
-        fetchPendingRecipes(user.uid);
+        // fetchPendingRecipes(user.uid);
       } else {
         //alert('Not logged in');
       }
