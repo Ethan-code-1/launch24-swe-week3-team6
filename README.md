@@ -98,6 +98,13 @@ npm start
 Go to http://localhost:5173/ to access the app.
 
 ## Features
+ - Explore recipes from Edamam API other user created recipes
+- Search a recipe based on its name
+- Filter recipes by cuisine type or meal type
+- Consult with AI Chatbot
+- Create your own recipe
+- Rate and leave reviews on other's recipes
+- Allow administrator log in to verify or delete recipes
 
 ## License
 
