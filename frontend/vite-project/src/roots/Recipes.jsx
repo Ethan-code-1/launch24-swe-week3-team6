@@ -61,6 +61,7 @@ const Recipes = () => {
       const response = await axios.get(
         `http://localhost:5001/api/recipes/cuisine/all`
       );
+      console.log("edamamresults", response.data.edamamResults);
 
       const newRecipes = [];
 
@@ -72,7 +73,18 @@ const Recipes = () => {
           image: recipe.recipe.image,
           time: recipe.recipe.totalTime,
           id: extractID(recipe._links.self.href),
+          ingredients: recipe.recipe.ingredientLines,
+          dishType: recipe.recipe.dishType,
+          cuisineType: recipe.recipe.cuisineType,
+          author: recipe.recipe.source,
           userMade: false,
+          calories: recipe.recipe.calories,
+          // Nutritional facts object with keys
+          nutrients: {
+            carbs: recipe.recipe.totalNutrients.CHOCDF,
+            fat: recipe.recipe.totalNutrients.FAT,
+            protein: recipe.recipe.totalNutrients.PROCNT,
+          },
         };
         //console.log(recipe._links.self.href);
         newRecipes.push(recipeObj);
@@ -114,7 +126,7 @@ const Recipes = () => {
         const recipeObj = {
           name: recipe.recipe.label,
           meal: recipe.recipe.mealType,
-          image: recipe.recipe.image,
+          image: recipe.recipe.images,
           time: recipe.recipe.totalTime,
           id: extractID(recipe._links.self.href),
           userMade: false,
@@ -414,10 +426,8 @@ const Recipes = () => {
                 }
               >
                 <Link
-                  to={`/recipeView/${recipe.id.split("/").pop()}`}
-                  onClick={(e) => {
-                    handleOpenRecipe(recipe.id);
-                  }}
+                  to={`/recipeView/${recipe.id}`}
+                  state={filterByEdamam ? { recipe } : null}
                   style={{ textDecoration: "none", color: "inherit" }} // Ensures text color stays as it is
                 >
                   {/* <Link
