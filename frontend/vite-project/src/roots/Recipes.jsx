@@ -3,7 +3,7 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../../firebase";
-import { useParams } from 'react-router-dom';
+import { useParams } from "react-router-dom";
 import {
   Box,
   Card,
@@ -27,14 +27,13 @@ const Recipes = () => {
   const [currentUser, setCurrentUser] = useState(null);
   const [flag, setFlag] = useState(false);
   const [notification, setNotification] = useState(false);
-  
+
   const [recipeHome, setRecipeHome] = useState([]);
   const { category } = useParams();
 
   const defaultCategory = category || null;
-  console.log("hiiii")
+  console.log("hiiii");
   console.log(category);
-
 
   const [allrecipes, setAllRecipes] = useState([]);
   const [recipes, setRecipes] = useState([]);
@@ -66,7 +65,7 @@ const Recipes = () => {
   const [searchResults, setSearchResults] = useState([]);
 
   const fetchRecipesHome = async () => {
-    const response = (await axios.get(`http://localhost:5001/home/${category}`));
+    const response = await axios.get(`http://localhost:5001/home/${category}`);
     console.log(response);
     const newRecipes = [];
 
@@ -85,7 +84,6 @@ const Recipes = () => {
     });
     setRecipes(newRecipes);
   };
-
 
   const fetchAllRecipes = async () => {
     try {
@@ -129,7 +127,18 @@ const Recipes = () => {
           image: recipe.image || null,
           time: recipe.totalTime || null,
           id: recipe.id,
+          ingredients: recipe.recipe.ingredientLines,
+          dishType: recipe.recipe.dishType,
+          cuisineType: recipe.recipe.cuisineType,
+          author: recipe.recipe.source,
+          userMade: false,
+          calories: recipe.recipe.calories,
           userMade: recipe.userMade,
+          nutrients: {
+            carbs: recipe.recipe.totalNutrients.CHOCDF,
+            fat: recipe.recipe.totalNutrients.FAT,
+            protein: recipe.recipe.totalNutrients.PROCNT,
+          },
         };
         newRecipes.push(recipeObj);
       });
@@ -214,12 +223,10 @@ const Recipes = () => {
     if (type) {
       setRecipes([]); // Reset recipes state
       fetchRecipes(type);
-    }
-    else {
+    } else {
       if (category == null) {
         fetchAllRecipes();
-      }
-      else {
+      } else {
         fetchRecipesHome();
       }
     }

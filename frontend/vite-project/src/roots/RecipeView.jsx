@@ -227,16 +227,6 @@ const RecipeView = () => {
                       ))}
                     </ul>
                   </div>
-                  {/* 
-                  <div className="directions-container">
-                    <div className="recipe-subtitle"> Directions </div>
-                    {directionSteps.map((info, index) => (
-                      <div className="direction-step" key={index}>
-                        <div className="direction-title">Step {index + 1}</div>
-                        <div className="direction-info">{info}</div>
-                      </div>
-                    ))}
-                  </div> */}
                   <div className="nutrition-facts-container">
                     <div className="recipe-subtitle"> Nutrition Facts </div>
                     <div className="nutrition-facts-grid">
@@ -278,16 +268,6 @@ const RecipeView = () => {
                     <Stars
                       rating={rating}
                       onRatingChange={handleRatingChange}
-                    />
-                  </div>
-                  <div>
-                    <textarea
-                      className="review-input"
-                      maxLength="400"
-                      type="text"
-                      placeholder="What did you think about this recipe? Join the discussion!"
-                      value={review} // Bind the input value to the state
-                      onChange={(e) => setReview(e.target.value)}
                     />
                   </div>
                   <div className="review-bottom">
@@ -505,44 +485,6 @@ const RecipeView = () => {
               )}
             </div>
           </div>
-
-          {/* <div className="recipe-section">
-            <div className="recipe-container">
-              <div className="recipe-title"> {recipe.name} </div>
-              <div className="recipe-line"></div>
-
-              <div className="ingredients-container">
-                <div className="recipe-subtitle"> Ingredients </div>
-                <ul>
-                  {ingredients.map((ingredient, index) => (
-                    <li key={index}>{ingredient}</li>
-                  ))}
-                </ul>
-              </div>
-
-              <div className="directions-container">
-                <div className="recipe-subtitle"> Directions </div>
-                {directionSteps.map((info, index) => (
-                  <div className="direction-step" key={index}>
-                    <div className="direction-title">Step {index + 1}</div>
-                    <div className="direction-info">{info}</div>
-                  </div>
-                ))}
-              </div>
-
-              <div className="nutrition-facts-container">
-                <div className="recipe-subtitle"> Nutrition Facts </div>
-                <div className="nutrition-facts-grid">
-                  {nutritionFacts.map((fact, index) => (
-                    <div className="nutrition-fact" key={index}>
-                      <div className="fact-top">{fact.value}</div>
-                      <div className="fact-bottom">{fact.label}</div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div> */}
         </>
       ) : (
         <div className="recipe-view-page">
