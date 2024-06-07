@@ -125,5 +125,22 @@ router.put("/comment/:id", async (req, res) => {
     }
 })
 
+router.put("/upvote/:id", async (req, res) => {
+  try {
+    const rid = req.params.id;
+    const data = req.body;
+    console.log(data);
+    const revDocRef = doc(db, "recipes", rid, "reviews", data.revId);
+    const revDocSnap = await getDoc(revDocRef);
+    const revDocData = revDocSnap.data();
+    let upvotes = revDocData.upvotes;
+    upvotes += 1;
+    await updateDoc(revDocRef, { upvotes: upvotes });
+    res.status(200).send("Upvoted Successfully!");
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).send({ error: error.message });
+  }
+});
 
 export default router;

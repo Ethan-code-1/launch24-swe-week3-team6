@@ -47,6 +47,7 @@ const UserRecipe = () => {
     try {
       const res = await axios.get(`http://localhost:5001/recipe/${rid}`);
       const { rec, reviews, averageRating, count, totalComments } = res.data;
+      console.log(reviews);
 
       setRecipe(rec);
       setNutritionFacts(rec.nutritionFacts);
@@ -76,7 +77,21 @@ const UserRecipe = () => {
     setSaved(!saved);
   };
 
+const handleUpvote = async (reviewId) => {
+  const body = {
+    uid: uid,
+    revId: reviewId,
+  };
+  try {
+    await axios.put(`http://localhost:5001/recipe/upvote/${rid}`, body);
+  } catch (error) {
+    console.error("Error:", error);
+  }
+};
+
+
   const handleSetUpvote = (reviewId) => {
+    handleUpvote(reviewId);
     setUpvotes((prevUpvotes) => ({
       ...prevUpvotes,
       [reviewId]: !prevUpvotes[reviewId],
