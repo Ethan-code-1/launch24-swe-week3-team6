@@ -110,6 +110,5 @@ Go to http://localhost:5173/ to access the app.
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
-## Contact
-
-- [Kening Zhao](mailto:keningz@umich.edu)
+## Credits
+Authors: Kening Zhao, Ethan Ogilvie, Maggie Laflam, Jennifer Zhuang, Rayna Bhattacharyya, Anh Tran
