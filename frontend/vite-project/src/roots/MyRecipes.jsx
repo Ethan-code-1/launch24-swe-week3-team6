@@ -55,7 +55,7 @@ const MyRecipes = () => {
     try {
       await axios.post('http://localhost:5001/myRecipes/unfavorite', { uid, recipeId });
       setFavoritedRecipes(prevRecipes => prevRecipes.filter(recipe => recipe.id !== recipeId));
-      alert(`Unfavorited recipe with ID: ${recipeId}`);
+      //alert(`Unfavorited recipe with ID: ${recipeId}`);
     } catch (error) {
       console.error('Error unfavoriting recipe:', error);
     }
@@ -394,6 +394,8 @@ const MyRecipes = () => {
                       <FavoriteIcon />
                     </IconButton>
                   )}
+
+                  {/*
                   {showYourRecipes && (
                       <IconButton
                         aria-label="delete"
@@ -407,6 +409,7 @@ const MyRecipes = () => {
                         <DeleteIcon style={{ zIndex: 200, color: 'white', background: '#0000006b' }} />
                       </IconButton>
                     )}
+                      */}
 
                   <CardMedia
                     component="img"
