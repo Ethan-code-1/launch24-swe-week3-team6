@@ -86,7 +86,7 @@ const Home = () => {
               <CountUp start={0} end={35} duration={2} />+
             </Typography>
             <Typography variant="h6">
-              Diets
+              Categories
             </Typography>
           </Grid>
 

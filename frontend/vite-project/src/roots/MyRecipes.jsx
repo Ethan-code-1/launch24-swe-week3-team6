@@ -57,7 +57,7 @@ const MyRecipes = () => {
     try {
       await axios.post('http://localhost:5001/myRecipes/unfavorite', { uid, recipeId });
       setFavoritedRecipes(prevRecipes => prevRecipes.filter(recipe => recipe.id !== recipeId));
-      alert(`Unfavorited recipe with ID: ${recipeId}`);
+      //alert(`Unfavorited recipe with ID: ${recipeId}`);
     } catch (error) {
       console.error('Error unfavoriting recipe:', error);
     }
@@ -192,15 +192,12 @@ const MyRecipes = () => {
         {pendingRecipes && pendingRecipes.map(recipe => (
           <Grid key={recipe.id} item xs={12} sm={6} md={3}>
             <a 
-              href={`./recipeView/${recipe.id}`} 
-              onClick={(e) => {
-                if (e.defaultPrevented) return; 
-                handleOpenRecipe(recipe.id);
-              }}
+            
               style={{textDecoration:'none'}}
             >
               <Card className="recipe-card">
                 <Box sx={{ position: 'relative' }}>
+                  {/*
                   <IconButton
                     aria-label="edit"
                     onClick={(e) => {
@@ -212,6 +209,8 @@ const MyRecipes = () => {
                   >
                     <EditIcon style={{ zIndex: 200, color: 'white', background: '#0000006b' }} />
                   </IconButton>
+                  
+                  
                   <IconButton
                     aria-label="delete"
                     onClick={(e) => {
@@ -221,8 +220,10 @@ const MyRecipes = () => {
                     }}
                     sx={{ position: 'absolute', bottom: '0', right: '0', zIndex: 1000 }}
                   >
-                    <DeleteIcon style={{ zIndex: 200, color: 'red', background: '#0000006b' }} />
+                    <DeleteIcon style={{ zIndex: 200, color: 'red', background: '#0000006b' }} /> 
                   </IconButton>
+                    */}
+
                   <CardMedia
                     component="img"
                     sx={{ height: 140, borderBottom: '7px solid #2e6123', minHeight: '18vh', maxHeight: '18vh' }}
