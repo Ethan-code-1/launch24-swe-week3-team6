@@ -51,22 +51,15 @@ const RecipeView = () => {
     try {
       const res = await axios.get(`http://localhost:5001/recipe/${rid}`);
 
-      // Assuming your response includes averageRating now
       const { rec, reviews, averageRating, count, totalComments } = res.data;
 
-      // Update state with the new data
       setRecipe(rec);
       setNutritionFacts(rec.nutritionFacts);
       setImage(rec.img);
       setRevs(reviews);
-      setAverageRating(averageRating); // Assuming you have a state for averageRating
-      setReviewCount(count); // Set the review count
-      setTotalComments(totalComments); // Set the total comments
-
-      // For debugging
-      console.log(rec.img);
-      console.log(reviews);
-      console.log(averageRating);
+      setAverageRating(averageRating);
+      setReviewCount(count);
+      setTotalComments(totalComments);
     } catch (e) {
       console.error("Error fetching data", e);
     }
@@ -114,9 +107,7 @@ const RecipeView = () => {
   };
 
   const handlePostReview = async (e) => {
-    // Add the event parameter
     e.preventDefault(); // Prevent the default form submission behavior
-    // const id = editID;
     const timestamp = new Date().toLocaleTimeString([], {
       hour: "2-digit",
       minute: "2-digit",
@@ -132,17 +123,56 @@ const RecipeView = () => {
         uid: uid,
         votes: [],
         replies: [],
+        isEdamamRecipe: false, // Set to false for non-Edamam recipe review
       };
 
-      const response = await axios.put(
-        `http://localhost:5001/recipe/review/${rid}`,
-        body
-      );
-      // console.log(`http://localhost:5001/posts/${id}`);
-      fetchData();
-      clearReview();
+      try {
+        const response = await axios.put(
+          `http://localhost:5001/recipe/review/${rid}`,
+          body
+        );
+        fetchData();
+        clearReview();
+      } catch (error) {
+        console.error("Error posting review:", error);
+      }
     } else {
       alert("please fill in all fields");
+    }
+  };
+
+  const handlePostEdamamReview = async (e) => {
+    e.preventDefault(); // Prevent the default form submission behavior
+    const timestamp = new Date().toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+    const timestampISO = new Date().toISOString();
+
+    if (review && rating) {
+      const body = {
+        review: review,
+        rating: rating,
+        timestamp: timestamp,
+        timestampISO: timestampISO,
+        uid: uid,
+        votes: [],
+        replies: [],
+        isEdamamRecipe: true, // Set to true for Edamam recipe review
+      };
+
+      try {
+        const response = await axios.put(
+          `http://localhost:5001/recipe/review/${rid}`,
+          body
+        );
+        fetchData();
+        clearReview();
+      } catch (error) {
+        console.error("Error posting Edamam review:", error);
+      }
+    } else {
+      alert("Please fill in all fields");
     }
   };
 
@@ -233,8 +263,8 @@ const RecipeView = () => {
                   className="recipe-image"
                 />
                 <div className="recipe-info">
-                  Keywords: #{edamamRecipe && edamamRecipe.cuisineType},{" "}
-                  <> </>#{edamamRecipe && edamamRecipe.meal}, <> </>#
+                  Keywords: #{edamamRecipe && edamamRecipe.cuisineType}, <> </>#
+                  {edamamRecipe && edamamRecipe.meal}, <> </>#
                   {edamamRecipe && edamamRecipe.dishType}
                 </div>
               </div>
@@ -294,7 +324,10 @@ const RecipeView = () => {
                 <div className="review-title">Reviews</div>
                 <div className="review-line"></div>
 
-                <form className="create-review" onSubmit={handlePostReview}>
+                <form
+                  className="create-review"
+                  onSubmit={handlePostEdamamReview}
+                >
                   <div className="review-top">
                     <div className="review-subtitle">Your Rating</div>
                     <Stars
