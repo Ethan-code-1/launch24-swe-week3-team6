@@ -1,14 +1,29 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react';
 import '../styles/recipe.css'
 
 const Recipe = (data) => {
   const recipe = data.recipe;
-    const nutritionFacts = [
-  { value: '508', label: 'calories' },
-  { value: '34g', label: 'fat' },
-  { value: '12g', label: 'carbs' },
-  { value: '25g', label: 'protein' },
-  ];
+
+  const nutrition = data.nutrition;
+
+  // console.log("nutrition" + nutrition);
+  // console.log(typeof nutrition);
+
+  function extractNutritionData(nutritionString) {
+    const regex = /{ value: "(.*?)", label: "(.*?)" }/g;
+    const nutritionData = [];
+    let match;
+
+    while ((match = regex.exec(nutritionString)) !== null) {
+        nutritionData.push({ value: match[1], label: match[2] });
+    }
+
+    return nutritionData;
+  }
+  
+  const nutritionFacts = extractNutritionData(nutrition);
+  console.log(nutritionFacts);
+  
   
   const split = recipe.steps.split('\n');
 

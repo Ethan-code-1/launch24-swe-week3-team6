@@ -4,7 +4,7 @@ import request from 'request';
 import dotenv from "dotenv";
 import OpenAI from "openai";
 
-import {db} from "./../firebase.js";
+import { db } from "./../firebase.js";
 import { collection, getDocs, updateDoc, doc, addDoc, getDoc, deleteDoc, query, where } from "firebase/firestore";
 
 const requestGet = util.promisify(request.get);
@@ -17,35 +17,80 @@ const openai = new OpenAI({apiKey: process.env.OPENAI_API_KEY});
 router.post('/draft', async (req, res) => {
     try {
         const recipe = req.body;
+        console.log(recipe);
+        // const image = JSON.parse(recipe.img);
+        // console.log('image', image);
+
+        // generate steps
         const msg = 'Create a recipe from this description: ' + recipe.name + recipe.desc;
-        console.log(msg)
+        const completion = await openai.chat.completions.create({
+            messages: [{role: 'user', content: msg}],
+            model: "gpt-3.5-turbo",
+        });
+
+        // create recipy and add recipe doc
+        const ans = completion.choices[0].message.content;
+        recipe["steps"] = ans;
+        recipe['createdBy'] = recipe.uid;
+        recipe['userMade'] = true;
+        delete recipe['uid'];
+        // delete recipe['img']
+        const docRef = await addDoc(collection(db, 'pending_recipes'), recipe);
+        
+        // add recipe to user's created recipes
+        let recipes = (await getDoc(doc(db, 'users', recipe.createdBy))).data()['pendingRecipes'];
+        if (recipes) {
+            // console.log('pushing', recipes)
+            recipes.push(docRef.id);
+        } else {
+            recipes = [docRef.id];
+        }
+        // console.log(recipes);
+        await updateDoc(doc(db, 'users', recipe.createdBy), {'pendingRecipes': recipes});
+
+        // console.log('doc', docRef.id);
+        res.status(200).send({ docRef, docId: docRef.id });
+    } catch (e) {
+        res.status(500).send({ error: e.message });
+    }
+})
+
+
+router.post('/nutrition', async (req, res) => {
+    try {
+        const recipe = req.body;
+        const docId = recipe.docId
+        console.log("doc" + docId);
+        const msg = 'Create an array of nutrition facts from this description: ' + recipe.name + " " + recipe.desc + " in this format: " + `
+        { value: "", label: "calories" },
+        { value: "", label: "fat" },
+        { value: "", label: "carbs" },
+        { value: "", label: "protein" },
+        `;
+        // console.log(msg)
         const completion = await openai.chat.completions.create({
             messages: [{role: 'user', content: msg}],
             model: "gpt-3.5-turbo",
         });
         // console.log('completion', completion.choices[0]);
-        const ans = completion.choices[0].message.content;
-        recipe["steps"] = ans;
-        recipe['createdBy'] = recipe.uid;
-        delete recipe['uid'];
-        const docRef = await addDoc(collection(db, 'recipes'), recipe);
-        // console.log('addedDoc', docRef);
-        let recipes = (await getDoc(doc(db, 'users', recipe.createdBy))).data()['myRecipes'];
-        console.log('hello', recipes)
-        if (recipes) {
-            console.log('pushing', recipes)
-            recipes.push(docRef.id);
-        } else {
-            recipes = [docRef.id];
-        }
-        console.log(recipes);
-        await updateDoc(doc(db, 'users', recipe.createdBy), {'myRecipes': recipes});
+        console.log('completion', completion.choices[0].message.content);
+        const result = completion.choices[0].message.content;
 
-        res.status(200).send(docRef);
+        // const cleanedResult = result.replace(/(\r\n|\n|\r)/gm, "").trim();
+        // console.log(cleanedResult)
+        // const nutritionFacts = JSON.parse(cleanedResult);
+
+        console.log("fin");
+        await updateDoc(doc(db, 'recipes', docId), { nutritionFacts: result });
+        console.log("fini");
+
+        // res.status(200).send(docRef);
     } catch (e) {
         res.status(500).send({ error: e.message });
     }
 })
+
+
 
 router.get("/created/:id", async (req, res) => {
     try {

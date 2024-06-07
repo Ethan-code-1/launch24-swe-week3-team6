@@ -1,3 +1,4 @@
+// main.jsx
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
@@ -5,13 +6,15 @@ import './index.css';
 
 import Home from './roots/Home';
 import Navbar from './components/Navbar.jsx'
-import Login  from './components/Login.jsx'
+import Login from './components/Login.jsx'
 import Signup from './components/Signup.jsx';
+import AdminRoute from './components/AdminRoute.jsx';
+import Admin from './roots/Admin.jsx';
 
 const router = createBrowserRouter([
   {
     path: '/login',
-    element: <Login></Login>,
+    element: <Login />,
   },
   {
     path: '/signup',
@@ -19,27 +22,31 @@ const router = createBrowserRouter([
   },
   {
     path: '/',
-    element: <Navbar></Navbar>,
+    element: <Navbar />,
   },
   {
     path: '/recipes',
-    element: <Navbar></Navbar>,
+    element: <Navbar />,
+  },
+  {
+    path: '/recipes/:category',
+    element: <Navbar />,
   },
   {
     path: '/recipeView',
-    element: <Navbar></Navbar>,
+    element: <Navbar />,
   },
   {
     path: '/recipeView/:rid',
-    element: <Navbar></Navbar>,
+    element: <Navbar />,
   },
   {
     path: '/myRecipes',
-    element: <Navbar></Navbar>,
+    element: <Navbar />,
   },
   {
     path: '/admin',
-    element: <Navbar></Navbar>,
+    element: <AdminRoute element={Admin} />,
   }
 ]);
 

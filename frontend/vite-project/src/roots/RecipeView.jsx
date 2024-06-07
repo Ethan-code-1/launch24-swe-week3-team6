@@ -32,9 +32,11 @@ const RecipeView = () => {
   const [showReply, setShowReply] = useState([]);
   const [reply, setReply] = useState("");
   const [recipe, setRecipe] = useState(null);
+  const [nutritionFacts, setNutritionFacts] = useState("");
   const [uid, setUid] = useState("");
   const [revs, setRevs] = useState(null);
   const [showReplies, setShowReplies] = useState([]);
+  const [image, setImage] = useState("");
 
   const { rid } = useParams();
   const location = useLocation();
@@ -46,7 +48,12 @@ const RecipeView = () => {
     try {
       const res = await axios.get(`http://localhost:5001/recipe/${rid}`);
       // console.log(res.data);
+
       setRecipe(res.data.rec);
+      setNutritionFacts(res.data.rec.nutritionFacts);
+      setImage(res.data.rec.img);
+      // console.log(res.data.rec.nutritionFacts);
+      console.log(res.data.rec.img);
       console.log(res.data.revs);
       setRevs(res.data.revs);
     } catch (e) {

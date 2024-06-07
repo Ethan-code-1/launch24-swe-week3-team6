@@ -3,6 +3,7 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../../firebase";
+import { useParams } from 'react-router-dom';
 import {
   Box,
   Card,
@@ -26,6 +27,14 @@ const Recipes = () => {
   const [currentUser, setCurrentUser] = useState(null);
   const [flag, setFlag] = useState(false);
   const [notification, setNotification] = useState(false);
+  
+  const [recipeHome, setRecipeHome] = useState([]);
+  const { category } = useParams();
+
+  const defaultCategory = category || null;
+  console.log("hiiii")
+  console.log(category);
+
 
   const [allrecipes, setAllRecipes] = useState([]);
   const [recipes, setRecipes] = useState([]);
@@ -55,6 +64,28 @@ const Recipes = () => {
   const mealOptions = ["Breakfast", "Lunch", "Dinner", "Snack", "Teatime"];
   // setting the array for result of recipes with the keyword
   const [searchResults, setSearchResults] = useState([]);
+
+  const fetchRecipesHome = async () => {
+    const response = (await axios.get(`http://localhost:5001/home/${category}`));
+    console.log(response);
+    const newRecipes = [];
+
+    // Process edamamResults
+    response.data.forEach((recipe) => {
+      const recipeObj = {
+        name: recipe.recipe.label,
+        meal: recipe.recipe.mealType,
+        image: recipe.recipe.image,
+        time: recipe.recipe.totalTime,
+        id: extractID(recipe._links.self.href),
+        userMade: false,
+      };
+      //console.log(recipe._links.self.href);
+      newRecipes.push(recipeObj);
+    });
+    setRecipes(newRecipes);
+  };
+
 
   const fetchAllRecipes = async () => {
     try {
@@ -183,9 +214,16 @@ const Recipes = () => {
     if (type) {
       setRecipes([]); // Reset recipes state
       fetchRecipes(type);
-    } else {
-      fetchAllRecipes();
     }
+    else {
+      if (category == null) {
+        fetchAllRecipes();
+      }
+      else {
+        fetchRecipesHome();
+      }
+    }
+
     // Clean up subscription on unmount
     return () => unsubscribe();
   }, [type]);

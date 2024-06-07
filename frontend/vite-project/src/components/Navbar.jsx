@@ -1,4 +1,5 @@
-import React, {useState} from 'react';
+// Navbar.jsx
+import React, { useState, useEffect } from 'react';
 import { styled, useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import MuiDrawer from '@mui/material/Drawer';
@@ -22,7 +23,9 @@ import BookIcon from '@mui/icons-material/Book';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import Button from '@mui/material/Button';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
+import { getFirestore, collection, query, where, getDocs } from "firebase/firestore";
 
 import Home from "../roots/Home.jsx";
 import Recipes from '../roots/Recipes.jsx';
@@ -30,9 +33,7 @@ import MyRecipes from '../roots/MyRecipes.jsx';
 import RecipeView from '../roots/RecipeView.jsx';
 import Admin from '../roots/Admin.jsx';
 import Login from './Login.jsx';
-import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 import Signup from './Signup.jsx';
-
 
 const drawerWidth = 240;
 
@@ -103,22 +104,56 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 
 const Navbar = () => {
   const theme = useTheme();
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
   const location = useLocation();
-  const [user, setUser] = useState(null)
-  React.useEffect(() => {
-    const auth = getAuth();
-    const unsubcribe = onAuthStateChanged(auth, (user) => {
-      setUser(user)
-    })
-    return () => unsubcribe();
-  }, [])
+  const navigate = useNavigate();
+  const [user, setUser] = useState(null);
+  const [email, setEmail] = useState(null);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [loading, setLoading] = useState(true);
 
-  const handleLogout = async() => {
+  useEffect(() => {
     const auth = getAuth();
-    await signOut(auth)
-    alert('Log out successfully')
-  }
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setUser(user);
+      if (user) {
+        console.log('User signed in:', user.email);
+        setEmail(user.email);
+      } else {
+        console.log('No user signed in');
+        setLoading(false);
+      }
+    });
+    return () => unsubscribe();
+  }, []);
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      if (email) {
+        const db = getFirestore();
+        const q = query(collection(db, 'users'), where('email', '==', email));
+        const querySnapshot = await getDocs(q);
+        querySnapshot.forEach((doc) => {
+          console.log('User data:', doc.data());
+          setIsAdmin(doc.data().isAdmin);
+        });
+      }
+      setLoading(false);
+    };
+    fetchUserData();
+  }, [email]);
+
+  useEffect(() => {
+    if (isAdmin) {
+      navigate('/admin');
+    }
+  }, [isAdmin, navigate]);
+
+  const handleLogout = async () => {
+    const auth = getAuth();
+    await signOut(auth);
+    alert('Log out successfully');
+  };
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -130,13 +165,24 @@ const Navbar = () => {
 
   const renderContent = () => {
     if (location.pathname.split('/').length > 2) {
-      switch (location.pathname.split('/')[1]) {
-        case 'recipeView':
-          return <RecipeView />;
-        default:
-          return null;
+      if (location.pathname.split('/')[1] === "recipes") {
+        switch (location.pathname.split('/')[1]) {
+          case 'recipes':
+            return <Recipes />;
+          default:
+            return null;
+        }
       }
-    } else {
+      else {
+        switch (location.pathname.split('/')[1]) {
+          case 'recipeView':
+            return <RecipeView />;
+          default:
+            return null;
+        }
+      }
+    }
+    else {
       switch (location.pathname) {
         case '/login':
           return <Login />;
@@ -157,6 +203,10 @@ const Navbar = () => {
       }
     }
   };
+
+  if (loading) {
+    return <div>Loading...</div>; // Add a loading indicator
+  }
 
   return (
     <Box sx={{ display: 'flex' }}>
@@ -182,52 +232,53 @@ const Navbar = () => {
             <img src="/websitelogo.png" alt="Recipe App Logo" style={{ marginRight: '8px', marginLeft: '12px', height: '55px' }} />
           </Box>
           {user ? (
-            <Button onClick={handleLogout}
-            variant="contained"
-            sx={{
-              backgroundColor: 'white',
-              color: '#2e6123',
-              '&:hover': {
-                backgroundColor: '#f5f5f5',
-              },
-            }}>Log out</Button>
-          ):(
-            <>
             <Button
-            component={Link}
-            to="/login"
-            variant="contained"
-            sx={{
-              backgroundColor: 'white',
-              color: '#2e6123',
-              '&:hover': {
-                backgroundColor: '#f5f5f5',
-              },
-              mr: 1
-            }}
-            
-          >
-            Login
-          </Button>
+              onClick={handleLogout}
+              variant="contained"
+              sx={{
+                backgroundColor: 'white',
+                color: '#2e6123',
+                '&:hover': {
+                  backgroundColor: '#f5f5f5',
+                },
+              }}
+            >
+              Log out
+            </Button>
+          ) : (
+            <>
+              <Button
+                component={Link}
+                to="/login"
+                variant="contained"
+                sx={{
+                  backgroundColor: 'white',
+                  color: '#2e6123',
+                  '&:hover': {
+                    backgroundColor: '#f5f5f5',
+                  },
+                  mr: 1,
+                }}
+              >
+                Login
+              </Button>
 
-          <Button
-            component={Link}
-            to="/signup"
-            variant="contained"
-            sx={{
-              backgroundColor: 'white',
-              color: '#2e6123',
-              '&:hover': {
-                backgroundColor: '#f5f5f5',
-              },
-            }}
-          >
-            Sign up
-          </Button>
+              <Button
+                component={Link}
+                to="/signup"
+                variant="contained"
+                sx={{
+                  backgroundColor: 'white',
+                  color: '#2e6123',
+                  '&:hover': {
+                    backgroundColor: '#f5f5f5',
+                  },
+                }}
+              >
+                Sign up
+              </Button>
             </>
-            
           )}
-          
         </Toolbar>
       </AppBar>
       <Drawer variant="permanent" open={open}>
@@ -238,14 +289,8 @@ const Navbar = () => {
         </DrawerHeader>
         <Divider />
         <List>
-          {[
-            { text: 'Home', icon: <HomeIcon />, path: '/' },
-            { text: 'Recipes', icon: <RestaurantMenuIcon />, path: '/recipes' },
-            { text: 'My Recipes', icon: <BookIcon />, path: '/myRecipes' },
-            { text: 'Recipe View', icon: <VisibilityIcon />, path: '/recipeView' },
-            { text: 'Admin Page', icon: <AdminPanelSettingsIcon />, path: '/admin' },
-          ].map((item) => (
-            <ListItem key={item.text} disablePadding sx={{ display: 'block' }}>
+          {isAdmin ? (
+            <ListItem disablePadding sx={{ display: 'block' }}>
               <ListItemButton
                 sx={{
                   minHeight: 48,
@@ -253,7 +298,7 @@ const Navbar = () => {
                   px: 2.5,
                 }}
                 component={Link}
-                to={item.path}
+                to="/admin"
               >
                 <ListItemIcon
                   sx={{
@@ -262,19 +307,108 @@ const Navbar = () => {
                     justifyContent: 'center',
                   }}
                 >
-                  {item.icon}
+                  <AdminPanelSettingsIcon />
                 </ListItemIcon>
-                <ListItemText primary={item.text} sx={{ opacity: open ? 1 : 0 }} />
+                <ListItemText primary="Admin Page" sx={{ opacity: open ? 1 : 0 }} />
               </ListItemButton>
             </ListItem>
-          ))}
+          ) : (
+            <>
+              <ListItem disablePadding sx={{ display: 'block' }}>
+                <ListItemButton
+                  sx={{
+                    minHeight: 48,
+                    justifyContent: open ? 'initial' : 'center',
+                    px: 2.5,
+                  }}
+                  component={Link}
+                  to="/"
+                >
+                  <ListItemIcon
+                    sx={{
+                      minWidth: 0,
+                      mr: open ? 3 : 'auto',
+                      justifyContent: 'center',
+                    }}
+                  >
+                    <HomeIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Home" sx={{ opacity: open ? 1 : 0 }} />
+                </ListItemButton>
+              </ListItem>
+              <ListItem disablePadding sx={{ display: 'block' }}>
+                <ListItemButton
+                  sx={{
+                    minHeight: 48,
+                    justifyContent: open ? 'initial' : 'center',
+                    px: 2.5,
+                  }}
+                  component={Link}
+                  to="/recipes"
+                >
+                  <ListItemIcon
+                    sx={{
+                      minWidth: 0,
+                      mr: open ? 3 : 'auto',
+                      justifyContent: 'center',
+                    }}
+                  >
+                    <RestaurantMenuIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Recipes" sx={{ opacity: open ? 1 : 0 }} />
+                </ListItemButton>
+              </ListItem>
+              <ListItem disablePadding sx={{ display: 'block' }}>
+                <ListItemButton
+                  sx={{
+                    minHeight: 48,
+                    justifyContent: open ? 'initial' : 'center',
+                    px: 2.5,
+                  }}
+                  component={Link}
+                  to="/myRecipes"
+                >
+                  <ListItemIcon
+                    sx={{
+                      minWidth: 0,
+                      mr: open ? 3 : 'auto',
+                      justifyContent: 'center',
+                    }}
+                  >
+                    <BookIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="My Recipes" sx={{ opacity: open ? 1 : 0 }} />
+                </ListItemButton>
+              </ListItem>
+              <ListItem disablePadding sx={{ display: 'block' }}>
+                <ListItemButton
+                  sx={{
+                    minHeight: 48,
+                    justifyContent: open ? 'initial' : 'center',
+                    px: 2.5,
+                  }}
+                  component={Link}
+                  to="/recipeView"
+                >
+                  <ListItemIcon
+                    sx={{
+                      minWidth: 0,
+                      mr: open ? 3 : 'auto',
+                      justifyContent: 'center',
+                    }}
+                  >
+                    <VisibilityIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Recipe View" sx={{ opacity: open ? 1 : 0 }} />
+                </ListItemButton>
+              </ListItem>
+            </>
+          )}
         </List>
       </Drawer>
       <Box style={{ background: "#f5f2f2" }} component="main" sx={{ flexGrow: 1, p: 3 }}>
         <DrawerHeader />
-        <div>
-          {renderContent()}
-        </div>
+        <div>{renderContent()}</div>
       </Box>
     </Box>
   );
