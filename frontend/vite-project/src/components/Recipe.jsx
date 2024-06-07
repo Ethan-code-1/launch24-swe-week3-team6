@@ -22,7 +22,7 @@ const Recipe = (data) => {
   }
   
   const nutritionFacts = extractNutritionData(nutrition);
-  console.log(nutritionFacts);
+  // console.log(nutritionFacts);
   
   
   const split = recipe.steps.split('\n');
