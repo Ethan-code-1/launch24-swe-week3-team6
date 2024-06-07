@@ -77,18 +77,6 @@ const UserRecipe = () => {
     setSaved(!saved);
   };
 
-const handleUpvote = async (reviewId) => {
-  const body = {
-    uid: uid,
-    revId: reviewId,
-  };
-  try {
-    await axios.put(`http://localhost:5001/recipe/upvote/${rid}`, body);
-  } catch (error) {
-    console.error("Error:", error);
-  }
-};
-
 
 const handleSetUpvote = async (reviewId) => {
   try {
@@ -296,7 +284,7 @@ const toggleReplyWindow = (id, v, f) => {
                 <div className="upvote-section">
                   <button
                     className="upvote-button"
-                    onClick={() => handleSetUpvote(rev.id)}
+                    onClick={() => handleSetUpvotes(rev.id)}
                   >
                     {rev.votes.includes(uid) ? (
                       <img
@@ -396,7 +384,7 @@ const toggleReplyWindow = (id, v, f) => {
                             <div className="upvote-section">
                               <button
                                 className="upvote-button"
-                                onClick={() => handleSetUpvote(rep.id)}
+                                onClick={() => handleSetUpvotes(rep.id)}
                               >
                                 {upvotes[rep.id] ? (
                                   <img
