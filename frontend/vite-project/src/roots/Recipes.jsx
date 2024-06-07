@@ -56,7 +56,7 @@ const Recipes = () => {
   ];
   const mealOptions = ["Breakfast", "Lunch", "Dinner", "Snack", "Teatime"];
   // setting the array for result of recipes with the keyword
-  const [searchResults, setSearchResults] = useState([]);
+  const [searchResults, setSearchResults] = useState(null);
 
   const fetchRecipesHome = async () => {
     const response = await axios.get(`http://localhost:5001/home/${category}`);
@@ -142,7 +142,7 @@ const Recipes = () => {
       setRecipes(newRecipes);
     } catch (error) {
       console.error("Error fetching recipes:", error);
-      setError("Failed to fetch recipes. Please try again.");
+      // setError("Failed to fetch recipes. Please try again.");
     }
   };
 
@@ -257,18 +257,44 @@ const Recipes = () => {
   };
 
   const handleSubmit = async () => {
-    setLoading(true);
-    setError(null);
+    // setLoading(true);
+    // setError(null);
     try {
+      console.log('in submit', searchQuery);
       const response = await axios.get(
         `http://localhost:5001/home/search/${searchQuery}`
       );
-      setSearchResults(response.data);
+      console.log("hello", response.data);
+      const recs = response.data.map((recipe) => {
+        const recipeObj = {
+          name: recipe.recipe.label,
+          meal: recipe.recipe.mealType,
+          image: recipe.recipe.image,
+          time: recipe.recipe.totalTime,
+          id: extractID(recipe._links.self.href),
+          ingredients: recipe.recipe.ingredientLines,
+          dishType: recipe.recipe.dishType,
+          cuisineType: recipe.recipe.cuisineType,
+          author: recipe.recipe.source,
+          userMade: false,
+          calories: recipe.recipe.calories,
+          // Nutritional facts object with keys
+          nutrients: {
+            carbs: recipe.recipe.totalNutrients.CHOCDF,
+            fat: recipe.recipe.totalNutrients.FAT,
+            protein: recipe.recipe.totalNutrients.PROCNT,
+          },
+          url: recipe.recipe.url,
+        };
+        return recipeObj;
+      });
+      console.log('recs', recs);
+      setRecipes(recs);
     } catch (error) {
       console.error("Error fetching search results:", error);
-      setError("Failed to fetch search results. Please try again.");
+      // setError("Failed to fetch search results. Please try again.");
     } finally {
-      setLoading(false);
+      // setLoading(false);
     }
   };
 

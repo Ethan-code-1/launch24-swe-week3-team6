@@ -65,27 +65,41 @@ router.get("/search/:q", async (req, res) => {
     const user_searchResponse = await requestGet(url.href);
     // parsing the string of all information into objects
     const user_search = JSON.parse(user_searchResponse.body);
-    console.log(user_search);
-    let usersearchdata = [];
+    console.log('user search', user_search);
+    // let usersearchdata = [];
 
     // grabbing specific/most necessary data objects (name, image, ingredients, link to webpage that has ingredients)
     if (user_search.hits) {
-      user_search.hits.forEach((hit) => {
-        let searchedrecipeinfo = {};
-        searchedrecipeinfo.recipe_name = hit.recipe.label;
-        searchedrecipeinfo.recipe_img = hit.recipe.image;
-        searchedrecipeinfo.recipe_ingredients = hit.recipe.ingredientLines;
-        searchedrecipeinfo.recipe_link = hit.recipe.url;
-        searchedrecipeinfo.recipe_id = hit.recipe.url;
+    //   const searchedrecipeinfo = [];
+    //   user_search.hits.forEach((hit) => {
+    //     console.log(doc);
+    //     searchedrecipeinfo.push({
+    //       name: hit.recipe.label,
+    //       mealType: doc.data().mealType,
+    //       image: hit.recipe.image || null,
+    //       totalTime: doc.data().totalTime || null,
+    //       id: doc.id,
+    //       userMade: doc.data().userMade,
+    //     });
+    //   });
+      // console.log(searchedrecipeinfo)
+      // user_search.hits.forEach((hit) => {
+      //   let searchedrecipeinfo = {};
+      //   searchedrecipeinfo.name = hit.recipe.label;
+      //   searchedrecipeinfo.recipe_img = hit.recipe.image;
+      //   searchedrecipeinfo.recipe_ingredients = hit.recipe.ingredientLines;
+      //   searchedrecipeinfo.recipe_link = hit.recipe.url;
+      //   searchedrecipeinfo.recipe_id = hit.recipe.url;
+        
 
-        usersearchdata.push(searchedrecipeinfo);
-        console.log(searchedrecipeinfo);
-      });
+      //   usersearchdata.push(searchedrecipeinfo);
+      //   console.log(searchedrecipeinfo);
+      // });
       // error capturing
     } else {
       console.log("No hits found in the search results");
     }
-    res.json(usersearchdata);
+    res.json(user_search.hits);
   } catch (error) {
     console.error("Failed to fetch data:", error);
     res.status(500).send("Failed to fetch search results");
